@@ -1,5 +1,5 @@
 data "aws_route53_zone" "selected" {
-  name         = "${var.domain_name}"
+  name         = var.domain_name
 }
 
 module "alb" {

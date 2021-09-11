@@ -1,22 +1,3 @@
-data "aws_availability_zones" "available" {
-  state = "available"
-}
-
-data "aws_ami" "amazon-linux-2" {
-  most_recent = true
-  owners = ["amazon"]
-
-  filter {
-    name   = "owner-alias"
-    values = ["amazon"]
-  }
-
-  filter {
-    name   = "name"
-    values = ["amzn2-ami-hvm-*-x86_64-ebs"]
-  }
-}
-
 resource "aws_iam_role_policy" "ec2_ssm_management" {
   name   = "${var.customer}SsmManagement"
   role   = module.ec2.iam_role_id
@@ -38,43 +19,53 @@ resource "aws_iam_role_policy" "ec2_s3_access_management" {
 }
 
 module "ec2" {
-  additional_user_data = templatefile("${path.module}/templates/aio.tpl", {
-    ast_bucket_name        = split(".", aws_s3_bucket.customer_data.bucket_domain_name)[0]
-    iam_role_name          = module.ec2.iam_role_name
-    asterisk_ramdisk_size  = var.asterisk_ramdisk_size
-    mountpoint             = "/opt/omnileads/asterisk/var/spool/asterisk/monitor"
-    aws_region             = var.aws_region
-    device_tag_name        = "${module.tags.tags.environment}-${var.customer}-opt-EBS"
-    device_path            = "/dev/xvdcx"
-    mount_path             = "/var/tmp/omnileads"
-    ami_user               = var.ami_user
-    ami_password           = var.ami_password
-    customer               = var.customer
-    gitlab_user            = var.gitlab_user
-    gitlab_password        = var.gitlab_password
-    mysql_password         = var.mysql_password
-    pg_database         = var.pg_database
-    pg_username         = var.pg_username
-    pg_password         = var.pg_password
-    dialer_user         = var.dialer_user
-    dialer_password     = var.dialer_password
-    django_pass         = var.django_pass
-    omnileads_release   = var.omnileads_release
-    omnileads_repository = var.omnileads_repository
-    ECCTL               = var.ECCTL
-    dialer_host       = local.dialer_host != null ? local.dialer_host : ""
-    mysql_host        = local.mysql_host != null ? local.mysql_host : ""
-    pg_host           = module.rds_postgres.address
-    rtpengine_host    = data.terraform_remote_state.shared_state.outputs.rtpengine_fqdn
-    SCA               = var.SCA
-    schedule          = var.schedule
-    vpc_subnet        = data.terraform_remote_state.shared_state.outputs.vpc_cidr_block
-    TZ                = var.TZ
+  additional_user_data = templatefile("${path.module}/templates/omlapp.tpl", {
+    ast_bucket_name           = split(".", aws_s3_bucket.customer_data.bucket_domain_name)[0]
+    iam_role_name             = module.ec2.iam_role_name
+    aws_region                = var.aws_region
+    oml_ami_user              = var.ami_user
+    oml_ami_password          = var.ami_password
+    oml_pgsql_host            = module.rds_postgres.address
+    oml_pgsql_port            = 5432
+    oml_pgsql_db              = var.pg_database
+    oml_pgsql_user            = var.pg_username
+    oml_pgsql_password        = var.pg_password
+    oml_pgsql_cloud           = "true"
+    oml_dialer_host           = local.dialer_host != null ? local.dialer_host : ""
+    api_dialer_user           = var.dialer_user
+    api_dialer_password       = var.dialer_password
+    oml_app_release           = var.omnileads_release
+    oml_app_ecctl             = var.ECCTL
+    oml_rtpengine_host        = data.terraform_remote_state.shared_state.outputs.rtpengine_fqdn
+    oml_app_sca               = var.SCA
+    vpc_subnet                = data.terraform_remote_state.shared_state.outputs.vpc_cidr_block
+    oml_tz                    = var.TZ
+    oml_infras_stage          = "aws"
+    oml_tenant_name           = var.customer
+    oml_callrec_device        = "s3-aws"
+    s3_access_key             = "NULL"
+    s3_secret_key             = "NULL"
+    s3url                     = "NULL"
+    s3_bucket_name            = "NULL"
+    nfs_host                  = "NULL"
+    optoml_device             = "NULL"
+    pgsql_device              = "NULL"
+    oml_nic                   = var.instance_nic
+    oml_acd_host              = aws_instance.asterisk.private_dns
+    oml_kamailio_host         = aws_instance.kamailio.private_dns
+    oml_redis_host            = aws_instance.redis.private_dns
+    oml_websocket_host        = "NULL"
+    oml_websocket_port        = "NULL"
+    oml_extern_ip             = "auto"
+    oml_app_login_fail_limit  = 10
+    oml_app_init_env          = "true"
+    oml_app_reset_admin_pass  = "true"
+    oml_app_install_sngrep    = "true"
   })
   source                                      = "./modules/ec2-no-elb"
   vpc_id                                      = data.terraform_remote_state.shared_state.outputs.vpc_id
   launch_config_key_name                      = data.terraform_remote_state.shared_state.outputs.ec2_key
-  launch_config_instance_type                 = var.customer_ec2_size
+  launch_config_instance_type                 = var.ec2_oml_size
   launch_config_image_id                      = data.aws_ami.amazon-linux-2.id
   launch_config_root_block_device_volume_size = var.customer_root_disk_size
   launch_config_root_block_device_volume_type = var.customer_root_disk_type

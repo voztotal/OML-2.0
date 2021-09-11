@@ -97,10 +97,8 @@ echo "******************** yum update and install packages ********************"
 case ${oml_infras_stage} in
   aws)
     amazon-linux-extras install epel
-    yum install -y $SSM_AGENT_URL git
-    yum remove -y python3 python3-pip
-    yum install -y patch libedit-devel libuuid-devel
-    amazon-linux-extras install python3
+    yum install -y $SSM_AGENT_URL kernel-devel git
+    yum install -y python3-pip patch libedit-devel libuuid-devel
     systemctl start amazon-ssm-agent
     systemctl enable amazon-ssm-agent
     ;;
@@ -215,13 +213,6 @@ if [[ "${oml_app_login_fail_limit}" != "NULL" ]];then
 fi
 if [[ "${oml_app_reset_admin_pass}" == "true" ]];then
   sed -i "s/reset_admin_password=false/reset_admin_password=true/g" $PATH_DEPLOY/inventory
-fi
-
-# User certs verification *******
-
-if [ -f $PATH_CERTS/key.pem ] && [ -f $PATH_CERTS/cert.pem ];then
-        cp $PATH_CERTS/key.pem $SRC/ominicontacto/install/onpremise/deploy/ansible/certs
-        cp $PATH_CERTS/cert.pem $SRC/ominicontacto/install/onpremise/deploy/ansible/certs
 fi
 
 sleep 35

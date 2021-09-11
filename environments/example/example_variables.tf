@@ -142,3 +142,93 @@ variable "wombat_version" {
 variable "aws_default_region" {
   type        = "string"
 }
+
+variable "name" {}
+variable "oml_tenant_name" {}
+variable "bucket_name" {}
+variable "bucket_acl" {}
+
+variable "shared_bucket_name" {}
+variable "tenant_bucket_callrec" {}
+
+variable "tenant_bucket_tfstate" {}
+
+variable "cloud_provider" {}
+variable "instance_nic" {}
+variable "callrec_storage" {}
+
+variable "nfs_host" {}
+
+variable "init_environment" {}
+variable "reset_admin_pass" {}
+
+variable "name_rtpengine" {}
+variable "name_pgsql" {}
+variable "name_redis" {}
+variable "name_mariadb" {}
+variable "name_wombat" {}
+variable "name_omlapp" {}
+variable "name_kamailio" {}
+variable "name_asterisk" {}
+variable "name_websocket" {}
+variable "name_lb" {}
+variable "name_haproxy" {}
+
+variable "oml_app_branch" {}
+variable "oml_acd_branch" {}
+variable "oml_redis_branch" {}
+variable "oml_rtpengine_branch" {}
+variable "oml_kamailio_branch" {}
+variable "oml_ws_branch" {}
+variable "oml_nginx_branch" {}
+variable "oml_pgsql_branch" {}
+
+variable "oml_app_img" {}
+variable "oml_acd_img" {}
+variable "oml_redis_img" {}
+variable "oml_rtpengine_img" {}
+variable "oml_kamailio_img" {}
+variable "oml_ws_img" {}
+variable "oml_nginx_img" {}
+
+variable "ec2_oml_size" {}
+variable "ec2_asterisk_size" {}
+variable "ec2_rtp_size" {}
+variable "ec2_dialer_size" {}
+variable "ec2_kamailio_size" {}
+variable "ec2_redis_size" {}
+variable "ec2_websocket_size" {}
+#variable "ec2_postgresql_size" {}
+variable "pgsql_size" {}
+#variable "ec2_haproxy_size" {}
+# App # App # App
+
+variable "sip_allowed_ip" {
+  type    = list(string)
+}
+
+# OMniLeads deploy vars
+
+variable "omlapp_nginx_port" {}
+variable "oml_tz" {}
+variable "omlapp_hostname" {}
+variable "sca" {}
+variable "ecctl" {
+  default = "28800"
+}
+variable "extern_ip" {
+  default = "none"
+}
+
+variable "kamailio_pkg_size" {
+  default = "8"
+}
+
+variable "kamailio_shm_size" {
+  default = "64"
+}
+
+# Wombat dialer
+variable "wombat_database" {}
+variable "wombat_database_username" {}
+variable "wombat_database_password" {}

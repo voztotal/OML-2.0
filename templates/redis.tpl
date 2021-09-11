@@ -55,7 +55,6 @@ case ${oml_infras_stage} in
     echo -n "AWS"
     PRIVATE_IPV4=$(ip addr show ${oml_nic} | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
     PUBLIC_IPV4=$(curl checkip.amazonaws.com)
-    amazon-linux-extras install epel
     ;;    
   *)
     echo -n "you must to declare STAGE variable"
@@ -72,8 +71,19 @@ systemctl stop firewalld > /dev/null 2>&1
 
 echo "************************ yum install  *************************"
 echo "************************ yum install  *************************"
-yum update -y 
-yum install -y python3 python3-pip epel-release git
+case ${oml_infras_stage} in
+  aws)
+    amazon-linux-extras install -y epel
+    yum install -y $SSM_AGENT_URL
+    yum install -y git python3-pip patch libedit-devel libuuid-devel
+    systemctl start amazon-ssm-agent
+    systemctl enable amazon-ssm-agent
+    ;;
+  *)
+    yum update -y
+    yum -y install git python3 python3-pip kernel-devel
+    ;;
+esac
 
 echo "************************ install ansible *************************"
 echo "************************ install ansible *************************"
@@ -99,6 +109,4 @@ ansible-playbook redis.yml -i inventory --extra-vars "redis_version=$(cat ../.re
 sed -i "s/#bind/bind $PRIVATE_IPV4/g" /etc/redis.conf
 sed -i "s/port 6379/port $REDIS_PORT/g" /etc/redis.conf
 
-echo "************************ Remove source dirs  *************************"
-echo "************************ Remove source dirs  *************************"
-reboot
+systemctl restart redis

@@ -1,0 +1,30 @@
+---
+# Tfstate
+tfstate:
+  source: "git@gitlab.com:freetech_solutions_terraform/tfstate.git"
+  version: "master"
+
+# Tags
+tags:
+  source: "git@gitlab.com:freetech_solutions_terraform/tags.git"
+  version: "master"
+
+# AWS-ACM
+tf-aws-acm:
+  source: "git@gitlab.com:freetech_solutions_terraform/tf-aws-acm.git"
+  version: "master"
+
+# NLB
+terraform-aws-nlb:
+  source: "git@gitlab.com:freetech_solutions_terraform/terraform-aws-nlb.git"
+  version: "master"
+
+# EC2 no ELB
+ec2-no-elb:
+  source: "git@gitlab.com:freetech_solutions_terraform/ec2-no-elb.git"
+  version: "develop"
+
+# Networking
+networking:
+  source: "git@gitlab.com:freetech_solutions_terraform/networking.git"
+  version: "master"
