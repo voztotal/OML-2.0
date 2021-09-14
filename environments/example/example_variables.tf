@@ -237,3 +237,7 @@ variable "pstn_trunks" {
   description = "The IP of the PSTN gateways that connect with SBC"
   type        = "list"
 }
+
+
+variable  "s3_access_key"{}
+variable  "s3_secret_key" {}

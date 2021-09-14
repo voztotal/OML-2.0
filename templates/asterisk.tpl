@@ -57,6 +57,7 @@
 # *********************************** SET ENV VARS **************************************************
 
 SSM_AGENT_URL="https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm"
+S3FS="/bin/s3fs"
 
 SRC=/usr/src
 COMPONENT_REPO=https://gitlab.com/omnileads/omlacd.git
@@ -140,7 +141,7 @@ case ${oml_callrec_device} in
     yum install -y s3fs-fuse lsof
     echo "${s3_access_key}:${s3_secret_key} " > ~/.passwd-s3fs
     chmod 600 ~/.passwd-s3fs
-       if [ ! -d $CALLREC_DIR_DST ]; then
+    if [ ! -d $CALLREC_DIR_DST ]; then
       mkdir -p $CALLREC_DIR_DST
       chown -R omnileads. $CALLREC_DIR_DST
     fi
@@ -162,6 +163,10 @@ case ${oml_callrec_device} in
       >&2  echo "*** No se ha podido acceder al bucket"
       BUCKETS_LIST=$(aws s3 ls ${ast_bucket_name})
     done
+    if [ ! -d $CALLREC_DIR_DST ]; then
+      mkdir -p $CALLREC_DIR_DST
+      chown -R omnileads. $CALLREC_DIR_DST
+    fi
     echo "*** Se pudo acceder al bucket!, siguiendo"
     echo "*** Montando bucket ${ast_bucket_name}"
     $S3FS $S3FS_OPTIONS
@@ -231,3 +236,5 @@ openssl-devel git gcc autoconf automake -y
 cd $SRC && git clone https://github.com/irontec/sngrep
 cd sngrep && ./bootstrap.sh && ./configure && make && make install
 ln -s /usr/local/bin/sngrep /usr/bin/sngrep
+
+reboot

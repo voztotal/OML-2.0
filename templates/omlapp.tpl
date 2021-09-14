@@ -252,6 +252,10 @@ case ${oml_callrec_device} in
       >&2  echo "*** No se ha podido acceder al bucket"
       BUCKETS_LIST=$(aws s3 ls ${ast_bucket_name})
     done
+    if [ ! -d $CALLREC_DIR_DST ];then
+      mkdir -p $CALLREC_DIR_DST
+      chown omnileads.omnileads -R $CALLREC_DIR_DST
+    fi
     echo "*** Se pudo acceder al bucket!, siguiendo"
     echo "*** Montando bucket ${ast_bucket_name}"
     $S3FS $S3FS_OPTIONS
