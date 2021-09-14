@@ -1,22 +1,3 @@
-resource "aws_iam_role_policy" "ec2_ssm_management" {
-  name   = "${var.customer}SsmManagement"
-  role   = module.ec2.iam_role_id
-  policy = templatefile("${path.module}/templates/ec2_ssm_policy.tpl", {})
-}
-
-resource "aws_iam_role_policy" "ec2_ebs_attach_management" {
-  name   = "${var.customer}EbsAttachManagement"
-  role   = module.ec2.iam_role_id
-  policy = templatefile("${path.module}/templates/ec2_ebs_attach_policy.tpl", {})
-}
-
-resource "aws_iam_role_policy" "ec2_s3_access_management" {
-  name = "${var.customer}S3FullAccessManagement"
-  role = module.ec2.iam_role_id
-  policy = templatefile("${path.module}/templates/s3_full_access_policy.tpl", {
-    astsbc_s3_bucket = aws_s3_bucket.customer_data.arn
-  })
-}
 
 module "ec2" {
   additional_user_data = templatefile("${path.module}/templates/omlapp.tpl", {
@@ -40,9 +21,9 @@ module "ec2" {
     oml_app_sca               = var.SCA
     vpc_subnet                = data.terraform_remote_state.shared_state.outputs.vpc_cidr_block
     oml_tz                    = var.TZ
-    oml_infras_stage          = "aws"
+    oml_infras_stage          = var.cloud_provider
     oml_tenant_name           = var.customer
-    oml_callrec_device        = "s3-aws"
+    oml_callrec_device        = var.callrec_storage
     s3_access_key             = "NULL"
     s3_secret_key             = "NULL"
     s3url                     = "NULL"
@@ -84,15 +65,6 @@ module "ec2" {
   asg_tag_names = merge(module.tags.tags,
     map("Name", "${module.tags.tags.environment}-${var.customer}-EC2"),
     map("role", "${module.tags.tags.environment}-${var.customer}-EC2")
-  )
-}
-
-resource "aws_s3_bucket" "customer_data" {
-  bucket = "${module.tags.tags.environment}-${module.tags.tags.owner}-${var.customer}-data"
-  acl    = "private"
-  tags = merge(module.tags.tags,
-    map("Name", "${module.tags.tags.environment}-${module.tags.tags.owner}-${var.customer}-data"),
-    map("role", "${module.tags.tags.environment}-${module.tags.tags.owner}-${var.customer}-data")
   )
 }
 

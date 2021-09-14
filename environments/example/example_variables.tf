@@ -232,3 +232,8 @@ variable "kamailio_shm_size" {
 variable "wombat_database" {}
 variable "wombat_database_username" {}
 variable "wombat_database_password" {}
+
+variable "pstn_trunks" {
+  description = "The IP of the PSTN gateways that connect with SBC"
+  type        = "list"
+}

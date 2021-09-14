@@ -54,6 +54,11 @@ cat > /etc/rtpengine-config.conf <<EOF
 OPTIONS="-i external/$${PRIVATE_IPV4::-1}!$PUBLIC_IPV4 -o 60 -a 3600 -d 30 -s 120 -n $${PRIVATE_IPV4::-1}:$RTPENGINE_PORT -m $PORT_MIN -M $PORT_MAX --table=0 -L 7 --log-stderr"
 EOF
 
+# Fix Amazon Linux 2
+cd /usr/lib64/
+ln -s libip4tc.so.2 libip4tc.so.0
+ln -s libip6tc.so.2 libip6tc.so.0
+
 echo "***[rtpengine] Iniciando y habilitando rtpengine"
 systemctl enable rtpengine
 systemctl start rtpengine

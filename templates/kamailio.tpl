@@ -61,6 +61,7 @@ case ${oml_infras_stage} in
     ;;
   *)
     echo -n "you must to declare STAGE variable"
+    PRIVATE_IPV4=$(ip addr show ${oml_nic} | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
     ;;
 esac
 

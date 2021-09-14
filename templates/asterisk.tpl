@@ -79,9 +79,9 @@ echo "************************ yum install *************************"
 case ${oml_infras_stage} in
   aws)
     amazon-linux-extras install epel
-    yum install -y $SSM_AGENT_URL git
+    yum install -y $SSM_AGENT_URL 
     yum remove -y python3 python3-pip
-    yum install -y patch libedit-devel libuuid-devel
+    yum install -y patch libedit-devel libuuid-devel git
     amazon-linux-extras install python3
     systemctl start amazon-ssm-agent
     systemctl enable amazon-ssm-agent

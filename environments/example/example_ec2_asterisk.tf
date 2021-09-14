@@ -1,3 +1,25 @@
+############################## bucket for callrec #####################################################
+resource "aws_s3_bucket" "customer_data" {
+  bucket = "${module.tags.tags.environment}-${module.tags.tags.owner}-${var.customer}-data"
+  acl    = "private"
+  tags = merge(module.tags.tags,
+    map("Name", "${module.tags.tags.environment}-${module.tags.tags.owner}-${var.customer}-data"),
+    map("role", "${module.tags.tags.environment}-${module.tags.tags.owner}-${var.customer}-data")
+  )
+}
+
+resource "aws_instance" "asterisk" {
+  ami                                   = data.aws_ami.amazon-linux-2.id
+  instance_type                         = var.ec2_asterisk_size
+  subnet_id                             = data.terraform_remote_state.shared_state.outputs.private_subnet_ids[0]
+  associate_public_ip_address           = false
+  iam_instance_profile                  = aws_iam_instance_profile.test_profile.name
+  vpc_security_group_ids                = [aws_security_group.asterisk_ec2_sg.id]
+  user_data                             = base64encode(data.template_file.asterisk.rendered)
+  tags = {
+    Name = "${module.tags.tags.environment}-${var.customer}-asterisk-EC2"
+  } 
+}
 
 data "template_file" "asterisk" {
   template = file("${path.module}/templates/asterisk.tpl") 
@@ -5,7 +27,7 @@ data "template_file" "asterisk" {
       oml_infras_stage          = var.cloud_provider
       aws_region                = var.aws_region
       oml_nic                   = var.instance_nic
-      iam_role_name             = "NULL"
+      iam_role_name             = module.ec2.iam_role_name
       oml_acd_release           = var.oml_acd_branch
       oml_tenant_name           = var.customer
       oml_redis_host            = aws_instance.redis.private_dns
@@ -22,21 +44,7 @@ data "template_file" "asterisk" {
       s3_access_key             = "NULL"
       s3_secret_key             = "NULL"
       s3url                     = "NULL"
-      ast_bucket_name           = "NULL"
+      ast_bucket_name           = split(".", aws_s3_bucket.customer_data.bucket_domain_name)[0]
       nfs_host                  = "NULL"
     }
  }
-
-resource "aws_instance" "asterisk" {
-  ami                                   = data.aws_ami.amazon-linux-2.id
-  instance_type                         = var.ec2_asterisk_size
-  subnet_id                             = data.terraform_remote_state.shared_state.outputs.private_subnet_ids[0]
-  associate_public_ip_address           = false
-  iam_instance_profile                  = aws_iam_instance_profile.test_profile.name
-  user_data                             = base64encode(data.template_file.asterisk.rendered)
-  vpc_security_group_ids                = [aws_security_group.asterisk_ec2_sg.id]
-  tags = {
-    Name = "${module.tags.tags.environment}-${var.customer}-asterisk-EC2"
-  }
-  
-}

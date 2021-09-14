@@ -43,7 +43,7 @@ tenant_bucket_tfstate = "customer-name"
 
 bucket_name = "tenantbucket"
 bucket_acl = "private"
-callrec_storage = "local"
+callrec_storage = "s3-aws"
 
 nfs_host = "NULL"
 

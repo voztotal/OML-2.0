@@ -13,4 +13,4 @@ ec2_size_rtpengine  = "t3.small"
 disk_size_rtpengine    = 40
 rtpengine_rtp_min_port = 7000
 rtpengine_rtp_max_port = 65000
-rtpengine_version      = "5.5.3.1"
+rtpengine_version      = "5.5.12.1"

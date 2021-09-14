@@ -70,18 +70,32 @@ resource "aws_security_group" "asterisk_ec2_sg" {
 
   ingress {
     from_port   = 5160
-    to_port     = 5160
+    to_port     = 5161
     protocol    = "udp"
     cidr_blocks = [data.terraform_remote_state.shared_state.outputs.vpc_cidr_block]
     description = "udp agents"
   }
   ingress {
-    from_port   = 5161
-    to_port     = 5161
+    from_port   = 5162
+    to_port     = 5162
+    protocol    = "udp"
+    cidr_blocks = var.pstn_trunks
+    description = "udp trunks"
+  }
+  ingress {
+    from_port   = 20000
+    to_port     = 30000
     protocol    = "udp"
     cidr_blocks = [data.terraform_remote_state.shared_state.outputs.vpc_cidr_block]
-    description = "udp trunks"
-  }  
+    description = "udp rtpengine"
+  }
+  ingress {
+    from_port   = 40000
+    to_port     = 50000
+    protocol    = "udp"
+    cidr_blocks = var.pstn_trunks
+    description = "udp rtp PSTN"
+  }          
   ingress {
     from_port   = 5038
     to_port     = 5038
@@ -89,7 +103,6 @@ resource "aws_security_group" "asterisk_ec2_sg" {
     cidr_blocks = [data.terraform_remote_state.shared_state.outputs.vpc_cidr_block]
     description = "AMI"
   }
-  
   egress {
     from_port   = 0
     to_port     = 0
@@ -118,7 +131,7 @@ resource "aws_security_group" "kamailio_ec2_sg" {
     from_port   = 14443
     to_port     = 14443
     protocol    = "tcp"
-    cidr_blocks = [data.terraform_remote_state.shared_state.outputs.vpc_cidr_block]
+    cidr_blocks = ["0.0.0.0/0"]
     description = "kamailio SIP WSS"
   }  
   ingress {

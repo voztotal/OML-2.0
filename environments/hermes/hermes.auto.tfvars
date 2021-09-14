@@ -1,17 +1,17 @@
 # Customer variables
 asterisk_ramdisk_size   = "200"
-customer                = "hermetica"
+customer                = "hermes"
 environment             = "prod" //aqui puede ir dev o prod, dependiendo de que tipo es el entorno
-customer_ec2_size       = "t2.medium"
+customer_ec2_size       = "t2.micro"
 ami_user                = "omnileadsami"
 ami_password            = "5_MeO_DMT"
-pg_database             = "hermetica_oml"
-pg_username             = "hermetica_pg"
+pg_database             = "hermes_oml"
+pg_username             = "hermes_pg"
 pg_password             = "admin123"
 django_pass             = "FTS098098ZZZ"
 ebs_volume_size         = 100
 ECCTL                   = "28800"
-omnileads_release       = "develop"
+omnileads_release       = "master"
 pg_rds_size             = "db.t3.micro"
 customer_root_disk_type = "standard"
 customer_root_disk_size = 80
@@ -43,7 +43,7 @@ tenant_bucket_tfstate = "customer-name"
 
 bucket_name = "tenantbucket"
 bucket_acl = "private"
-callrec_storage = "local"
+callrec_storage = "s3-aws"
 
 nfs_host = "NULL"
 
