@@ -34,17 +34,7 @@ wombat_version        = "20.02.1-271"
 ## GENERAL VARS ## GENERAL VARS ## GENERAL VARS
 ## GENERAL VARS ## GENERAL VARS ## GENERAL VARS
 cloud_provider = "aws"
-
-app = "omlapp"
-
-shared_bucket_name = "tfstate-shared"
-tenant_bucket_callrec = "customer-name"
-tenant_bucket_tfstate = "customer-name"
-
-bucket_name = "tenantbucket"
-bucket_acl = "private"
 callrec_storage = "s3-aws"
-
 nfs_host = "NULL"
 
 ## SIZING VARS ## SIZING VARS ## SIZING VARS
@@ -68,26 +58,6 @@ ec2_websocket_size = "t2.micro"
 # PGSQL component digitalocean-cluster size
 pgsql_size = "t2.micro"
 
-## COMPONENETS NAME VARS ## COMPONENETS NAME VARS ## COMPONENETS NAME VARS
-## COMPONENETS NAME VARS ## COMPONENETS NAME VARS ## COMPONENETS NAME VARS
-
-# Don't change this variables !!!!
-# Don't change this variables !!!!
-# Don't change this variables !!!!
-name = "customer-name"
-oml_tenant_name = "customer-name"
-name_rtpengine = "customer-name-rtp"
-name_pgsql = "customer-name-pgsql"
-name_redis = "customer-name-redis"
-name_mariadb = "customer-name-mariadb"
-name_wombat = "customer-name-wombat"
-name_lb = "customer-name-lb"
-name_kamailio = "customer-name-kamailio"
-name_websocket = "customer-name-websocket"
-name_asterisk = "customer-name-asterisk"
-name_haproxy = "customer-name-haproxy"
-name_omlapp = "customer-name"
-omlapp_hostname = "customer-name.sefirot.cloud"
 # OMLapp ec2 private NIC
 omlapp_nginx_port = "443"
 
@@ -105,28 +75,6 @@ oml_ws_branch="ws-27-dev-amazon-linux-compatibilidad"
 oml_nginx_branch="210802.01"
 oml_pgsql_branch="210714.01"
 
-# ********************** Docker deploy
-oml_app_img="latest"
-oml_rtpengine_img="latest"
-oml_redis_img="1.0.3"
-oml_kamailio_img="latest"
-oml_acd_img="latest"
-oml_ws_img="latest"
-oml_nginx_img="develop"
-
-# ********************* OMniLeads App variables
-# Asterisk SIP Trunks allowed ips
-sip_allowed_ip = ["190.19.150.8/32"]
-# Time Zone to apply on Django
-oml_tz = "America/Argentina/Cordoba"
-
-# Session cookie age
-sca = "3600"
-
 reset_admin_pass = "true"
 init_environment = "true"
 
-# Wombat dialer Component vars
-wombat_database = "wombat"
-wombat_database_username = "wombat"
-wombat_database_password = "admin123"

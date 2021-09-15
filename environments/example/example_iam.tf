@@ -1,6 +1,6 @@
 ############################### iam for SSM ################################
 resource "aws_iam_role" "test_role" {
-  name = "test_role"
+  name = "${var.customer}-iamrole"
 
   assume_role_policy = <<EOF
 {
@@ -24,13 +24,13 @@ EOF
 }
 
 resource "aws_iam_policy" "policy" {
-  name        = "test-policy"
+  name        = "${var.customer}-test-policy"
   description = "A test policy"
   policy      = file("${path.module}/templates/ec2_ssm_policy.tpl") 
 }
 
 resource "aws_iam_policy" "policy_s3" {
-  name        = "test-policy-s3"
+  name        = "${var.customer}-test-policy-s3"
   description = "A test policy S3"
   policy      = templatefile("${path.module}/templates/s3_full_access_policy.tpl", {
     astsbc_s3_bucket = aws_s3_bucket.customer_data.arn
@@ -50,12 +50,12 @@ resource "aws_iam_policy_attachment" "s3-attach" {
 }
 
 resource "aws_iam_instance_profile" "test_profile" {
-  name  = "test_profile"
+  name  = "${var.customer}-test_profile"
   roles = [aws_iam_role.test_role.name]
 }
 
 resource "aws_iam_role_policy" "ec2_ssm_management" {
-  name   = "${var.customer}SsmManagement"
+  name   = "${var.customer}-SsmManagement"
   role   = module.ec2.iam_role_id
   policy = templatefile("${path.module}/templates/ec2_ssm_policy.tpl", {})
 }
