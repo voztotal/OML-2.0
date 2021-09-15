@@ -78,9 +78,9 @@ echo "************************ yum install  *************************"
 echo "************************ yum install  *************************"
 case ${oml_infras_stage} in
   aws)
-    yum install -y $SSM_AGENT_URL git
-    yum remove -y python3 python3-pip
-    yum install -y patch libedit-devel libuuid-devel
+    yum install -y $SSM_AGENT_URL 
+    yum remove -y python3 python3-pip 
+    yum install -y patch libedit-devel libuuid-devel git
     yum install -y https://centos.pkgs.org/7/okey-x86_64/hiredis-0.12.1-1.el7.centos.x86_64.rpm.html
     yum install -y http://www6.atomicorp.com/channels/atomic/centos/7/x86_64/RPMS/hiredis-devel-0.12.1-1.el7.art.x86_64.rpm
     amazon-linux-extras install epel

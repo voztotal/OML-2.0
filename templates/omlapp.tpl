@@ -238,28 +238,16 @@ case ${oml_callrec_device} in
     mount -a
     ;;
   s3-aws)
-    echo "Callrec device: S3-AWS \n"
+    echo "Callrec device: S3-DigitalOcean \n"
     yum install -y s3fs-fuse
-    if [ ${aws_region} == "us-east-1" ];then
-      URL_OPTION=""
-    else
-      URL_OPTION="-o url=https://s3-${aws_region}.amazonaws.com"
-    fi
-    S3FS_OPTIONS="${ast_bucket_name} $CALLREC_DIR_DST -o iam_role=${iam_role_name} $URL_OPTION -o umask=0007 -o allow_other -o nonempty -o uid=$(id -u omnileads) -o gid=$(id -g omnileads) -o kernel_cache -o max_background=1000 -o max_stat_cache_size=100000 -o multipart_size=52 -o parallel_count=30 -o multireq_max=30 -o dbglevel=warn"
-    echo "*** Comprobando que se tiene acceso al bucket"
-    BUCKETS_LIST=$(aws s3 ls ${ast_bucket_name})
-    until [ $? -eq 0 ];do
-      >&2  echo "*** No se ha podido acceder al bucket"
-      BUCKETS_LIST=$(aws s3 ls ${ast_bucket_name})
-    done
+    echo "${s3_access_key}:${s3_secret_key} " > ~/.passwd-s3fs
+    chmod 600 ~/.passwd-s3fs
     if [ ! -d $CALLREC_DIR_DST ];then
       mkdir -p $CALLREC_DIR_DST
       chown omnileads.omnileads -R $CALLREC_DIR_DST
     fi
-    echo "*** Se pudo acceder al bucket!, siguiendo"
-    echo "*** Montando bucket ${ast_bucket_name}"
-    $S3FS $S3FS_OPTIONS
-    echo "$S3FS $S3FS_OPTIONS" >> /etc/rc.local
+    echo "${ast_bucket_name} $CALLREC_DIR_DST fuse.s3fs _netdev,allow_other 0 0" >> /etc/fstab
+    mount -a
     ;;
   nfs)
     echo "Callrec device: NFS \n"

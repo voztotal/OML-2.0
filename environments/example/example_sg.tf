@@ -4,20 +4,12 @@ resource "aws_security_group" "tenants_ec2_sg" {
   description = "${module.tags.tags.role} EC2 Instances Service SG"
 
   ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = [data.terraform_remote_state.shared_state.outputs.vpc_cidr_block]
-    description = "Internal SSH"
-  }
-  ingress {
     from_port       = 443
     to_port         = 443
     protocol        = "tcp"
     security_groups = [module.alb.security_group_id]
     description     = "HTTPS between ${var.customer} ALB and ${var.customer} tenant"
   }
-
   egress {
     from_port   = 0
     to_port     = 0
@@ -43,14 +35,6 @@ resource "aws_security_group" "redis_ec2_sg" {
     cidr_blocks = [data.terraform_remote_state.shared_state.outputs.vpc_cidr_block]
     description = "Redis"
   }
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = [data.terraform_remote_state.shared_state.outputs.vpc_cidr_block]
-    description = "Internal SSH"
-  }
-  
   egress {
     from_port   = 0
     to_port     = 0
@@ -83,8 +67,8 @@ resource "aws_security_group" "asterisk_ec2_sg" {
     description = "udp trunks"
   }
   ingress {
-    from_port   = 20000
-    to_port     = 30000
+    from_port   = 40000
+    to_port     = 50000
     protocol    = "udp"
     cidr_blocks = [data.terraform_remote_state.shared_state.outputs.vpc_cidr_block]
     description = "udp rtpengine"
@@ -134,14 +118,6 @@ resource "aws_security_group" "kamailio_ec2_sg" {
     cidr_blocks = ["0.0.0.0/0"]
     description = "kamailio SIP WSS"
   }  
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = [data.terraform_remote_state.shared_state.outputs.vpc_cidr_block]
-    description = "Internal SSH"
-  }
-  
   egress {
     from_port   = 0
     to_port     = 0

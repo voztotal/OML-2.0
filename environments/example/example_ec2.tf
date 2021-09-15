@@ -24,8 +24,8 @@ module "ec2" {
     oml_infras_stage          = var.cloud_provider
     oml_tenant_name           = var.customer
     oml_callrec_device        = var.callrec_storage
-    s3_access_key             = "NULL"
-    s3_secret_key             = "NULL"
+    s3_access_key             = var.s3_access_key
+    s3_secret_key             = var.s3_secret_key
     s3url                     = "NULL"
     s3_bucket_name            = "NULL"
     nfs_host                  = "NULL"
