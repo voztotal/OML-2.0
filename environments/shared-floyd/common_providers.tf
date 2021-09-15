@@ -1,1 +1,0 @@
-../shared/common_providers.tf

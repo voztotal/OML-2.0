@@ -7,13 +7,13 @@ AWS_REGION ?= ${AWS_REGION}
 
 # AWS_SDK_LOAD_CONFIG: to be able to use shared credentials. Refer to:
 # https://docs.aws.amazon.com/sdk-for-go/api/aws/session/
-TF_VARS = cd environments/$(ENV) && AWS_SDK_LOAD_CONFIG=1 DIALER=$(DIALER)
+TF_VARS = cd instances/$(ENV) && AWS_SDK_LOAD_CONFIG=1 DIALER=$(DIALER)
 
 TF_ARGS = $(TARGET)
 
 check-env:
   ifndef ENV
-    $(error ENV is undefined. Use 'ENV=<env>' <env> is any directory under /environments)
+    $(error ENV is undefined. Use 'ENV=<env>' <env> is any directory under /instances)
   endif
 
 all: init plan
@@ -41,7 +41,7 @@ clean:
 	utils/aws_utils.sh undo_links $(ENV)
 
 prereqs:
-	test -d environments/$(ENV)
+	test -d instances/$(ENV)
 	aws --version
 	rake --version
 	$(TF_BIN) -version

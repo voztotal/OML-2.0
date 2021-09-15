@@ -1,1 +1,0 @@
-../example/example_ec2_asterisk.tf

@@ -2,7 +2,7 @@
 
 set -eo pipefail
 PATH=$PATH:~/.local/bin
-ENVS_DIR=environments
+ENVS_DIR=instances
 AWS="/usr/local/bin/aws"
 PTERRAFILE="/usr/local/bin/pterrafile"
 
@@ -20,41 +20,42 @@ prepare_deploy_links() {
   undo_links ${environment}
   cd ${ENVS_DIR}/${environment}/
   if [[ ${environment} == *"shared"* ]]; then
-    ln -s ../shared/*.tf .
-    ln -s ../shared/Terrafile .
+    ln -s ../../environments/shared/*.tf .
+    ln -s ../../environments/shared/Terrafile .
     if [ -f ${environment}.auto.tfvars ]; then
       cp ${environment}.auto.tfvars ${environment}.auto.tfvars.backup
       cp ${environment}.auto.tfvars.backup ${environment}.auto.tfvars
     else
-      ln -s ../shared/shared.auto.tfvars .
+      ln -s ../../environments/shared/shared.auto.tfvars .
     fi
     find . -name 'shared_*' -exec bash -c 'mv $0 ${0/shared/'"${environment}"'}' {} \;
     find . -name 'shared.*' -exec bash -c 'mv $0 ${0/shared/'"${environment}"'}' {} \;
   else
-    ln -s ../example/*.tf .
-    ln -s ../example/Terrafile .
+    ln -s ../../environments/example/*.tf .
+    ln -s ../../environments/example/Terrafile .
     if [ -f ${environment}.auto.tfvars ]; then
       cp ${environment}.auto.tfvars ${environment}.auto.tfvars.backup
       cp ${environment}.auto.tfvars.backup ${environment}.auto.tfvars
     else
-      ln -s ../example/example.auto.tfvars .
+      ln -s ../../environments/example/example.auto.tfvars .
     fi
     find . -name 'example_*' -exec bash -c 'mv $0 ${0/example/'"${environment}"'}' {} \;
     find . -name 'example.*' -exec bash -c 'mv $0 ${0/example/'"${environment}"'}' {} \;
     echo "Editing ${environment}_backend.tf and customer variable in ${environment}.auto.tfvars"
     sed -i "s/example/${environment}/g" ${environment}.auto.tfvars
     if [ "${dialer}" == "yes" ] || [ "${dialer}" == "YES" ]; then
-      ln -s ../example/dialer/*.tf .
+      ln -s ../../environments/example/dialer/*.tf .
       rm -rf ${environment}_locals.tf
     elif [ "${dialer}" == "no" ] || [ "${dialer}" == "NO" ]; then
       rm -rf dialer*
-      if [ ! -f ${environment}_locals.tf ]; then ln -s ../example/example_locals.tf ./${environment}_locals.tf; fi
+      if [ ! -f ${environment}_locals.tf ]; then ln -s ../../environments/example/example_locals.tf ./${environment}_locals.tf; fi
     elif [ "${dialer}" == "" ]; then
       echo "DIALER envar wasn't passed"; exit 1
     else
       echo "Invalid option for DIALER envar, valid options YES/yes or NO/no"; exit 1
     fi
     ln -s ../../common/*.tf .
+    sed -i "s/sharedus/${TF_VAR_shared_env}/" ./${environment}.auto.tfvars
   fi
   if [[ ${environment} == *"shared"* ]]; then
     rm -rf common_remote_state.tf
