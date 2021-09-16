@@ -96,7 +96,7 @@ echo "******************** yum update and install packages ********************"
 
 case ${oml_infras_stage} in
   aws)
-    amazon-linux-extras install epel
+    amazon-linux-extras install -y epel
     yum install -y $SSM_AGENT_URL kernel-devel git
     yum install -y python3-pip patch libedit-devel libuuid-devel
     systemctl start amazon-ssm-agent

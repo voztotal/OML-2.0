@@ -32,9 +32,9 @@ module "ec2" {
     optoml_device             = "NULL"
     pgsql_device              = "NULL"
     oml_nic                   = var.instance_nic
-    oml_acd_host              = aws_instance.asterisk.private_dns
-    oml_kamailio_host         = aws_instance.kamailio.private_dns
-    oml_redis_host            = aws_instance.redis.private_dns
+    oml_acd_host              = "${var.customer}-asterisk.${var.domain_name}"
+    oml_kamailio_host         = "${var.customer}-kamailio.${var.domain_name}"
+    oml_redis_host            = "${var.customer}-redis.${var.domain_name}"
     oml_websocket_host        = "NULL"
     oml_websocket_port        = "NULL"
     oml_extern_ip             = "auto"

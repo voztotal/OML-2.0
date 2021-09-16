@@ -79,7 +79,7 @@ echo "************************ yum install *************************"
 
 case ${oml_infras_stage} in
   aws)
-    amazon-linux-extras install epel
+    amazon-linux-extras install -y epel
     yum install -y $SSM_AGENT_URL 
     yum remove -y python3 python3-pip
     yum install -y patch libedit-devel libuuid-devel git

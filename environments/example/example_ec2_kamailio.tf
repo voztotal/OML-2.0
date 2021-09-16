@@ -5,8 +5,8 @@ data "template_file" "kamailio" {
       oml_nic                   = var.instance_nic
       oml_kamailio_release      = var.oml_kamailio_branch
       oml_rtpengine_host        = data.terraform_remote_state.shared_state.outputs.rtpengine_fqdn
-      oml_redis_host            = aws_instance.redis.private_dns
-      oml_acd_host              = aws_instance.asterisk.private_dns
+      oml_redis_host            = "${var.customer}-redis.${var.domain_name}"
+      oml_acd_host              = "${var.customer}-asterisk.${var.domain_name}"
     }
  }
 

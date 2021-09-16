@@ -129,3 +129,28 @@ resource "aws_security_group" "kamailio_ec2_sg" {
     map("role", "${module.tags.tags.environment}-${var.customer}-kamailio-SG")
   )
 }
+
+
+resource "aws_security_group" "wombat_ec2_sg" {
+  name        = "${module.tags.tags.prefix}-${module.tags.tags.environment}-${var.customer}-wombat-SG"
+  vpc_id      = data.terraform_remote_state.shared_state.*.outputs.vpc_id[0]
+  description = "${module.tags.tags.role} EC2 Instances Service Wombat SG"
+
+  ingress {
+    from_port   = 8080
+    to_port     = 8080
+    protocol    = "tcp"
+    cidr_blocks = [data.terraform_remote_state.shared_state.outputs.vpc_cidr_block]
+    description = "Tomcat http"
+  }  
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  tags = merge(module.tags.tags,
+    map("Name", "${module.tags.tags.environment}-${var.customer}-kamailio-SG"),
+    map("role", "${module.tags.tags.environment}-${var.customer}-kamailio-SG")
+  )
+}

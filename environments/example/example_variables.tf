@@ -23,10 +23,6 @@ variable "environment" {
   description = "The environment type for this customer (prod or dev)"
   type        = "string"
 }
-variable "customer_ec2_size" {
-  description = "The size of rtpengine ec2 instance, check the sizes available in AWS"
-  type        = "string"
-}
 variable "customer_root_disk_size" {
   description = "The disk size of root partition in customer EC2"
   type        = number
