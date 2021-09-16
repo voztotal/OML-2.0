@@ -114,7 +114,7 @@ echo "************************ config and install *************************"
 echo "************************ config and install *************************"
 echo "************************ config and install *************************"
 sed -i "s/asterisk_hostname=/asterisk_hostname=${oml_acd_host}/g" ./inventory
-sed -i "s/kamailio_hostname=/kamailio_hostname=$PRIVATE_IPV4/g" ./inventory
+sed -i "s/kamailio_hostname=/kamailio_hostname=${oml_kamailio_host}/g" ./inventory
 sed -i "s/redis_hostname=/redis_hostname=${oml_redis_host}/g" ./inventory
 sed -i "s/rtpengine_hostname=/rtpengine_hostname=${oml_rtpengine_host}/g" ./inventory
 sed -i "s/shm_size=/shm_size=$KAMAILIO_SHM_SIZE/g" ./inventory

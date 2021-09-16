@@ -3,9 +3,9 @@ GREEN='\033[0;32m'
 RED='\033[0;31m'
 NC='\033[0m' # No Color
 DOCKER=$(which docker)
-printf "$GREEN** [OMniLeads] *********************************** $NC\n"
-printf "$GREEN** [OMniLeads] Script to run terraform using Docker $NC\n"
-printf "$GREEN** [OMniLeads] *********************************** $NC\n"
+printf "$GREEN** [OMniLeads] ************************************** $NC\n"
+printf "$GREEN** [OMniLeads] Script to run terraform using Docker * $NC\n"
+printf "$GREEN** [OMniLeads] ************************************** $NC\n"
 if [ -z $DOCKER ]; then
   printf "$RED** [OMniLeads] Docker was not found, please install it $NC\n"
 fi

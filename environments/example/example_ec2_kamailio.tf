@@ -7,6 +7,7 @@ data "template_file" "kamailio" {
       oml_rtpengine_host        = data.terraform_remote_state.shared_state.outputs.rtpengine_fqdn
       oml_redis_host            = "${var.customer}-redis.${var.domain_name}"
       oml_acd_host              = "${var.customer}-asterisk.${var.domain_name}"
+      oml_kamailio_host         = "${var.customer}-kamailio.${var.domain_name}"
     }
  }
 

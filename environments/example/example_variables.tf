@@ -6,11 +6,6 @@ variable "ami_password" {
   description = "The user for AMI asterisk"
   type        = "string"
 }
-
-variable "asterisk_ramdisk_size" {
-  description = "The size of RAMDISK partition in asterisk customer EC2"
-  type        = number
-}
 variable "aws_region" {
   description = "The AWS region to deploy the customer infra"
   type        = "string"
@@ -65,14 +60,6 @@ variable "pg_username" {
 }
 variable "pg_password" {
   description = "The PG password per client"
-  type        = "string"
-}
-variable "django_pass" {
-  description = "The password of OMniLeads web admin"
-  type        = "string"
-}
-variable "dialer_ec2_size" {
-  description = "The size of dialer ec2 instance, check the sizes available in AWS"
   type        = "string"
 }
 variable "dialer_root_disk_size" {
