@@ -21,8 +21,17 @@ ec2_kamailio_size = "t2.micro"
 # Websocket component ec2 size
 ec2_websocket_size = "t2.micro"
 # PGSQL component digitalocean-cluster size
-pgsql_size = "t2.micro"
+pg_rds_size = "db.t3.micro"
 
+# Braches release to deploy
+oml_app_branch="release-1.17.0"
+oml_rtpengine_branch="rtp-27-dev-amazon-linux-compatibilidad"
+oml_redis_branch="210714.01"
+oml_kamailio_branch="kam-27-dev-amazon-linux-compatibilidad"
+oml_acd_branch="210802.01"
+oml_ws_branch="ws-27-dev-amazon-linux-compatibilidad"
+oml_nginx_branch="210802.01"
+oml_pgsql_branch="210714.01"
 
 # Customer variables
 customer                = "example"
@@ -34,8 +43,6 @@ pg_username             = "example_pg"
 pg_password             = "admin123"
 ebs_volume_size         = 10
 ECCTL                   = "28800"
-omnileads_release       = "master"
-pg_rds_size             = "db.t3.micro"
 customer_root_disk_type = "standard"
 customer_root_disk_size = 20
 SCA                     = "3600"
@@ -56,17 +63,6 @@ wombat_version        = "20.02.1-271"
 ### OMniLeads App vars ### OMniLeads App vars ### OMniLeads App vars
 ### OMniLeads App vars ### OMniLeads App vars ### OMniLeads App vars
 
-# ********************** Classic deploy
-# Braches release to deploy
-oml_app_branch="release-1.17.0"
-oml_rtpengine_branch="rtp-27-dev-amazon-linux-compatibilidad"
-oml_redis_branch="210714.01"
-oml_kamailio_branch="kam-27-dev-amazon-linux-compatibilidad"
-oml_acd_branch="210802.01"
-oml_ws_branch="ws-27-dev-amazon-linux-compatibilidad"
-oml_nginx_branch="210802.01"
-oml_pgsql_branch="210714.01"
-
-reset_admin_pass = "true"
-init_environment = "true"
+#reset_admin_pass = "true"
+init_environment = "false"
 

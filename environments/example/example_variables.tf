@@ -86,10 +86,6 @@ variable "ECCTL" {
   description = "The number of seconds that ephimeral SIP credentials will last"
   type        = "string"
 }
-variable "omnileads_release" {
-  description = "The OML release for this customer"
-  type        = "string"
-}
 variable "omnileads_repository" {
   description = "The OML repository to install for this customer"
   type        = "string"
@@ -145,7 +141,6 @@ variable "oml_ws_branch" {}
 variable "oml_nginx_branch" {}
 variable "oml_pgsql_branch" {}
 
-
 variable "ec2_oml_size" {}
 variable "ec2_asterisk_size" {}
 variable "ec2_rtp_size" {}
@@ -153,9 +148,6 @@ variable "ec2_dialer_size" {}
 variable "ec2_kamailio_size" {}
 variable "ec2_redis_size" {}
 variable "ec2_websocket_size" {}
-#variable "ec2_postgresql_size" {}
-variable "pgsql_size" {}
-#variable "ec2_haproxy_size" {}
 # App # App # App
 
 variable "kamailio_pkg_size" {
