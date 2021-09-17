@@ -67,15 +67,3 @@ module "ec2" {
     map("role", "${module.tags.tags.environment}-${var.customer}-EC2")
   )
 }
-
-module "aws_backup_oml" {
-  source             = "./modules/tf-aws-backup"
-  namespace          = var.customer
-  stage              = module.tags.tags.environment
-  name               = "backups"
-  tags               = module.tags.tags
-  backup_resources   = local.backup_resources
-  schedule           = "cron(0 4 ? * * *)"
-  #cold_storage_after = 15
-  delete_after       = 15
-}

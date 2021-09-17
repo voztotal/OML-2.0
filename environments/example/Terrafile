@@ -28,8 +28,3 @@ terraform-aws-alb:
 terraform-aws-nlb:
   source: "git@gitlab.com:freetech_solutions_terraform/terraform-aws-nlb.git"
   version: "master"
-
-# Backup
-tf-aws-backup:
-  source: "git@gitlab.com:freetech_solutions_terraform/tf-aws-backup.git"
-  version: "master"
