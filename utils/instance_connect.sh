@@ -2,7 +2,7 @@
 
 set -eo pipefail
 PATH=$PATH:~/.local/bin
-ENVS_DIR=environments
+ENVS_DIR=instances
 AWS="/usr/local/bin/aws"
 INSTANCE=$1
 INSTANCE_ID=$($AWS ec2 describe-instances \

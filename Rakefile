@@ -3,12 +3,12 @@ require 'fileutils'
 
 # You may want to change this.
 def modules_path(environment)
-  File.join('environments', environment, 'modules')
+  File.join('hcl_template', environment, 'modules')
 end
 
 # You may want to change this.
 def terrafile_path(environment)
-  File.join('environments', environment, 'Terrafile')
+  File.join('hcl_template', environment, 'Terrafile')
 end
 
 def read_terrafile(environment)
