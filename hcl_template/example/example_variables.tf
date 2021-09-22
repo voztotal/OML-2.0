@@ -58,6 +58,10 @@ variable "dialer_root_disk_size" {
   description = "The disk size of root partition in dialer EC2"
   type        = number
 }
+variable "oml_app_repo_url" {
+  description = "URL for omlapp repository"
+  type        = string
+}
 variable "dialer_user" {
   description = "The username of Wombat Dialer web admin"
   type        = "string"
