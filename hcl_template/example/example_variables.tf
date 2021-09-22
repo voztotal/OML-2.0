@@ -26,14 +26,6 @@ variable "customer_root_disk_type" {
   description = "The disk type of root partition in customer EC2 (can be standard or gp2)"
   type        = "string"
 }
-variable "gitlab_user" {
-  description = "The gitlab user to clone repository with OMniLeads code"
-  type        = "string"
-}
-variable "gitlab_password" {
-  description = "The gitlab password to clone repository with OMniLeads code"
-  type        = "string"
-}
 variable "mysql_database" {
   description = "The name of MYSQL database per client"
   type        = "string"
@@ -84,10 +76,6 @@ variable "ebs_volume_size" {
 }
 variable "ECCTL" {
   description = "The number of seconds that ephimeral SIP credentials will last"
-  type        = "string"
-}
-variable "omnileads_repository" {
-  description = "The OML repository to install for this customer"
   type        = "string"
 }
 variable "owner" {

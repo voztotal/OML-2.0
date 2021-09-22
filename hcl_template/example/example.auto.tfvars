@@ -64,5 +64,5 @@ wombat_version        = "20.02.1-271"
 ### OMniLeads App vars ### OMniLeads App vars ### OMniLeads App vars
 
 #reset_admin_pass = "true"
-init_environment = "false"
+#init_environment = "false"
 
