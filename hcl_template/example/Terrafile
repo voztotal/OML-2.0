@@ -1,30 +1,30 @@
 ---
 # Tfstate
 tfstate:
-  source: "git@gitlab.com:freetech_solutions_terraform/tfstate.git"
+  source: "https://gitlab.com/freetech_solutions_terraform/tfstate.git"
   version: "master"
 
 # Tags
 tags:
-  source: "git@gitlab.com:freetech_solutions_terraform/tags.git"
+  source: "https://gitlab.com/freetech_solutions_terraform/tags.git"
   version: "master"
 
 # EC2 no ELB
 ec2-no-elb:
-  source: "git@gitlab.com:freetech_solutions_terraform/ec2-no-elb.git"
+  source: "https://gitlab.com/freetech_solutions_terraform/ec2-no-elb.git"
   version: "develop"
 
 # RDS
 tf-aws-rds:
-  source: "git@gitlab.com:freetech_solutions_terraform/tf-aws-rds.git"
+  source: "https://gitlab.com/freetech_solutions_terraform/tf-aws-rds.git"
   version: "master"
 
 # ALB
 terraform-aws-alb:
-  source: "git@gitlab.com:freetech_solutions_terraform/terraform-aws-alb.git"
+  source: "https://gitlab.com/freetech_solutions_terraform/terraform-aws-alb.git"
   version: "master"
 
 # NLB
 terraform-aws-nlb:
-  source: "git@gitlab.com:freetech_solutions_terraform/terraform-aws-nlb.git"
+  source: "https://gitlab.com/freetech_solutions_terraform/terraform-aws-nlb.git"
   version: "master"
