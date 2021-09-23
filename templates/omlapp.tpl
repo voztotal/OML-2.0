@@ -1,6 +1,6 @@
 #!/bin/bash
 
-COMPONENT_REPO=https://gitlab.com/omnileads/ominicontacto.git
+
 SRC=/usr/src
 PATH_DEPLOY=install/onpremise/deploy/ansible
 CALLREC_DIR_DST=/opt/omnileads/asterisk/var/spool/asterisk/monitor
@@ -118,7 +118,7 @@ export PATH="$HOME/.local/bin/:$PATH"
 echo "******************** git clone omnileads repo ********************"
 
 cd $SRC
-git clone --recurse-submodules --branch ${oml_app_release} $COMPONENT_REPO
+git clone --recurse-submodules --branch ${oml_app_release} ${oml_app_repo_url}
 cd ominicontacto
 git submodule update --remote
 

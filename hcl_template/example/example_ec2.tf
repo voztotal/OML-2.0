@@ -4,6 +4,7 @@ module "ec2" {
     ast_bucket_name           = split(".", aws_s3_bucket.customer_data.bucket_domain_name)[0]
     iam_role_name             = module.ec2.iam_role_name
     aws_region                = var.aws_region
+    oml_app_repo_url          = var.oml_app_repo_url
     oml_ami_user              = var.ami_user
     oml_ami_password          = var.ami_password
     oml_pgsql_host            = module.rds_postgres.address

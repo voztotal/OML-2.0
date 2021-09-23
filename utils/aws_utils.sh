@@ -20,35 +20,35 @@ prepare_deploy_links() {
   undo_links ${environment}
   cd ${ENVS_DIR}/${environment}/
   if [[ ${environment} == *"shared"* ]]; then
-    ln -s ../../environments/shared/*.tf .
-    ln -s ../../environments/shared/Terrafile .
+    ln -s ../../hcl_template/shared/*.tf .
+    ln -s ../../hcl_template/shared/Terrafile .
     if [ -f ${environment}.auto.tfvars ]; then
       cp ${environment}.auto.tfvars ${environment}.auto.tfvars.backup
       cp ${environment}.auto.tfvars.backup ${environment}.auto.tfvars
     else
-      ln -s ../../environments/shared/shared.auto.tfvars .
+      ln -s ../../hcl_template/shared/shared.auto.tfvars .
     fi
     find . -name 'shared_*' -exec bash -c 'mv $0 ${0/shared/'"${environment}"'}' {} \;
     find . -name 'shared.*' -exec bash -c 'mv $0 ${0/shared/'"${environment}"'}' {} \;
   else
-    ln -s ../../environments/example/*.tf .
-    ln -s ../../environments/example/Terrafile .
+    ln -s ../../hcl_template/example/*.tf .
+    ln -s ../../hcl_template/example/Terrafile .
     if [ -f ${environment}.auto.tfvars ]; then
       cp ${environment}.auto.tfvars ${environment}.auto.tfvars.backup
       cp ${environment}.auto.tfvars.backup ${environment}.auto.tfvars
     else
-      ln -s ../../environments/example/example.auto.tfvars .
+      ln -s ../../hcl_template/example/example.auto.tfvars .
     fi
     find . -name 'example_*' -exec bash -c 'mv $0 ${0/example/'"${environment}"'}' {} \;
     find . -name 'example.*' -exec bash -c 'mv $0 ${0/example/'"${environment}"'}' {} \;
     echo "Editing ${environment}_backend.tf and customer variable in ${environment}.auto.tfvars"
     sed -i "s/example/${environment}/g" ${environment}.auto.tfvars
     if [ "${dialer}" == "yes" ] || [ "${dialer}" == "YES" ]; then
-      ln -s ../../environments/example/dialer/*.tf .
+      ln -s ../../hcl_template/example/dialer/*.tf .
       rm -rf ${environment}_locals.tf
     elif [ "${dialer}" == "no" ] || [ "${dialer}" == "NO" ]; then
       rm -rf dialer*
-      if [ ! -f ${environment}_locals.tf ]; then ln -s ../../environments/example/example_locals.tf ./${environment}_locals.tf; fi
+      if [ ! -f ${environment}_locals.tf ]; then ln -s ../../hcl_template/example/example_locals.tf ./${environment}_locals.tf; fi
     elif [ "${dialer}" == "" ]; then
       echo "DIALER envar wasn't passed"; exit 1
     else
