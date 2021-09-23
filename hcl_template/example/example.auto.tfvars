@@ -59,10 +59,3 @@ mysql_username        = "root" # no cambiar este username
 mysql_password        = "admin123"
 mysql_rds_size        = "db.t3.micro"
 wombat_version        = "20.02.1-271"
-
-### OMniLeads App vars ### OMniLeads App vars ### OMniLeads App vars
-### OMniLeads App vars ### OMniLeads App vars ### OMniLeads App vars
-
-#reset_admin_pass = "true"
-init_environment = "false"
-
