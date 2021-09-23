@@ -15,7 +15,6 @@ docker pull freetechsolutions/terraform:latest
 printf "$GREEN** [OMniLeads] Run and exec the container $NC\n"
 docker run -it --rm --name terraform \
   --mount type=bind,source="$(pwd)",target=/home/terraform/src \
-  --mount type=bind,source="/home/$(whoami)/.ssh",target=/home/terraform/.ssh \
   --env-file .env \
   --network=host \
   --workdir=/home/terraform/src \
