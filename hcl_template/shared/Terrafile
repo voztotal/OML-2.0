@@ -22,7 +22,7 @@ terraform-aws-nlb:
 # EC2 no ELB
 ec2-no-elb:
   source: "https://gitlab.com/freetech_solutions_terraform/ec2-no-elb.git"
-  version: "develop"
+  version: "master"
 
 # Networking
 networking:
