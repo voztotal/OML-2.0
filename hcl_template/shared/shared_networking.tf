@@ -108,3 +108,8 @@ module "networking" {
     map("role", "${module.tags.tags.environment}-${module.tags.tags.costCenter}-vpc")
   )
 }
+
+resource "aws_key_pair" "ec2" {
+  key_name   = "deployer-key"
+  public_key = var.aws_ssh_key
+}

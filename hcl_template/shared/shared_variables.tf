@@ -81,3 +81,8 @@ variable "rtpengine_version" {
   description = "The rtpengine version to install"
   type        = "string"
 }
+
+variable "aws_ssh_key" {
+  description = "ssh key ec2 instances"
+  type        = "string"
+}

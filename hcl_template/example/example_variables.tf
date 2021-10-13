@@ -121,25 +121,19 @@ variable "callrec_storage" {}
 variable "nfs_host" {}
 
 variable "init_environment" {}
-variable "reset_admin_pass" {}
+variable "reset_admin_password" {}
 
 
 variable "oml_app_branch" {}
 variable "oml_acd_branch" {}
 variable "oml_redis_branch" {}
-variable "oml_rtpengine_branch" {}
 variable "oml_kamailio_branch" {}
-variable "oml_ws_branch" {}
-variable "oml_nginx_branch" {}
-variable "oml_pgsql_branch" {}
 
 variable "ec2_oml_size" {}
 variable "ec2_asterisk_size" {}
-variable "ec2_rtp_size" {}
 variable "ec2_dialer_size" {}
 variable "ec2_kamailio_size" {}
 variable "ec2_redis_size" {}
-variable "ec2_websocket_size" {}
 # App # App # App
 
 variable "kamailio_pkg_size" {
