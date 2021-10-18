@@ -121,7 +121,7 @@ variable "callrec_storage" {}
 variable "nfs_host" {}
 
 variable "init_environment" {}
-variable "reset_admin_password" {}
+variable "reset_admin_pass" {}
 
 
 variable "oml_app_branch" {}

@@ -80,7 +80,7 @@ module "astsbc_ec2" {
 }
 
 resource "aws_s3_bucket" "astsbc_configuration" {
-  bucket = "${module.tags.tags.prefix}-${module.tags.tags.environment}-${module.tags.tags.owner}-${var.customer}-astsbc-configuration"
+  bucket = "${module.tags.tags.prefix}-${module.tags.tags.environment}-${module.tags.tags.owner}-${var.customer}-sbc-configuration"
   acl    = "private"
   tags = merge(module.tags.tags,
     map("Name", "${module.tags.tags.environment}-${var.customer}-astsbc-configuration"),

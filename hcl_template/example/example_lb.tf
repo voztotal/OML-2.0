@@ -5,7 +5,7 @@ data "aws_route53_zone" "selected" {
 module "alb" {
   source                                  = "./modules/terraform-aws-alb"
   stage                                   = module.tags.environment
-  name                                    = "${var.customer}-alb"
+  name                                    = "${var.owner}-${var.customer}-alb"
   vpc_id                                  = data.terraform_remote_state.shared_state.outputs.vpc_id
   subnet_ids                              = data.terraform_remote_state.shared_state.outputs.public_subnet_ids
   http_enabled                            = false
