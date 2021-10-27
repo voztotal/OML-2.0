@@ -19,6 +19,14 @@ ec2_kamailio_size       = "t2.micro"
 # PGSQL component digitalocean-cluster size
 pg_rds_size             = "db.t3.micro"
 
+# Disk Root EBS
+ebs_volume_size         = 10
+customer_root_disk_type = "standard"
+customer_root_disk_size = 20
+asterisk_root_size      = 50
+kamailio_root_disk_size = 25
+dialer_root_disk_size   = 20
+
 # Braches release to deploy
 oml_app_branch          ="release-1.20.0"
 oml_redis_branch        ="211220.01"
@@ -33,7 +41,6 @@ ami_password            = "5_MeO_DMT"
 pg_database             = "example_oml"
 pg_username             = "example_pg"
 pg_password             = "admin123"
-ebs_volume_size         = 10
 ECCTL                   = "28800"
 customer_root_disk_type = "standard"
 customer_root_disk_size = 20
