@@ -36,8 +36,8 @@
 # *********************************** SET ENV VARS **************************************************
 # *********************************** SET ENV VARS **************************************************
 
-KAMAILIO_SHM_SIZE=64
-KAMAILIO_PKG_SIZE=8
+KAMAILIO_SHM_SIZE=1024
+KAMAILIO_PKG_SIZE=512
 
 SSM_AGENT_URL="https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm"
 
