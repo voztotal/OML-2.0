@@ -20,7 +20,7 @@ ec2_kamailio_size       = "t2.micro"
 pg_rds_size             = "db.t3.micro"
 
 # Braches release to deploy
-oml_app_branch          ="release-1.17.0"
+oml_app_branch          ="release-1.18.1"
 oml_redis_branch        ="210714.01"
 oml_kamailio_branch     ="kam-27-dev-amazon-linux-compatibilidad"
 oml_acd_branch          ="210802.01"
