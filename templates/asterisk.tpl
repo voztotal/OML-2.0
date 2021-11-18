@@ -83,21 +83,20 @@ case ${oml_infras_stage} in
     yum install -y $SSM_AGENT_URL 
     yum remove -y python3 python3-pip
     yum install -y patch libedit-devel libuuid-devel git
-    amazon-linux-extras install python3
+    amazon-linux-extras install python3 Zlibselinux-python3
     systemctl start amazon-ssm-agent
     systemctl enable amazon-ssm-agent
     ;;
   *)
     yum update -y
-    yum -y install git python3 python3-pip kernel-devel
+    yum -y install git python3 python3-pip kernel-devel libselinux-python3
     ;;
 esac
-
 
 echo "************************ install ansible *************************"
 echo "************************ install ansible *************************"
 pip3 install pip --upgrade
-pip3 install 'ansible==2.9.2'
+pip3 install --user boto boto3 botocore 'ansible==2.9.2'
 export PATH="$HOME/.local/bin/:$PATH"
 
 echo "************************ clone REPO *************************"
@@ -122,6 +121,27 @@ sed -i "s/postgres_password=my_very_strong_pass/postgres_password=${oml_pgsql_pa
 sed -i "s/ami_user=omnileads/ami_user=${oml_ami_user}/g" ./inventory
 sed -i "s/ami_password=C12H17N2O4P_o98o98/ami_password=${oml_ami_password}/g" ./inventory
 
+
+if [[ "${oml_backup_filename}" != "NULL" ]];then
+sed -i "s%\#backup_file_name=%backup_file_name=${oml_backup_filename}%g" ./inventory
+fi
+if [[ "${s3_access_key}" != "NULL" ]];then
+sed -i "s%\#s3_access_key=%s3_access_key=${s3_access_key}%g" ./inventory
+fi
+if [[ "${s3_secret_key}" != "NULL" ]];then
+sed -i "s%\#s3_secret_key=%s3_secret_key=${s3_secret_key}%g" ./inventory
+fi
+if [[ "${ast_bucket_name}" != "NULL" ]];then
+sed -i "s%\#backup_bucket_name=%backup_bucket_name=${ast_bucket_name}%g" ./inventory
+fi
+if [[ "${s3url}" != "NULL" ]];then
+sed -i "s%\#s3url=%s3url=${s3url}%g" ./inventory
+fi
+if [[ "${oml_auto_restore}" != "NULL" ]];then
+sed -i "s/auto_restore=false/auto_restore=${oml_auto_restore}/g" ./inventory
+fi
+
+
 ansible-playbook asterisk.yml -i inventory --extra-vars "asterisk_version=$(cat ../.package_version)"
 
 echo "************************ check if set SSLmode for PGSQL *************************"
@@ -141,27 +161,30 @@ case ${oml_callrec_device} in
     yum install -y s3fs-fuse lsof
     echo "${s3_access_key}:${s3_secret_key} " > ~/.passwd-s3fs
     chmod 600 ~/.passwd-s3fs
-    if [ ! -d $CALLREC_DIR_DST ]; then
+       if [ ! -d $CALLREC_DIR_DST ]; then
       mkdir -p $CALLREC_DIR_DST
       chown -R omnileads. $CALLREC_DIR_DST
     fi
     echo "${ast_bucket_name} $CALLREC_DIR_DST fuse.s3fs _netdev,allow_other,use_path_request_style,url=${s3url} 0 0" >> /etc/fstab
     mount -a
     ;;
-  s3-aws)
-    echo "s3 callrec device \n"
-    yum install -y s3fs-fuse lsof
-    echo "${s3_access_key}:${s3_secret_key} " > ~/.passwd-s3fs
-    chmod 600 ~/.passwd-s3fs
-    if [ ! -d $CALLREC_DIR_DST ]; then
+  nfs)
+    echo "NFS callrec device \n"
+    yum install -y nfs-utils nfs-utils-lib lsof
+        if [ ! -d $CALLREC_DIR_DST ]; then
       mkdir -p $CALLREC_DIR_DST
       chown -R omnileads. $CALLREC_DIR_DST
     fi
-    echo "${ast_bucket_name} $CALLREC_DIR_DST fuse.s3fs _netdev,allow_other 0 0" >> /etc/fstab
+    echo "${nfs_host}:$CALLREC_DIR_TMP $CALLREC_DIR_DST nfs auto,nofail,noatime,nolock,intr,tcp,actimeo=1800 0 0" >> /etc/fstab
     mount -a
     ;;
   *)
-    echo "callrec on local filesystem \n"
+    echo "[ERROR] you must to define some net FS in order to put there callrec files"
+    echo "[ERROR] you must to define some net FS in order to put there callrec files"
+    echo "[ERROR] you must to define some net FS in order to put there callrec files"
+    echo "[ERROR] you must to define some net FS in order to put there callrec files"
+    echo "[ERROR] you must to define some net FS in order to put there callrec files"
+    exit 0
     ;;
  esac
 
@@ -214,5 +237,3 @@ openssl-devel git gcc autoconf automake -y
 cd $SRC && git clone https://github.com/irontec/sngrep
 cd sngrep && ./bootstrap.sh && ./configure && make && make install
 ln -s /usr/local/bin/sngrep /usr/bin/sngrep
-
-reboot

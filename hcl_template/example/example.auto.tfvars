@@ -51,3 +51,14 @@ mysql_username          = "root" # no cambiar este username
 mysql_password          = "admin123"
 mysql_rds_size          = "db.t3.micro"
 wombat_version          = "20.02.1-271"
+
+# Backup/Restore params
+oml_auto_restore        = "false"
+oml_app_backup_path     = "/opt/omnileads/backup"
+oml_app_backup_filename = "NULL"
+oml_acd_backup_filename = "NULL"
+
+
+# Kamailio tweeks 
+kamailio_shm_size       = "256"
+kamailio_pkg_size       = "32"

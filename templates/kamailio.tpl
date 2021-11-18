@@ -84,13 +84,13 @@ case ${oml_infras_stage} in
     yum install -y https://centos.pkgs.org/7/okey-x86_64/hiredis-0.12.1-1.el7.centos.x86_64.rpm.html
     yum install -y http://www6.atomicorp.com/channels/atomic/centos/7/x86_64/RPMS/hiredis-devel-0.12.1-1.el7.art.x86_64.rpm
     amazon-linux-extras install epel
-    amazon-linux-extras install python3
+    amazon-linux-extras install python3 libselinux-python3
     systemctl start amazon-ssm-agent
     systemctl enable amazon-ssm-agent
     ;;
   *)
     yum update -y
-    yum -y install git python3 python3-pip
+    yum -y install git python3 python3-pip libselinux-python3
     ;;
 esac
 
@@ -98,7 +98,7 @@ echo "************************ install ansible *************************"
 echo "************************ install ansible *************************"
 echo "************************ install ansible *************************"
 pip3 install pip --upgrade
-pip3 install 'ansible==2.9.2'
+pip3 install --user boto boto3 botocore 'ansible==2.9.2'
 export PATH="$HOME/.local/bin/:$PATH"
 
 echo "************************ clone REPO *************************"
@@ -117,8 +117,8 @@ sed -i "s/asterisk_hostname=/asterisk_hostname=${oml_acd_host}/g" ./inventory
 sed -i "s/kamailio_hostname=/kamailio_hostname=${oml_kamailio_host}/g" ./inventory
 sed -i "s/redis_hostname=/redis_hostname=${oml_redis_host}/g" ./inventory
 sed -i "s/rtpengine_hostname=/rtpengine_hostname=${oml_rtpengine_host}/g" ./inventory
-sed -i "s/shm_size=/shm_size=$KAMAILIO_SHM_SIZE/g" ./inventory
-sed -i "s/pkg_size=/pkg_size=$KAMAILIO_PKG_SIZE/g" ./inventory
+sed -i "s/shm_size=/shm_size=${oml_kamailio_shm_size}/g" ./inventory
+sed -i "s/pkg_size=/pkg_size=${oml_kamailio_pkg_size}/g" ./inventory
 
 ansible-playbook kamailio.yml -i inventory --extra-vars "repo_location=$(pwd)/.. kamailio_version=$(cat ../.package_version)"
 

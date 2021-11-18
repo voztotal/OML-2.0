@@ -8,6 +8,8 @@ data "template_file" "kamailio" {
       oml_redis_host            = "${var.customer}-redis.${var.domain_name}"
       oml_acd_host              = "${var.customer}-asterisk.${var.domain_name}"
       oml_kamailio_host         = "${var.customer}-kamailio.${var.domain_name}"
+      oml_kamailio_pkg_size     = var.kamailio_pkg_size
+      oml_kamailio_shm_size     = var.kamailio_shm_size
     }
  }
 
