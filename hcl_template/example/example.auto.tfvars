@@ -58,7 +58,10 @@ oml_app_backup_path     = "/opt/omnileads/backup"
 oml_app_backup_filename = "NULL"
 oml_acd_backup_filename = "NULL"
 
-
 # Kamailio tweeks 
 kamailio_shm_size       = "256"
 kamailio_pkg_size       = "32"
+
+init_environment        = "false"
+reset_admin_pass        = "false"
+

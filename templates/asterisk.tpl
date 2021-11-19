@@ -1,6 +1,6 @@
 #!/bin/bash
 
-########################## README ############ README ############# README #########################
+########################## README ############ README ############# README #######################
 ########################## README ############ README ############# README #########################
 # El script first_boot_installer tiene como finalidad desplegar el componente sobre una instancia
 # de linux exclusiva. Las variables que utiliza son "variables de entorno" de la instancia que está
@@ -78,39 +78,42 @@ echo "************************ yum install *************************"
 echo "************************ yum install *************************"
 
 case ${oml_infras_stage} in
-  aws)
-    amazon-linux-extras install -y epel
-    yum install -y $SSM_AGENT_URL 
-    yum remove -y python3 python3-pip
-    yum install -y patch libedit-devel libuuid-devel git
-    amazon-linux-extras install python3 Zlibselinux-python3
-    systemctl start amazon-ssm-agent
-    systemctl enable amazon-ssm-agent
-    ;;
-  *)
-    yum update -y
-    yum -y install git python3 python3-pip kernel-devel libselinux-python3
-    ;;
-esac
+   aws)
+     yum remove -y python3 python3-pip
+     yum install -y $SSM_AGENT_URL 
+     yum install -y patch libedit-devel libuuid-devel git
+     amazon-linux-extras install -y epel
+     amazon-linux-extras install python3 -y
+     systemctl start amazon-ssm-agent
+     ;;
+   *)
+     yum update -y
+     yum -y install git python3 python3-pip kernel-devel libselinux-python3
+     ;;
+ esac
 
-echo "************************ install ansible *************************"
-echo "************************ install ansible *************************"
+# echo "************************ install ansible *************************"
+# echo "************************ install ansible *************************"
 pip3 install pip --upgrade
-pip3 install --user boto boto3 botocore 'ansible==2.9.2'
+pip3 install boto boto3 botocore 'ansible==2.9.9' selinux
 export PATH="$HOME/.local/bin/:$PATH"
 
-echo "************************ clone REPO *************************"
-echo "************************ clone REPO *************************"
-echo "************************ clone REPO *************************"
+# if [[ "${oml_infras_stage}" == "aws" ]];then
+# ln -s /root/.local/lib/python3.6/site-packages/selinux /usr/lib64/python3.6/site-packages/
+# fi
+
+# echo "************************ clone REPO *************************"
+# echo "************************ clone REPO *************************"
+# echo "************************ clone REPO *************************"
 cd $SRC
 git clone $COMPONENT_REPO
 cd omlacd
 git checkout ${oml_acd_release}
 cd deploy
 
-echo "******************************************* config and install *****************************************"
-echo "******************************************* config and install *****************************************"
-echo "******************************************* config and install *****************************************"
+# echo "******************************************* config and install *****************************************"
+# echo "******************************************* config and install *****************************************"
+# echo "******************************************* config and install *****************************************"
 sed -i "s/omnileads_hostname=omnileads/omnileads_hostname=${oml_app_host}/g" ./inventory
 sed -i "s/redis_hostname=redis/redis_hostname=${oml_redis_host}/g" ./inventory
 sed -i "s/postgres_hostname=postgres/postgres_hostname=${oml_pgsql_host}/g" ./inventory
@@ -140,7 +143,6 @@ fi
 if [[ "${oml_auto_restore}" != "NULL" ]];then
 sed -i "s/auto_restore=false/auto_restore=${oml_auto_restore}/g" ./inventory
 fi
-
 
 ansible-playbook asterisk.yml -i inventory --extra-vars "asterisk_version=$(cat ../.package_version)"
 
