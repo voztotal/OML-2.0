@@ -96,11 +96,12 @@ echo "******************** yum update and install packages ********************"
 
 case ${oml_infras_stage} in
   aws)
+    yum remove -y python3 python3-pip
+    yum install -y $SSM_AGENT_URL 
+    yum install -y patch libedit-devel libuuid-devel git
     amazon-linux-extras install -y epel
-    yum install -y $SSM_AGENT_URL kernel-devel git
-    yum install -y python3-pip patch libedit-devel libuuid-devel
+    amazon-linux-extras install python3 -y
     systemctl start amazon-ssm-agent
-    systemctl enable amazon-ssm-agent
     ;;
   *)
     yum update -y
@@ -109,11 +110,13 @@ case ${oml_infras_stage} in
 esac
 
 echo "******************** Ansible installation ********************"
-
-sleep 5
-pip3 install --upgrade pip
-pip3 install --user 'ansible==2.9.2'
+pip3 install pip --upgrade
+pip3 install boto boto3 botocore 'ansible==2.9.9' selinux
 export PATH="$HOME/.local/bin/:$PATH"
+
+# if [[ "${oml_infras_stage}" == "aws" ]];then
+# ln -s /root/.local/lib/python3.6/site-packages/selinux /usr/lib64/python3.6/site-packages/
+# fi
 
 echo "******************** git clone omnileads repo ********************"
 
@@ -213,6 +216,25 @@ if [[ "${oml_app_login_fail_limit}" != "NULL" ]];then
 fi
 if [[ "${oml_app_reset_admin_pass}" == "true" ]];then
   sed -i "s/reset_admin_password=false/reset_admin_password=true/g" $PATH_DEPLOY/inventory
+fi
+
+if [[ "${oml_backup_filename}" != "NULL" ]];then
+sed -i "s%\#backup_file_name=%backup_file_name=${oml_backup_filename}%g" $PATH_DEPLOY/inventory
+fi
+if [[ "${s3_access_key}" != "NULL" ]];then
+sed -i "s%\#s3_access_key=%s3_access_key=${s3_access_key}%g" $PATH_DEPLOY/inventory
+fi
+if [[ "${s3_secret_key}" != "NULL" ]];then
+sed -i "s%\#s3_secret_key=%s3_secret_key=${s3_secret_key}%g" $PATH_DEPLOY/inventory
+fi
+if [[ "${ast_bucket_name}" != "NULL" ]];then
+sed -i "s%\#backup_bucket_name=%backup_bucket_name=${ast_bucket_name}%g" $PATH_DEPLOY/inventory
+fi
+if [[ "${s3url}" != "NULL" ]];then
+sed -i "s%\#s3url=%s3url=${s3url}%g" $PATH_DEPLOY/inventory
+fi
+if [[ "${oml_auto_restore}" != "NULL" ]];then
+sed -i "s/auto_restore=false/auto_restore=${oml_auto_restore}/g" $PATH_DEPLOY/inventory
 fi
 
 sleep 35

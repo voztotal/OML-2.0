@@ -92,8 +92,8 @@ case ${oml_infras_stage} in
      ;;
  esac
 
-# echo "************************ install ansible *************************"
-# echo "************************ install ansible *************************"
+echo "************************ install ansible *************************"
+echo "************************ install ansible *************************"
 pip3 install pip --upgrade
 pip3 install boto boto3 botocore 'ansible==2.9.9' selinux
 export PATH="$HOME/.local/bin/:$PATH"
@@ -102,18 +102,18 @@ export PATH="$HOME/.local/bin/:$PATH"
 # ln -s /root/.local/lib/python3.6/site-packages/selinux /usr/lib64/python3.6/site-packages/
 # fi
 
-# echo "************************ clone REPO *************************"
-# echo "************************ clone REPO *************************"
-# echo "************************ clone REPO *************************"
+echo "************************ clone REPO *************************"
+echo "************************ clone REPO *************************"
+echo "************************ clone REPO *************************"
 cd $SRC
 git clone $COMPONENT_REPO
 cd omlacd
 git checkout ${oml_acd_release}
 cd deploy
 
-# echo "******************************************* config and install *****************************************"
-# echo "******************************************* config and install *****************************************"
-# echo "******************************************* config and install *****************************************"
+echo "******************************************* config and install *****************************************"
+echo "******************************************* config and install *****************************************"
+echo "******************************************* config and install *****************************************"
 sed -i "s/omnileads_hostname=omnileads/omnileads_hostname=${oml_app_host}/g" ./inventory
 sed -i "s/redis_hostname=redis/redis_hostname=${oml_redis_host}/g" ./inventory
 sed -i "s/postgres_hostname=postgres/postgres_hostname=${oml_pgsql_host}/g" ./inventory
@@ -170,6 +170,18 @@ case ${oml_callrec_device} in
     echo "${ast_bucket_name} $CALLREC_DIR_DST fuse.s3fs _netdev,allow_other,use_path_request_style,url=${s3url} 0 0" >> /etc/fstab
     mount -a
     ;;
+  s3-aws)
+    echo "s3 callrec device \n"
+    yum install -y s3fs-fuse lsof
+    echo "${s3_access_key}:${s3_secret_key} " > ~/.passwd-s3fs
+    chmod 600 ~/.passwd-s3fs
+    if [ ! -d $CALLREC_DIR_DST ]; then
+      mkdir -p $CALLREC_DIR_DST
+      chown -R omnileads. $CALLREC_DIR_DST
+    fi
+    echo "${ast_bucket_name} $CALLREC_DIR_DST fuse.s3fs _netdev,allow_other 0 0" >> /etc/fstab
+    mount -a
+    ;;    
   nfs)
     echo "NFS callrec device \n"
     yum install -y nfs-utils nfs-utils-lib lsof
@@ -188,10 +200,10 @@ case ${oml_callrec_device} in
     echo "[ERROR] you must to define some net FS in order to put there callrec files"
     exit 0
     ;;
- esac
+esac
 
-echo "**************************** write callrec files move script ******************************"
-echo "**************************** write callrec files move script ******************************"
+echo "**************************** write callrec files move script *****************************"
+echo "**************************** write callrec files move script *****************************"
 cat > /opt/omnileads/mover_audios.sh <<EOF
 #!/bin/bash
 
