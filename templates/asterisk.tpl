@@ -87,13 +87,13 @@ case ${oml_infras_stage} in
      systemctl start amazon-ssm-agent
      ;;
    *)
-     yum update -y
-     yum -y install git python3 python3-pip kernel-devel libselinux-python3
+     #yum update -y
+     yum -y install epel-release git python3 python3-pip libselinux-python3
      ;;
  esac
 
-echo "************************ install ansible *************************"
-echo "************************ install ansible *************************"
+# echo "************************ install ansible *************************"
+# echo "************************ install ansible *************************"
 pip3 install pip --upgrade
 pip3 install boto boto3 botocore 'ansible==2.9.9' selinux
 export PATH="$HOME/.local/bin/:$PATH"
@@ -102,18 +102,18 @@ export PATH="$HOME/.local/bin/:$PATH"
 # ln -s /root/.local/lib/python3.6/site-packages/selinux /usr/lib64/python3.6/site-packages/
 # fi
 
-echo "************************ clone REPO *************************"
-echo "************************ clone REPO *************************"
-echo "************************ clone REPO *************************"
+# echo "************************ clone REPO *************************"
+# echo "************************ clone REPO *************************"
+# echo "************************ clone REPO *************************"
 cd $SRC
 git clone $COMPONENT_REPO
 cd omlacd
 git checkout ${oml_acd_release}
 cd deploy
 
-echo "******************************************* config and install *****************************************"
-echo "******************************************* config and install *****************************************"
-echo "******************************************* config and install *****************************************"
+# echo "******************************************* config and install *****************************************"
+# echo "******************************************* config and install *****************************************"
+# echo "******************************************* config and install *****************************************"
 sed -i "s/omnileads_hostname=omnileads/omnileads_hostname=${oml_app_host}/g" ./inventory
 sed -i "s/redis_hostname=redis/redis_hostname=${oml_redis_host}/g" ./inventory
 sed -i "s/postgres_hostname=postgres/postgres_hostname=${oml_pgsql_host}/g" ./inventory
@@ -202,8 +202,8 @@ case ${oml_callrec_device} in
     ;;
 esac
 
-echo "**************************** write callrec files move script *****************************"
-echo "**************************** write callrec files move script *****************************"
+echo "**************************** write callrec files move script ******************************"
+echo "**************************** write callrec files move script ******************************"
 cat > /opt/omnileads/mover_audios.sh <<EOF
 #!/bin/bash
 

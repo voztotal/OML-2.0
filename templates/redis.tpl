@@ -28,8 +28,6 @@
 #export oml_redis_release=210624.01
 # *********************************** SET ENV VARS **************************************************
 
-SSM_AGENT_URL="https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm"
-
 SRC=/usr/src
 COMPONENT_REPO=https://gitlab.com/omnileads/omlredis.git
 REDIS_PORT=6379
@@ -37,6 +35,11 @@ REDIS_PORT=6379
 echo "******************** IPV4 address config ***************************"
 echo "******************** IPV4 address config ***************************"
 case ${oml_infras_stage} in
+  aws)
+    echo -n "AWS"
+    PRIVATE_IPV4=$(ip addr show ${oml_nic} | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
+    PUBLIC_IPV4=$(curl checkip.amazonaws.com)
+    ;;    
   digitalocean)
     echo -n "DigitalOcean"
     PUBLIC_IPV4=$(curl -s http://169.254.169.254/metadata/v1/interfaces/public/0/ipv4/address)
@@ -51,11 +54,6 @@ case ${oml_infras_stage} in
     echo -n "Onpremise CentOS7 Minimal"
     PRIVATE_IPV4=$(ip addr show ${oml_nic} | grep inet |grep -v inet6 | awk '{print $2}' | cut -d/ -f1)
     ;;
-  aws)
-    echo -n "AWS"
-    PRIVATE_IPV4=$(ip addr show ${oml_nic} | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
-    PUBLIC_IPV4=$(curl checkip.amazonaws.com)
-    ;;    
   *)
     echo -n "you must to declare STAGE variable"
     ;;
@@ -71,19 +69,8 @@ systemctl stop firewalld > /dev/null 2>&1
 
 echo "************************ yum install  *************************"
 echo "************************ yum install  *************************"
-case ${oml_infras_stage} in
-  aws)
-    amazon-linux-extras install -y epel
-    yum install -y $SSM_AGENT_URL
-    yum install -y git python3-pip patch libedit-devel libuuid-devel
-    systemctl start amazon-ssm-agent
-    systemctl enable amazon-ssm-agent
-    ;;
-  *)
-    yum update -y
-    yum -y install git python3 python3-pip kernel-devel
-    ;;
-esac
+#yum update -y 
+yum install -y python3 python3-pip epel-release git libselinux-python3
 
 echo "************************ install ansible *************************"
 echo "************************ install ansible *************************"
@@ -109,4 +96,6 @@ ansible-playbook redis.yml -i inventory --extra-vars "redis_version=$(cat ../.re
 sed -i "s/#bind/bind $PRIVATE_IPV4/g" /etc/redis.conf
 sed -i "s/port 6379/port $REDIS_PORT/g" /etc/redis.conf
 
+echo "************************ Remove source dirs  *************************"
+echo "************************ Remove source dirs  *************************"
 systemctl restart redis

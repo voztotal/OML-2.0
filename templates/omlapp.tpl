@@ -1,7 +1,5 @@
 #!/bin/bash
 
-
-
 COMPONENT_REPO=https://gitlab.com/omnileads/ominicontacto.git
 SRC=/usr/src
 PATH_DEPLOY=install/onpremise/deploy/ansible
@@ -14,6 +12,8 @@ if [[ ${oml_callrec_device} == "disk" ]];then
   CALLREC_BLOCK_DEVICE=/dev/disk/by-label/callrec-${oml_tenant_name}
 fi
 
+echo "******************** OML RELEASE = ${oml_app_release} ********************"
+echo "******************** OML RELEASE = ${oml_app_release} ********************"
 echo "******************** OML RELEASE = ${oml_app_release} ********************"
 
 sleep 5
