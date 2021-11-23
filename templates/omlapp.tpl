@@ -1,6 +1,8 @@
 #!/bin/bash
 
 
+
+COMPONENT_REPO=https://gitlab.com/omnileads/ominicontacto.git
 SRC=/usr/src
 PATH_DEPLOY=install/onpremise/deploy/ansible
 CALLREC_DIR_DST=/opt/omnileads/asterisk/var/spool/asterisk/monitor
@@ -14,7 +16,7 @@ fi
 
 echo "******************** OML RELEASE = ${oml_app_release} ********************"
 
-sleep 20
+sleep 5
 
 echo "******************** block_device mount ********************"
 
@@ -110,13 +112,10 @@ case ${oml_infras_stage} in
 esac
 
 echo "******************** Ansible installation ********************"
+
 pip3 install pip --upgrade
 pip3 install boto boto3 botocore 'ansible==2.9.9' selinux
 export PATH="$HOME/.local/bin/:$PATH"
-
-# if [[ "${oml_infras_stage}" == "aws" ]];then
-# ln -s /root/.local/lib/python3.6/site-packages/selinux /usr/lib64/python3.6/site-packages/
-# fi
 
 echo "******************** git clone omnileads repo ********************"
 
@@ -237,8 +236,14 @@ if [[ "${oml_auto_restore}" != "NULL" ]];then
 sed -i "s/auto_restore=false/auto_restore=${oml_auto_restore}/g" $PATH_DEPLOY/inventory
 fi
 
-sleep 35
+# User certs verification *******
 
+if [ -f $PATH_CERTS/key.pem ] && [ -f $PATH_CERTS/cert.pem ];then
+        cp $PATH_CERTS/key.pem $SRC/ominicontacto/install/onpremise/deploy/ansible/certs
+        cp $PATH_CERTS/cert.pem $SRC/ominicontacto/install/onpremise/deploy/ansible/certs
+fi
+
+sleep 4
 echo "******************** deploy.sh execution ********************"
 
 cd $PATH_DEPLOY
@@ -292,7 +297,7 @@ case ${oml_callrec_device} in
     ;;
  esac
 
-sleep 30
+sleep 10
 
 echo "******************** Exec task if RTP run AIO ********************"
 
