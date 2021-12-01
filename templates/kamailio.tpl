@@ -20,7 +20,7 @@
 # *********************************** SET ENV VARS **************************************************
 
 # The infrastructure environment:
-# onpremise | digitalocean | linode | vultr
+# onpremise | digitalocean | linode | vultr | aws
 #export oml_infras_stage=onpremise
 
 # Set your net interfaces, you must have at least a PRIVATE_NIC
@@ -33,13 +33,10 @@
 #export oml_acd_host=
 #export oml_rtpengine_host=
 
+#export oml_kamailio_shm_size=64
+#export oml_kamailio_pkg_size=8
 # *********************************** SET ENV VARS **************************************************
 # *********************************** SET ENV VARS **************************************************
-
-KAMAILIO_SHM_SIZE=1024
-KAMAILIO_PKG_SIZE=512
-
-SSM_AGENT_URL="https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm"
 
 SRC=/usr/src
 COMPONENT_REPO=https://gitlab.com/omnileads/omlkamailio.git
@@ -47,6 +44,10 @@ COMPONENT_REPO=https://gitlab.com/omnileads/omlkamailio.git
 echo "******************** IPV4 address config ***************************"
 echo "******************** IPV4 address config ***************************"
 case ${oml_infras_stage} in
+  aws)
+    echo -n "AWS"
+    PRIVATE_IPV4=${oml_kamailio_host}
+    ;;
   digitalocean)
     echo -n "DigitalOcean"
     PRIVATE_IPV4=$(curl -s http://169.254.169.254/metadata/v1/interfaces/private/0/ipv4/address)
@@ -61,7 +62,6 @@ case ${oml_infras_stage} in
     ;;
   *)
     echo -n "you must to declare STAGE variable"
-    PRIVATE_IPV4=$(ip addr show ${oml_nic} | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
     ;;
 esac
 
@@ -76,21 +76,24 @@ systemctl stop firewalld > /dev/null 2>&1
 
 echo "************************ yum install  *************************"
 echo "************************ yum install  *************************"
+
 case ${oml_infras_stage} in
   aws)
+    yum remove -y python3 python3-pip
     yum install -y $SSM_AGENT_URL 
-    yum remove -y python3 python3-pip 
+    yum install -y patch libedit-devel libuuid-devel git
+    amazon-linux-extras install epel
+    amazon-linux-extras install python3
+    systemctl start amazon-ssm-agent
     yum install -y patch libedit-devel libuuid-devel git
     yum install -y https://centos.pkgs.org/7/okey-x86_64/hiredis-0.12.1-1.el7.centos.x86_64.rpm.html
     yum install -y http://www6.atomicorp.com/channels/atomic/centos/7/x86_64/RPMS/hiredis-devel-0.12.1-1.el7.art.x86_64.rpm
-    amazon-linux-extras install epel
-    amazon-linux-extras install python3
     systemctl start amazon-ssm-agent
     systemctl enable amazon-ssm-agent
     ;;
   *)
-    yum update -y
-    yum -y install git python3 python3-pip
+    #yum update -y
+    yum -y install git python3 python3-pip libselinux-python3 
     ;;
 esac
 
@@ -98,7 +101,7 @@ echo "************************ install ansible *************************"
 echo "************************ install ansible *************************"
 echo "************************ install ansible *************************"
 pip3 install pip --upgrade
-pip3 install 'ansible==2.9.2'
+pip3 install boto boto3 botocore 'ansible==2.9.9'
 export PATH="$HOME/.local/bin/:$PATH"
 
 echo "************************ clone REPO *************************"
@@ -114,11 +117,11 @@ echo "************************ config and install *************************"
 echo "************************ config and install *************************"
 echo "************************ config and install *************************"
 sed -i "s/asterisk_hostname=/asterisk_hostname=${oml_acd_host}/g" ./inventory
-sed -i "s/kamailio_hostname=/kamailio_hostname=${oml_kamailio_host}/g" ./inventory
+sed -i "s/kamailio_hostname=/kamailio_hostname=$PRIVATE_IPV4/g" ./inventory
 sed -i "s/redis_hostname=/redis_hostname=${oml_redis_host}/g" ./inventory
 sed -i "s/rtpengine_hostname=/rtpengine_hostname=${oml_rtpengine_host}/g" ./inventory
-sed -i "s/shm_size=/shm_size=$KAMAILIO_SHM_SIZE/g" ./inventory
-sed -i "s/pkg_size=/pkg_size=$KAMAILIO_PKG_SIZE/g" ./inventory
+sed -i "s/shm_size=/shm_size=${oml_kamailio_shm_size}/g" ./inventory
+sed -i "s/pkg_size=/pkg_size=${oml_kamailio_pkg_size}/g" ./inventory
 
 ansible-playbook kamailio.yml -i inventory --extra-vars "repo_location=$(pwd)/.. kamailio_version=$(cat ../.package_version)"
 
@@ -130,3 +133,6 @@ cd $SRC && git clone https://github.com/irontec/sngrep
 cd sngrep && ./bootstrap.sh && ./configure && make && make install
 ln -s /usr/local/bin/sngrep /usr/bin/sngrep
 
+echo "************************ Remove source dirs  *************************"
+echo "************************ Remove source dirs  *************************"
+rm -rf $SRC/omlkamailio

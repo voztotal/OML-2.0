@@ -139,4 +139,15 @@ undo_links() {
   done
 }
 
+retrieve_oml_installers() {
+  local branch=$1
+  if [ ! -d oml_installers ]; then
+    mkdir -p oml_installers
+  fi
+  curl https://gitlab.com/omnileads/ominicontacto/-/raw/${1}/install/onpremise/deploy/ansible/first_boot_installer.tpl?inline=false > oml_installers/omlapp.tpl
+  curl https://gitlab.com/omnileads/omlredis/-/raw/${1}/deploy/first_boot_installer.tpl?inline=false > oml_installers/first_boot_installer.tpl
+  curl https://gitlab.com/omnileads/omlacd/-/raw/${1}/deploy/first_boot_installer.tpl?inline=false > oml_installers/first_boot_installer.tpl
+  curl https://gitlab.com/omnileads/omlkamailio/-/raw/${1}/deploy/first_boot_installer.tpl?inline=false > oml_installers/first_boot_installer.tpl
+}
+
 $@
