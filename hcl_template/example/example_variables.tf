@@ -137,11 +137,10 @@ variable "ec2_redis_size" {}
 # App # App # App
 
 variable "kamailio_pkg_size" {
-  default = "8"
+  default = "16"
 }
-
 variable "kamailio_shm_size" {
-  default = "64"
+  default = "128"
 }
 variable "pstn_trunks" {
   description = "The IP of the PSTN gateways that connect with SBC"
@@ -149,3 +148,10 @@ variable "pstn_trunks" {
 }
 variable  "s3_access_key"{}
 variable  "s3_secret_key" {}
+
+
+variable "oml_app_backup_filename" {}
+variable "oml_acd_backup_filename" {}
+
+variable "oml_backup_path" { default = "" }
+variable "oml_auto_restore" {}
