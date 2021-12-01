@@ -1,4 +1,6 @@
-oml_app_repo_url=https://gitlab.com/omnileads/ominicontacto.git
+#!/bin/bash
+
+#oml_app_repo_url=https://gitlab.com/omnileads/ominicontacto.git
 SRC=/usr/src
 PATH_DEPLOY=install/onpremise/deploy/ansible
 CALLREC_DIR_DST=/opt/omnileads/asterisk/var/spool/asterisk/monitor
@@ -29,7 +31,7 @@ if [[ ${pgsql_device} != "NULL" ]];then
 fi
 
 mount -a
-sleep 10
+sleep 8
 mount
 
 echo "******************** IPV4 address config ********************"
