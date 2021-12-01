@@ -238,10 +238,15 @@ cat > /etc/cron.d/MoverGrabaciones <<EOF
 */1 * * * * omnileads /opt/omnileads/mover_audios.sh
 EOF
 
+if [[ "${oml_auto_restore}" != "NULL" ]];then
+echo "50 23 * * * /opt/omnileads/omlutilities/backup-restore.sh --backup --asterisk --target=/opt/callrec" >> /var/spool/cron/omnileads
+fi
+
 echo "******************** Restart asterisk ***************************"
 echo "******************** Restart asterisk ***************************"
 chown -R omnileads. /opt/omnileads/asterisk
 chown -R omnileads. $CALLREC_DIR_DST
+systemctl enable asterisk
 systemctl start asterisk
 
 echo "********************************** sngrep SIP sniffer install *********************************"

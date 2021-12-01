@@ -1,19 +1,17 @@
-#!/bin/bash
-
-COMPONENT_REPO=https://gitlab.com/omnileads/ominicontacto.git
+oml_app_repo_url=https://gitlab.com/omnileads/ominicontacto.git
 SRC=/usr/src
 PATH_DEPLOY=install/onpremise/deploy/ansible
 CALLREC_DIR_DST=/opt/omnileads/asterisk/var/spool/asterisk/monitor
 SSM_AGENT_URL="https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm"
 S3FS="/bin/s3fs"
+PATH_CERTS="$(cd "$(dirname "$BASH_SOURCE")" &> /dev/null && pwd)/certs"
+
 
 # if callrec device like DISK BLOCK DEVICE
 if [[ ${oml_callrec_device} == "disk" ]];then
   CALLREC_BLOCK_DEVICE=/dev/disk/by-label/callrec-${oml_tenant_name}
 fi
 
-echo "******************** OML RELEASE = ${oml_app_release} ********************"
-echo "******************** OML RELEASE = ${oml_app_release} ********************"
 echo "******************** OML RELEASE = ${oml_app_release} ********************"
 
 sleep 5
@@ -106,15 +104,15 @@ case ${oml_infras_stage} in
     systemctl start amazon-ssm-agent
     ;;
   *)
-    yum update -y
-    yum -y install git python3 python3-pip kernel-devel
+    #yum update -y
+    yum -y install git python3 python3-pip kernel-devel epel-release libselinux-python3
     ;;
 esac
 
 echo "******************** Ansible installation ********************"
 
-pip3 install pip --upgrade
-pip3 install boto boto3 botocore 'ansible==2.9.9' selinux
+pip3 install --upgrade pip
+pip3 install boto boto3 botocore 'ansible==2.9.2'
 export PATH="$HOME/.local/bin/:$PATH"
 
 echo "******************** git clone omnileads repo ********************"
@@ -205,7 +203,7 @@ fi
 sed -i "s%\#TZ=%TZ=${oml_tz}%g" $PATH_DEPLOY/inventory
 
 if [[ "$${oml_app_sca}" != "NULL" ]];then
-  sed -i "s/sca=3600/sca=$${oml_app_sca}/g" $PATH_DEPLOY/inventory
+  sed -i "s/sca=3600/sca=${oml_app_sca}/g" $PATH_DEPLOY/inventory
 fi
 if [[ "${oml_app_ecctl}" != "NULL" ]];then
   sed -i "s/sca=28800/sca=${oml_app_ecctl}/g" $PATH_DEPLOY/inventory
@@ -323,6 +321,11 @@ if [[ "${oml_app_init_env}" == "true" ]];then
   su -c "/opt/omnileads/bin/manage.sh inicializar_entorno" --login omnileads
 fi
 
+if [[ "${oml_auto_restore}" != "NULL" ]];then
+echo "50 23 * * * /opt/omnileads/bin/backup-restore.sh --backup --omniapp --target=/opt/omnileads/asterisk/var/spool/asterisk/monitor" >> /var/spool/cron/omnileads
+fi
+
+
 echo "******************** sngrep SIP sniffer install ********************"
 
 if [[ "${oml_app_install_sngrep}" == "true" ]];then
@@ -332,5 +335,3 @@ if [[ "${oml_app_install_sngrep}" == "true" ]];then
   cd sngrep && ./bootstrap.sh && ./configure && make && make install
   ln -s /usr/local/bin/sngrep /usr/bin/sngrep
 fi
-
-reboot
