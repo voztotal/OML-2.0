@@ -127,27 +127,20 @@ variable "reset_admin_pass" {}
 variable "oml_app_branch" {}
 variable "oml_acd_branch" {}
 variable "oml_redis_branch" {}
-variable "oml_rtpengine_branch" {}
 variable "oml_kamailio_branch" {}
-variable "oml_ws_branch" {}
-variable "oml_nginx_branch" {}
-variable "oml_pgsql_branch" {}
 
 variable "ec2_oml_size" {}
 variable "ec2_asterisk_size" {}
-variable "ec2_rtp_size" {}
 variable "ec2_dialer_size" {}
 variable "ec2_kamailio_size" {}
 variable "ec2_redis_size" {}
-variable "ec2_websocket_size" {}
 # App # App # App
 
 variable "kamailio_pkg_size" {
-  default = "8"
+  default = "16"
 }
-
 variable "kamailio_shm_size" {
-  default = "64"
+  default = "128"
 }
 variable "pstn_trunks" {
   description = "The IP of the PSTN gateways that connect with SBC"
@@ -155,3 +148,10 @@ variable "pstn_trunks" {
 }
 variable  "s3_access_key"{}
 variable  "s3_secret_key" {}
+
+
+variable "oml_app_backup_filename" {}
+variable "oml_acd_backup_filename" {}
+
+variable "oml_backup_path" { default = "" }
+variable "oml_auto_restore" {}

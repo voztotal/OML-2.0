@@ -52,11 +52,6 @@ resource "aws_iam_role_policy" "astsbc_eip_allocation" {
   policy = templatefile("${path.module}/templates/ec2_eip_allocation.tpl", {})
 }
 
-resource "aws_key_pair" "ec2" {
-  key_name   = "deployer-key"
-  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDNVAC8P2ExZZzw0EQB6EJ/anI60VJXCfPYL2Q2pXQDAfNUz55ZeFiWXNvSZtvhjWv9nJIfIWJxNpZibQn8O26pp1PgEUcu5gB8/5qpB6LeRICjpeKBN61z01R+ro3KSSd7qKxFb6IsdymPBdaMB+KCrEbdDCtIHYj15DKBreprLZFmmmJMSR3grSQaW3p7hyS9oDB8KXu3kg5yO9A+jUhvNMAHezxnUWKF1CpmVy1eMcrzCQolCt2OxcJu+TIjSaR7pqgyoQnva0VYvv9bvMvOAMbbazjzHO4dLW4PFwnpvlpxHyj2JmjUmpZZCKQr4biNtS96E5h+mKzoo3OimeTjN8RCsyAwc29suN/0fr0pLiVKtHVUOmOUGQ1whpQrh3js9nXUB9WY2Iyp7KCfNiLTZY4l/z40aJ0HmK39SXX9E5QkpQsdytvCMSudegR9nMrqZHkqxTw0IBwLO+e7pak1HE+tZgDYcmmZmI2bVHpHI3sjdUpvyZKVmpLxhl4XS3k= fpignataro@fpignataro-UX430UNR"
-}
-
 module "astsbc_ec2" {
 
   source                                      = "./modules/ec2-no-elb"
@@ -85,7 +80,7 @@ module "astsbc_ec2" {
 }
 
 resource "aws_s3_bucket" "astsbc_configuration" {
-  bucket = "${module.tags.tags.prefix}-${module.tags.tags.environment}-${module.tags.tags.owner}-${var.customer}-astsbc-configuration"
+  bucket = "${module.tags.tags.prefix}-${module.tags.tags.environment}-${module.tags.tags.owner}-${var.customer}-sbc-configuration"
   acl    = "private"
   tags = merge(module.tags.tags,
     map("Name", "${module.tags.tags.environment}-${var.customer}-astsbc-configuration"),

@@ -40,9 +40,11 @@ module "ec2" {
     oml_websocket_port        = "NULL"
     oml_extern_ip             = "auto"
     oml_app_login_fail_limit  = 10
-    oml_app_init_env          = "true"
-    oml_app_reset_admin_pass  = "true"
-    oml_app_install_sngrep    = "true"
+    oml_app_init_env          = var.init_environment
+    oml_app_reset_admin_pass  = var.reset_admin_pass
+    oml_app_install_sngrep    = "false"
+    oml_backup_filename       = var.oml_app_backup_filename
+    oml_auto_restore          = var.oml_auto_restore
   })
   source                                      = "./modules/ec2-no-elb"
   vpc_id                                      = data.terraform_remote_state.shared_state.outputs.vpc_id

@@ -33,8 +33,9 @@ refresh:
 
 destroy:
 	$(TF_VARS) $(TF_BIN) destroy $(TF_ARGS)
-	#utils/aws_utils.sh delete_s3_bucket $(ENV)
-	#utils/aws_utils.sh undo_links $(ENV)
+
+retrieve_installers:
+	utils/aws_utils.sh retrieve_oml_installers $(BRANCH)
 
 clean:
 	rake remove_modules[$(ENV)]
