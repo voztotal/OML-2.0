@@ -4,6 +4,7 @@ data "template_file" "redis" {
       oml_infras_stage  = var.cloud_provider
       oml_nic           = var.instance_nic
       oml_redis_release = var.oml_redis_branch
+      oml_redis_cpus    = var.oml_redis_cpus
     }
  }
 

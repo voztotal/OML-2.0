@@ -235,6 +235,9 @@ fi
 if [[ "${oml_auto_restore}" != "NULL" ]];then
 sed -i "s/auto_restore=false/auto_restore=${oml_auto_restore}/g" $PATH_DEPLOY/inventory
 fi
+if [[ "${oml_high_load}" != "NULL" ]];then
+sed -i "s/high_load=false/high_load=${oml_high_load}/g" $PATH_DEPLOY/inventory
+fi
 
 # User certs verification *******
 
