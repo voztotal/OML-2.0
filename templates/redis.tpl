@@ -96,6 +96,11 @@ ansible-playbook redis.yml -i inventory --extra-vars "redis_version=$(cat ../.re
 sed -i "s/#bind/bind $PRIVATE_IPV4/g" /etc/redis.conf
 sed -i "s/port 6379/port $REDIS_PORT/g" /etc/redis.conf
 
+if [[ "${oml_redis_cpus}" != "NULL" ]];then
+sed -i "s/# io-threads 4/io-threads $((${oml_redis_cpus} - 2))/g" /etc/redis.conf
+sed -i "s/# io-threads-do-reads no/io-threads-do-reads yes/g" /etc/redis.conf
+fi
+
 echo "************************ Remove source dirs  *************************"
 echo "************************ Remove source dirs  *************************"
 systemctl restart redis

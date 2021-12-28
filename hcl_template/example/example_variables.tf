@@ -155,3 +155,6 @@ variable "oml_acd_backup_filename" {}
 
 variable "oml_backup_path" { default = "" }
 variable "oml_auto_restore" {}
+
+variable "oml_high_load" {}
+variable "oml_redis_cpus" {}
