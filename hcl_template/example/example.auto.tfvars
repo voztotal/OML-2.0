@@ -20,10 +20,10 @@ ec2_kamailio_size       = "t2.micro"
 pg_rds_size             = "db.t3.micro"
 
 # Braches release to deploy
-oml_app_branch          ="release-1.18.1"
-oml_redis_branch        ="210714.01"
-oml_kamailio_branch     ="kam-27-dev-amazon-linux-compatibilidad"
-oml_acd_branch          ="210802.01"
+oml_app_branch          ="pre-release-1.20.0"
+oml_redis_branch        ="redis-58-fix-tunning-para-alta-carga"
+oml_kamailio_branch     ="211220.01"
+oml_acd_branch          ="acd-34-dev-timezone-para-instancia-acd"
 
 # Customer variables
 customer                = "example"
@@ -64,7 +64,5 @@ reset_admin_pass        = "false"
 # Kamailio tweeks 
 kamailio_shm_size       = "256"
 kamailio_pkg_size       = "32"
-# OMLApp tweeks 
+# Hight Load components tweeks 
 oml_high_load           = "NULL"
-# Redis tweeks 
-oml_redis_cpus          = "NULL"

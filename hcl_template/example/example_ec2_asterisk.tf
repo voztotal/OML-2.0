@@ -48,5 +48,6 @@ data "template_file" "asterisk" {
       nfs_host                  = "NULL"
       oml_backup_filename       = var.oml_acd_backup_filename
       oml_auto_restore          = var.oml_auto_restore
+      oml_tz                    = var.TZ
     }
  }
