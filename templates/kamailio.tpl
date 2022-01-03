@@ -127,12 +127,11 @@ ansible-playbook kamailio.yml -i inventory --extra-vars "repo_location=$(pwd)/..
 
 echo "********************************** sngrep SIP sniffer install *********************************"
 echo "********************************** sngrep SIP sniffer install *********************************"
-yum install ncurses-devel make libpcap-devel pcre-devel \
-openssl-devel git gcc autoconf automake -y
+yum install -y ncurses-devel make libpcap-devel pcre-devel openssl-devel git gcc autoconf automake
 cd $SRC && git clone https://github.com/irontec/sngrep
 cd sngrep && ./bootstrap.sh && ./configure && make && make install
 ln -s /usr/local/bin/sngrep /usr/bin/sngrep
 
-echo "************************ Remove source dirs  *************************"
-echo "************************ Remove source dirs  *************************"
-rm -rf $SRC/omlkamailio
+echo "********************************** WA kamailio ban asterisk *********************************"
+sed -i "s/#!define WITH_ANTIFLOOD/##!define WITH_ANTIFLOOD/g" /opt/omnileads/kamailio/etc/kamailio/kamailio.cfg
+
