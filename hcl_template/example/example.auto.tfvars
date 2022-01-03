@@ -20,10 +20,10 @@ ec2_kamailio_size       = "t2.micro"
 pg_rds_size             = "db.t3.micro"
 
 # Braches release to deploy
-oml_app_branch          ="pre-release-1.20.0"
-oml_redis_branch        ="redis-58-fix-tunning-para-alta-carga"
+oml_app_branch          ="release-1.20.0"
+oml_redis_branch        ="211220.01"
 oml_kamailio_branch     ="211220.01"
-oml_acd_branch          ="acd-34-dev-timezone-para-instancia-acd"
+oml_acd_branch          ="211220.01"
 
 # Customer variables
 customer                = "example"
