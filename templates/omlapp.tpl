@@ -235,7 +235,7 @@ fi
 if [[ "${oml_auto_restore}" != "NULL" ]];then
 sed -i "s/auto_restore=false/auto_restore=${oml_auto_restore}/g" $PATH_DEPLOY/inventory
 fi
-if [[ "${oml_high_load}" != "NULL" ]];then
+if [[ "${oml_high_load}" == "true" ]];then
 sed -i "s/high_load=false/high_load=${oml_high_load}/g" $PATH_DEPLOY/inventory
 fi
 
@@ -326,10 +326,15 @@ if [[ "${oml_app_init_env}" == "true" ]];then
   su -c "/opt/omnileads/bin/manage.sh inicializar_entorno" --login omnileads
 fi
 
+echo "********************* Activate cron auto backup over bucket *****************"
 if [[ "${oml_auto_restore}" != "NULL" ]];then
 echo "50 23 * * * /opt/omnileads/bin/backup-restore.sh --backup --omniapp --target=/opt/omnileads/asterisk/var/spool/asterisk/monitor" >> /var/spool/cron/omnileads
 fi
 
+echo "********************* Deactivate cron callrec convert to mp3 *****************"
+if [[ "${oml_acd_host}"  != "NULL" ]];then
+sed -i "s/0 1 \* \* \* source/#0 1 \* \* \* source/g" /var/spool/cron/omnileads
+fi
 
 echo "******************** sngrep SIP sniffer install ********************"
 
@@ -340,3 +345,5 @@ if [[ "${oml_app_install_sngrep}" == "true" ]];then
   cd sngrep && ./bootstrap.sh && ./configure && make && make install
   ln -s /usr/local/bin/sngrep /usr/bin/sngrep
 fi
+
+reboot

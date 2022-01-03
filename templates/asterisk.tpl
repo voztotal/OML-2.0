@@ -1,61 +1,5 @@
 #!/bin/bash
 
-########################## README ############ README ############# README #######################
-########################## README ############ README ############# README #########################
-# El script first_boot_installer tiene como finalidad desplegar el componente sobre una instancia
-# de linux exclusiva. Las variables que utiliza son "variables de entorno" de la instancia que está
-# por lanzar el script como acto seguido al primer boot del sistema operativo.
-# Dichas variables podrán ser provisionadas por un archivo .env (ej: Vagrant) o bien utilizando este
-# script como plantilla de terraform.
-#
-# En el caso de necesitar ejecutar este script manualmente sobre el user_data de una instancia cloud
-# o bien sobre una instancia onpremise a través de una conexión ssh, entonces se deberá copiar
-# esta plantilla hacia un archivo ignorado por git: first_boot_installer.sh para luego sobre
-# dicha copia descomentar las líneas que comienzan con la cadena "export" para posteriormente
-# introducir el valor deseado a cada variable.
-########################## README ############ README ############# README #########################
-########################## README ############ README ############# README #########################
-
-# *********************************** SET ENV VARS **************************************************
-# The infrastructure environment:
-# onpremise | digitalocean | linode | vultr
-#export oml_infras_stage=
-
-# Component gitlab branch
-#export oml_acd_release=
-
-# OMniLeads tenant NAME
-#export oml_tenant_name=
-
-# OMLApp netaddr
-#export oml_app_host=
-# REDIS netaddr
-#export oml_redis_host=
-# POSTGRESQL netaddr and port
-#export oml_pgsql_host=
-#export oml_pgsql_port=
-# POSTGRESQL user, pass & DB params
-#export oml_pgsql_db=
-#export oml_pgsql_user=
-#export oml_pgsql_password=
-# IF PGSQL run on cloud cluster set this to true
-#export oml_pgsql_cloud=NULL
-# AMI conection from omlapp
-#export oml_ami_user=
-#export oml_ami_password=
-# call recordings store params: NULL | s3 | nfs
-#export oml_callrec_device=
-
-# NFS addr when you select NFS like store for callrec
-#export nfs_host=
-
-# S3 params when you select S3 like store for callrec
-#export s3_access_key=
-#export s3_secret_key=
-#export s3url=
-#export s3_bucket_name=
-# *********************************** SET ENV VARS **************************************************
-
 SSM_AGENT_URL="https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm"
 S3FS="/bin/s3fs"
 
@@ -114,6 +58,7 @@ cd deploy
 # echo "******************************************* config and install *****************************************"
 # echo "******************************************* config and install *****************************************"
 # echo "******************************************* config and install *****************************************"
+sed -i "s%\TZ=set_your_timezone_here%TZ=${oml_tz}%g" ./inventory
 sed -i "s/omnileads_hostname=omnileads/omnileads_hostname=${oml_app_host}/g" ./inventory
 sed -i "s/redis_hostname=redis/redis_hostname=${oml_redis_host}/g" ./inventory
 sed -i "s/postgres_hostname=postgres/postgres_hostname=${oml_pgsql_host}/g" ./inventory
@@ -239,8 +184,14 @@ cat > /etc/cron.d/MoverGrabaciones <<EOF
 EOF
 
 if [[ "${oml_auto_restore}" != "NULL" ]];then
-echo "50 23 * * * /opt/omnileads/omlutilities/backup-restore.sh --backup --asterisk --target=/opt/callrec" >> /var/spool/cron/omnileads
+echo "50 23 * * * /opt/omnileads/utils/backup-restore.sh --backup --asterisk --target=/opt/callrec" >> /var/spool/cron/omnileads
 fi
+
+echo "********************* Activate cron callrec convert to mp3 *****************"
+echo "********************* Activate cron callrec convert to mp3 *****************"
+mkdir /opt/omnileads/log && touch /opt/omnileads/log/conversor.log
+chown omnileads.omnileads /opt/omnileads/log/conversor.log
+echo "0 1 * * * source /etc/profile.d/omnileads_envars.sh; /opt/omnileads/utils/conversor.sh 1 0 >> /opt/omnileads/log/conversor.log" >> /var/spool/cron/omnileads
 
 echo "******************** Restart asterisk ***************************"
 echo "******************** Restart asterisk ***************************"
@@ -251,8 +202,8 @@ systemctl start asterisk
 
 echo "********************************** sngrep SIP sniffer install *********************************"
 echo "********************************** sngrep SIP sniffer install *********************************"
-yum install ncurses-devel make libpcap-devel pcre-devel \
-openssl-devel git gcc autoconf automake -y
+yum install -y ncurses-devel make libpcap-devel pcre-devel openssl-devel git gcc autoconf automake
 cd $SRC && git clone https://github.com/irontec/sngrep
 cd sngrep && ./bootstrap.sh && ./configure && make && make install
 ln -s /usr/local/bin/sngrep /usr/bin/sngrep
+
