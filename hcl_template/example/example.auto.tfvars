@@ -8,16 +8,25 @@ instance_nic = "eth0"
 
 # OMLapp component ec2 size
 ec2_oml_size            = "t2.medium"
+customer_root_disk_type = "standard"
+customer_root_disk_size = 20
+ebs_volume_size         = 10
 # Asterisk component ec2 size
 ec2_asterisk_size       = "t2.micro"
+asterisk_root_disk_size = 50
 # REDIS component ec2 size
 ec2_redis_size          = "t2.micro"
 # Wombat dialer component ec2 size
 ec2_dialer_size         = "t2.micro"
+dialer_root_disk_size   = 20
 # Kamailio component ec2 size
 ec2_kamailio_size       = "t2.micro"
-# PGSQL component digitalocean-cluster size
+kamailio_root_disk_size = 25
+# RDS PGSQL cluster size
 pg_rds_size             = "db.t3.micro"
+# RDS MySQL dialer backend SQL 
+mysql_rds_size          = "db.t3.micro"
+
 
 # Braches release to deploy
 oml_app_branch          ="release-1.20.0"
@@ -33,10 +42,7 @@ ami_password            = "5_MeO_DMT"
 pg_database             = "example_oml"
 pg_username             = "example_pg"
 pg_password             = "admin123"
-ebs_volume_size         = 10
 ECCTL                   = "28800"
-customer_root_disk_type = "standard"
-customer_root_disk_size = 20
 SCA                     = "3600"
 shared_env              = "sharedus"
 schedule                = "Agenda"
@@ -45,11 +51,9 @@ TZ                      = "America/Argentina/Cordoba"
 # Wombat Dialer variables used if DIALER=yes if DIALER=no these variables doesn't care
 dialer_user             = "demoadmin"
 dialer_password         = "demo"
-dialer_root_disk_size   = 20
 mysql_database          = "wombat"
 mysql_username          = "root" # no cambiar este username
 mysql_password          = "admin123"
-mysql_rds_size          = "db.t3.micro"
 wombat_version          = "20.02.1-271"
 
 # Backup/Restore params
