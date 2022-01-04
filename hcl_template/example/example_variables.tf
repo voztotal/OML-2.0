@@ -149,7 +149,6 @@ variable "pstn_trunks" {
 variable  "s3_access_key"{}
 variable  "s3_secret_key" {}
 
-
 variable "oml_app_backup_filename" {}
 variable "oml_acd_backup_filename" {}
 
@@ -157,3 +156,7 @@ variable "oml_backup_path" { default = "" }
 variable "oml_auto_restore" {}
 
 variable "oml_high_load" {}
+
+variable "asterisk_root_size" {}
+variable "kamailio_root_size" {}
+
