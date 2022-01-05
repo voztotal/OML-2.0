@@ -1,10 +1,10 @@
 # AstSBC  variables
 astsbc_ami_user         = "astsbcami"
 astsbc_ami_password     = "conqu33st4sami"
-astsbc_version          = "16.12.0"
+astsbc_version          = "16.23.0"
 astsbc_rtp_min_port     = 20000
 astsbc_rtp_max_port     = 60000
-customer                = "sharedcipo"
+customer                = "changemeplease"
 disk_size_astsbc        = 50
 ec2_size_astsbc         = "t3.small"
 
