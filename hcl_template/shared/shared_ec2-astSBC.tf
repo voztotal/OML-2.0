@@ -1,35 +1,3 @@
-# data "aws_ami" "amazon-linux-2" {
-#   most_recent = true
-#   owners = ["amazon"]
-
-#   filter {
-#     name   = "owner-alias"
-#     values = ["amazon"]
-#   }
-
-#   filter {
-#     name   = "name"
-#     values = ["amzn2-ami-hvm-*-x86_64-ebs"]
-#   }
-# }
-
-data "aws_ami" "ubuntu" {
-
-    most_recent = true
-    owners = ["099720109477"]
-
-    filter {
-        name   = "name"
-        values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
-    }
-
-    filter {
-        name = "virtualization-type"
-        values = ["hvm"]
-    }
-
-    
-}
 
 
 resource "aws_iam_role_policy" "astsbc_ec2_ssm_management" {
@@ -54,9 +22,20 @@ resource "aws_iam_role_policy" "astsbc_eip_allocation" {
 
 module "astsbc_ec2" {
 
+  additional_user_data = templatefile("${path.module}/templates/astsbc_install.tpl", {
+    ami_user           = var.astsbc_ami_user
+    ami_password       = var.astsbc_ami_password
+    aws_region         = var.aws_region
+    astsbc_version     = var.astsbc_version
+    astsbc_bucket_name = split(".", aws_s3_bucket.astsbc_configuration.bucket_domain_name)[0]
+    eip_tag_name       = "${module.tags.tags.environment}-${var.customer}-astsbcEIP"
+    rtp_min_port       = var.astsbc_rtp_min_port
+    rtp_max_port       = var.astsbc_rtp_max_port
+    }
+  )
   source                                      = "./modules/ec2-no-elb"
   vpc_id                                      = module.networking.vpc_id
-  launch_config_image_id                      = data.aws_ami.ubuntu.id
+  launch_config_image_id                      = data.aws_ami.amazon-linux-2.id
   launch_config_instance_type                 = var.ec2_size_astsbc
   launch_config_key_name                      = aws_key_pair.ec2.key_name
   launch_config_associate_public_ip_address   = true
@@ -80,7 +59,7 @@ module "astsbc_ec2" {
 }
 
 resource "aws_s3_bucket" "astsbc_configuration" {
-  bucket = "${module.tags.tags.prefix}-${module.tags.tags.environment}-${module.tags.tags.owner}-${var.customer}-sbc-configuration"
+  bucket = "${module.tags.tags.prefix}-${module.tags.tags.environment}-${module.tags.tags.owner}-${var.customer}-astsbc-configuration"
   acl    = "private"
   tags = merge(module.tags.tags,
     map("Name", "${module.tags.tags.environment}-${var.customer}-astsbc-configuration"),

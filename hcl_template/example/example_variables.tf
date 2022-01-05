@@ -157,6 +157,6 @@ variable "oml_auto_restore" {}
 
 variable "oml_high_load" {}
 
-variable "asterisk_root_size" {}
-variable "kamailio_root_size" {}
+variable "asterisk_root_disk_size" {}
+variable "kamailio_root_disk_size" {}
 

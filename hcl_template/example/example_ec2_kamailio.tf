@@ -23,7 +23,7 @@ resource "aws_instance" "kamailio" {
   vpc_security_group_ids                = [aws_security_group.kamailio_ec2_sg.id]
 
   root_block_device {
-    volume_size           = var.kamailio_root_size
+    volume_size           = var.kamailio_root_disk_size
     volume_type           = "gp3"
     delete_on_termination = true
   }

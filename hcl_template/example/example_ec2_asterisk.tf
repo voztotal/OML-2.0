@@ -18,7 +18,7 @@ resource "aws_instance" "asterisk" {
   user_data                             = base64encode(data.template_file.asterisk.rendered)
 
   root_block_device {
-    volume_size           = var.asterisk_root_size
+    volume_size           = var.asterisk_root_disk_size
     volume_type           = "gp3"
     delete_on_termination = true
   }
