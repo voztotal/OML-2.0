@@ -45,6 +45,7 @@ module "ec2" {
     oml_app_install_sngrep    = "false"
     oml_backup_filename       = var.oml_app_backup_filename
     oml_auto_restore          = var.oml_auto_restore
+    oml_high_load             = var.oml_high_load
   })
   source                                      = "./modules/ec2-no-elb"
   vpc_id                                      = data.terraform_remote_state.shared_state.outputs.vpc_id

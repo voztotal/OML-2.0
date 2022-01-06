@@ -30,6 +30,7 @@ prepare_deploy_links() {
     fi
     find . -name 'shared_*' -exec bash -c 'mv $0 ${0/shared/'"${environment}"'}' {} \;
     find . -name 'shared.*' -exec bash -c 'mv $0 ${0/shared/'"${environment}"'}' {} \;
+    sed -i "s/changemeplease/${environment}/g" ${environment}.auto.tfvars
   else
     ln -s ../../hcl_template/example/*.tf .
     ln -s ../../hcl_template/example/Terrafile .

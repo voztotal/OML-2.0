@@ -16,6 +16,13 @@ resource "aws_instance" "asterisk" {
   iam_instance_profile                  = aws_iam_instance_profile.test_profile.name
   vpc_security_group_ids                = [aws_security_group.asterisk_ec2_sg.id]
   user_data                             = base64encode(data.template_file.asterisk.rendered)
+
+  root_block_device {
+    volume_size           = var.asterisk_root_disk_size
+    volume_type           = "gp3"
+    delete_on_termination = true
+  }
+
   tags = {
     Name = "${module.tags.tags.environment}-${var.customer}-asterisk-EC2"
   } 
@@ -48,5 +55,6 @@ data "template_file" "asterisk" {
       nfs_host                  = "NULL"
       oml_backup_filename       = var.oml_acd_backup_filename
       oml_auto_restore          = var.oml_auto_restore
+      oml_tz                    = var.TZ
     }
  }
