@@ -79,12 +79,19 @@ resource "aws_security_group" "astsbc_ec2_sg" {
     description = "SIP between SBC and TENANTS"
   }
   ingress {
-    from_port   = 10000
+    from_port   = 20000
     to_port     = 60000
     protocol    = "udp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = var.pstn_trunks
     description = "RTP between SBC and TENANTS and PSTN"
   }  
+  ingress {
+    from_port   = 20000
+    to_port     = 60000
+    protocol    = "udp"
+    cidr_blocks = ["10.0.0.0/16"]
+    description = "RTP between SBC and TENANTS and PSTN"
+  }    
   egress {
     from_port   = 0
     to_port     = 0

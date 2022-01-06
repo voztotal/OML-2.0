@@ -27,6 +27,7 @@ module "astsbc_ec2" {
     ami_password       = var.astsbc_ami_password
     aws_region         = var.aws_region
     astsbc_version     = var.astsbc_version
+    domain_name        = var.domain_name
     astsbc_bucket_name = split(".", aws_s3_bucket.astsbc_configuration.bucket_domain_name)[0]
     eip_tag_name       = "${module.tags.tags.environment}-${var.customer}-astsbcEIP"
     rtp_min_port       = var.astsbc_rtp_min_port
