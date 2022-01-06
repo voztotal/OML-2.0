@@ -138,6 +138,8 @@ cat > /etc/logrotate.d/asterisk <<EOF
 }
 EOF
 
+sed -i "s/astsbc.fts-cloud.net/astsbc-${customer}.${domain_name}/g" $PREFIX/etc/asterisk/sbc_pjsip_transports.conf
+
 echo "***[astsbc] Habilitando e iniciando asterisk"
 systemctl enable asterisk
 exec service asterisk start
