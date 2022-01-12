@@ -28,7 +28,6 @@ module "ec2" {
     s3_access_key             = var.s3_access_key
     s3_secret_key             = var.s3_secret_key
     s3url                     = "NULL"
-    s3_bucket_name            = "NULL"
     nfs_host                  = "NULL"
     optoml_device             = "NULL"
     pgsql_device              = "NULL"

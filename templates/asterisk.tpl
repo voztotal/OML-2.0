@@ -115,7 +115,8 @@ case ${oml_callrec_device} in
     mount -a
     ;;
   s3-aws)
-    echo "s3 callrec device \n"
+    echo "AWS S3 \n"
+    echo "55 23 * * * source /etc/profile.d/omnileads_envars.sh && aws s3 sync /opt/omnileads/backup s3://${CALLREC_BUCKET}/omlacd-backup" >> /var/spool/cron/omnileads
     ;;    
   nfs)
     echo "NFS callrec device \n"
@@ -131,23 +132,19 @@ case ${oml_callrec_device} in
     echo "[ERROR] you must to define some net FS in order to put there callrec files"
     echo "[ERROR] you must to define some net FS in order to put there callrec files"
     echo "[ERROR] you must to define some net FS in order to put there callrec files"
-    echo "[ERROR] you must to define some net FS in order to put there callrec files"
-    echo "[ERROR] you must to define some net FS in order to put there callrec files"
     exit 0
     ;;
 esac
 
-echo "****************************** add cron-line to trigger the call-recording move script **************************"
-cat > /etc/cron.d/MoverGrabaciones <<EOF
-*/1 * * * * omnileads /opt/omnileads/utils/mover_audios.sh
-EOF
-
-echo "********************* Activate cron callrec convert to mp3 and asterisk backup *****************"
-echo "********************* Activate cron callrec convert to mp3 and asterisk backup *****************"
+echo "********************* Activate cron callrec mv & convert to mp3 and backup *****************"
+echo "********************* Activate cron callrec mv & convert to mp3 and backup *****************"
 mkdir /opt/omnileads/log && touch /opt/omnileads/log/conversor.log
-chown omnileads.omnileads /opt/omnileads/log/conversor.log
-echo "0 1 * * * source /etc/profile.d/omnileads_envars.sh ; /opt/omnileads/utils/conversor.sh 1 3 >> /opt/omnileads/log/conversor.log" >> /var/spool/cron/omnileads
-echo "50 23 * * * source /etc/profile.d/omnileads_envars.sh ; /opt/omnileads/utils/backup-restore.sh --backup --asterisk" >> /var/spool/cron/omnileads
+chown omnileads.omnileads -R /opt/omnileads/log
+
+echo "50 23 * * * source /etc/profile.d/omnileads_envars.sh && /opt/omnileads/utils/backup-restore.sh --backup --asterisk" >> /var/spool/cron/omnileads
+echo "0 1 * * * source /etc/profile.d/omnileads_envars.sh && /opt/omnileads/utils/conversor.sh 1 3 >> /opt/omnileads/log/conversor.log" >> /var/spool/cron/omnileads
+echo "*/1 * * * * omnileads source /etc/profile.d/omnileads_envars.sh && /opt/omnileads/utils/mover_audios.sh" >> /var/spool/cron/omnileads
+
 
 echo "******************** Restart asterisk ***************************"
 echo "******************** Restart asterisk ***************************"
