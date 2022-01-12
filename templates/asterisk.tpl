@@ -137,24 +137,9 @@ case ${oml_callrec_device} in
     ;;
 esac
 
-echo "**************************** write callrec files move script ******************************"
-echo "**************************** write callrec files move script ******************************"
-cat > /opt/omnileads/mover_audios.sh <<EOF
-#!/bin/bash
-
-Ano=\$(date +%Y -d today)
-Mes=\$(date +%m -d today)
-Dia=\$(date +%d -d today)
-
-aws s3 sync /opt/omnileads/asterisk/var/spool/asterisk/monitor/$Ano-$Mes-$Dia s3://${CALLREC_BUCKET}/$Ano-$Mes-$Dia --delete
-EOF
-
-chown -R omnileads.omnileads /opt/omnileads/mover_audios.sh
-chmod +x /opt/omnileads/mover_audios.sh
-
 echo "****************************** add cron-line to trigger the call-recording move script **************************"
 cat > /etc/cron.d/MoverGrabaciones <<EOF
-*/1 * * * * omnileads /opt/omnileads/mover_audios.sh
+*/1 * * * * omnileads /opt/omnileads/utils/mover_audios.sh
 EOF
 
 echo "********************* Activate cron callrec convert to mp3 and asterisk backup *****************"
