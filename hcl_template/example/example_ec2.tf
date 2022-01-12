@@ -1,7 +1,7 @@
 
 module "ec2" {
   additional_user_data = templatefile("${path.module}/templates/omlapp.tpl", {
-    ast_bucket_name           = split(".", aws_s3_bucket.customer_data.bucket_domain_name)[0]
+    s3_bucket_name            = split(".", aws_s3_bucket.customer_data.bucket_domain_name)[0]
     iam_role_name             = module.ec2.iam_role_name
     aws_region                = var.aws_region
     oml_app_repo_url          = var.oml_app_repo_url

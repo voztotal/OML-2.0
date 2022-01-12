@@ -226,8 +226,8 @@ fi
 if [[ "${s3_secret_key}" != "NULL" ]];then
 sed -i "s%\#s3_secret_key=%s3_secret_key=${s3_secret_key}%g" $PATH_DEPLOY/inventory
 fi
-if [[ "${ast_bucket_name}" != "NULL" ]];then
-sed -i "s%\#backup_bucket_name=%backup_bucket_name=${ast_bucket_name}%g" $PATH_DEPLOY/inventory
+if [[ "${s3_bucket_name}" != "NULL" ]];then
+sed -i "s%\#s3_bucket_name=%s3_bucket_name=${s3_bucket_name}%g" $PATH_DEPLOY/inventory
 fi
 if [[ "${s3url}" != "NULL" ]];then
 sed -i "s%\#s3url=%s3url=${s3url}%g" $PATH_DEPLOY/inventory
@@ -264,7 +264,7 @@ case ${oml_callrec_device} in
       mkdir -p $CALLREC_DIR_DST
       chown omnileads.omnileads -R $CALLREC_DIR_DST
     fi
-    echo "${ast_bucket_name} $CALLREC_DIR_DST fuse.s3fs _netdev,allow_other,use_path_request_style,url=${s3url} 0 0" >> /etc/fstab
+    echo "${s3_bucket_name} $CALLREC_DIR_DST fuse.s3fs _netdev,allow_other,use_path_request_style,url=${s3url} 0 0" >> /etc/fstab
     mount -a
     ;;
   s3-aws)
