@@ -268,7 +268,8 @@ case ${oml_callrec_device} in
     mount -a
     ;;
   s3-aws)
-    echo "Callrec device: S3-DigitalOcean \n"
+    echo "AWS S3 \n"
+    echo "55 23 * * * source /etc/profile.d/omnileads_envars.sh && aws s3 sync /opt/omnileads/backup s3://${s3_bucket_name}/omlapp-backup" >> /var/spool/cron/omnileads
     ;;
   nfs)
     echo "Callrec device: NFS \n"
