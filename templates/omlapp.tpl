@@ -269,15 +269,6 @@ case ${oml_callrec_device} in
     ;;
   s3-aws)
     echo "Callrec device: S3-DigitalOcean \n"
-    yum install -y s3fs-fuse
-    echo "${s3_access_key}:${s3_secret_key} " > ~/.passwd-s3fs
-    chmod 600 ~/.passwd-s3fs
-    if [ ! -d $CALLREC_DIR_DST ];then
-      mkdir -p $CALLREC_DIR_DST
-      chown omnileads.omnileads -R $CALLREC_DIR_DST
-    fi
-    echo "${ast_bucket_name} $CALLREC_DIR_DST fuse.s3fs _netdev,allow_other 0 0" >> /etc/fstab
-    mount -a
     ;;
   nfs)
     echo "Callrec device: NFS \n"
@@ -328,7 +319,7 @@ fi
 
 echo "********************* Activate cron auto backup over bucket *****************"
 if [[ "${oml_auto_restore}" != "NULL" ]];then
-echo "50 23 * * * /opt/omnileads/bin/backup-restore.sh --backup --omniapp --target=/opt/omnileads/asterisk/var/spool/asterisk/monitor" >> /var/spool/cron/omnileads
+echo "50 23 * * * source /etc/profile.d/omnileads_envars.sh ; /opt/omnileads/bin/backup-restore.sh --backup --omniapp" >> /var/spool/cron/omnileads
 fi
 
 echo "********************* Deactivate cron callrec convert to mp3 *****************"
@@ -345,5 +336,3 @@ if [[ "${oml_app_install_sngrep}" == "true" ]];then
   cd sngrep && ./bootstrap.sh && ./configure && make && make install
   ln -s /usr/local/bin/sngrep /usr/bin/sngrep
 fi
-
-reboot

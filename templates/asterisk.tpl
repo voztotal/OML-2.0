@@ -8,7 +8,6 @@ COMPONENT_REPO=https://gitlab.com/omnileads/omlacd.git
 COMPONENT_REPO_DIR=omlacd
 
 CALLREC_DIR_TMP=/opt/omnileads/asterisk/var/spool/asterisk/monitor
-CALLREC_DIR_DST=/opt/callrec
 
 echo "************************ disable SElinux *************************"
 echo "************************ disable SElinux *************************"
@@ -117,15 +116,6 @@ case ${oml_callrec_device} in
     ;;
   s3-aws)
     echo "s3 callrec device \n"
-    yum install -y s3fs-fuse lsof
-    echo "${s3_access_key}:${s3_secret_key} " > ~/.passwd-s3fs
-    chmod 600 ~/.passwd-s3fs
-    if [ ! -d $CALLREC_DIR_DST ]; then
-      mkdir -p $CALLREC_DIR_DST
-      chown -R omnileads. $CALLREC_DIR_DST
-    fi
-    echo "${ast_bucket_name} $CALLREC_DIR_DST fuse.s3fs _netdev,allow_other 0 0" >> /etc/fstab
-    mount -a
     ;;    
   nfs)
     echo "NFS callrec device \n"
@@ -152,27 +142,11 @@ echo "**************************** write callrec files move script *************
 cat > /opt/omnileads/mover_audios.sh <<EOF
 #!/bin/bash
 
-# RAMDISK Watcher
-# Revisa el contenido del ram0 y lo pasa a disco duro
-# Inicialización de variables
-
 Ano=\$(date +%Y -d today)
 Mes=\$(date +%m -d today)
 Dia=\$(date +%d -d today)
-Lsof="/sbin/lsof"
-DirectorioFinal=$CALLREC_DIR_DST/\$Ano-\$Mes-\$Dia
 
-if [ ! -d \$DirectorioFinal ];then
-  mkdir -p \$DirectorioFinal
-fi
-
-for Grabacion in \$(ls $CALLREC_DIR_TMP/\$Ano-\$Mes-\$Dia/*.wav);do
-  \$Lsof \$Grabacion &> /dev/null
-  Resultado=\$?
-  if [ \$Resultado -ne 0 ];then
-    mv \$Grabacion \$DirectorioFinal
-  fi
-done
+aws s3 sync /opt/omnileads/asterisk/var/spool/asterisk/monitor/$Ano-$Mes-$Dia s3://${CALLREC_BUCKET}/$Ano-$Mes-$Dia --delete
 EOF
 
 chown -R omnileads.omnileads /opt/omnileads/mover_audios.sh
@@ -183,22 +157,18 @@ cat > /etc/cron.d/MoverGrabaciones <<EOF
 */1 * * * * omnileads /opt/omnileads/mover_audios.sh
 EOF
 
-if [[ "${oml_auto_restore}" != "NULL" ]];then
-echo "50 23 * * * /opt/omnileads/utils/backup-restore.sh --backup --asterisk --target=/opt/callrec" >> /var/spool/cron/omnileads
-fi
-
-echo "********************* Activate cron callrec convert to mp3 *****************"
-echo "********************* Activate cron callrec convert to mp3 *****************"
+echo "********************* Activate cron callrec convert to mp3 and asterisk backup *****************"
+echo "********************* Activate cron callrec convert to mp3 and asterisk backup *****************"
 mkdir /opt/omnileads/log && touch /opt/omnileads/log/conversor.log
 chown omnileads.omnileads /opt/omnileads/log/conversor.log
-echo "0 1 * * * source /etc/profile.d/omnileads_envars.sh; /opt/omnileads/utils/conversor.sh 1 0 >> /opt/omnileads/log/conversor.log" >> /var/spool/cron/omnileads
+echo "0 1 * * * source /etc/profile.d/omnileads_envars.sh ; /opt/omnileads/utils/conversor.sh 1 3 >> /opt/omnileads/log/conversor.log" >> /var/spool/cron/omnileads
+echo "50 23 * * * source /etc/profile.d/omnileads_envars.sh ; /opt/omnileads/utils/backup-restore.sh --backup --asterisk" >> /var/spool/cron/omnileads
 
 echo "******************** Restart asterisk ***************************"
 echo "******************** Restart asterisk ***************************"
 chown -R omnileads. /opt/omnileads/asterisk
-chown -R omnileads. $CALLREC_DIR_DST
 systemctl enable asterisk
-systemctl start asterisk
+systemctl restart asterisk
 
 echo "********************************** sngrep SIP sniffer install *********************************"
 echo "********************************** sngrep SIP sniffer install *********************************"
