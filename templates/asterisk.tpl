@@ -116,7 +116,7 @@ case ${oml_callrec_device} in
     ;;
   s3-aws)
     echo "AWS S3 \n"
-    echo "55 23 * * * source /etc/profile.d/omnileads_envars.sh && aws s3 sync /opt/omnileads/backup s3://${CALLREC_BUCKET}/omlacd-backup" >> /var/spool/cron/omnileads
+    echo "55 23 * * * source /etc/profile.d/omnileads_envars.sh && aws s3 sync /opt/omnileads/backup s3://${s3_bucket_name}/omlacd-backup" >> /var/spool/cron/omnileads
     ;;    
   nfs)
     echo "NFS callrec device \n"
