@@ -143,7 +143,7 @@ chown omnileads.omnileads -R /opt/omnileads/log
 
 echo "50 23 * * * source /etc/profile.d/omnileads_envars.sh && /opt/omnileads/utils/backup-restore.sh --backup --asterisk" >> /var/spool/cron/omnileads
 echo "0 1 * * * source /etc/profile.d/omnileads_envars.sh && /opt/omnileads/utils/conversor.sh 1 3 >> /opt/omnileads/log/conversor.log" >> /var/spool/cron/omnileads
-echo "*/1 * * * * omnileads source /etc/profile.d/omnileads_envars.sh && /opt/omnileads/utils/mover_audios.sh" >> /var/spool/cron/omnileads
+echo "*/1 * * * * source /etc/profile.d/omnileads_envars.sh && /opt/omnileads/utils/mover_audios.sh" >> /var/spool/cron/omnileads
 
 
 echo "******************** Restart asterisk ***************************"
