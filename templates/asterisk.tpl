@@ -149,7 +149,7 @@ echo "*/1 * * * * source /etc/profile.d/omnileads_envars.sh && /opt/omnileads/ut
 
 echo "******************** Restart asterisk ***************************"
 echo "******************** Restart asterisk ***************************"
-chown -R omnileads. /opt/omnileads/asterisk
+chown -R omnileads. /opt/omnileads/
 systemctl enable asterisk
 systemctl restart asterisk
 
