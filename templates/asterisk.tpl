@@ -143,8 +143,11 @@ mkdir /opt/omnileads/log && touch /opt/omnileads/log/conversor.log
 chown omnileads.omnileads -R /opt/omnileads/log
 
 echo "50 23 * * * source /etc/profile.d/omnileads_envars.sh && /opt/omnileads/utils/backup-restore.sh --backup --asterisk" >> /var/spool/cron/omnileads
-echo "0 1 * * * source /etc/profile.d/omnileads_envars.sh && /opt/omnileads/utils/conversor.sh 1 3 >> /opt/omnileads/log/conversor.log" >> /var/spool/cron/omnileads
+echo "0 1 * * * source /etc/profile.d/omnileads_envars.sh && /opt/omnileads/utils/conversor.sh 2 0 >> /opt/omnileads/log/conversor.log" >> /var/spool/cron/omnileads
 echo "*/1 * * * * source /etc/profile.d/omnileads_envars.sh && /opt/omnileads/utils/mover_audios.sh" >> /var/spool/cron/omnileads
+
+touch /etc/cron.d/cleanTmp
+echo "10 0 * * 6 root rm -rf /tmp/*" > /etc/cron.d/cleanTmp
 
 
 echo "******************** Restart asterisk ***************************"
@@ -159,4 +162,3 @@ yum install -y ncurses-devel make libpcap-devel pcre-devel openssl-devel git gcc
 cd $SRC && git clone https://github.com/irontec/sngrep
 cd sngrep && ./bootstrap.sh && ./configure && make && make install
 ln -s /usr/local/bin/sngrep /usr/bin/sngrep
-
