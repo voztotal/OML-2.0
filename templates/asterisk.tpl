@@ -27,11 +27,12 @@ case ${oml_infras_stage} in
      yum install -y patch libedit-devel libuuid-devel git
      amazon-linux-extras install -y epel
      amazon-linux-extras install python3 -y
+     yum install -y lame gsm
      systemctl start amazon-ssm-agent
      ;;
    *)
      #yum update -y
-     yum -y install epel-release git python3 python3-pip libselinux-python3
+     yum -y install epel-release git python3 python3-pip libselinux-python3 lame gsm
      ;;
  esac
 
