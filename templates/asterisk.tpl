@@ -152,6 +152,7 @@ echo "10 0 * * 6 root rm -rf /tmp/*" > /etc/cron.d/cleanTmp
 
 echo "******************** Restart asterisk ***************************"
 echo "******************** Restart asterisk ***************************"
+source /etc/profile.d/omnileads_envars.sh
 chown -R omnileads. /opt/omnileads/
 systemctl enable asterisk
 systemctl restart asterisk
@@ -162,3 +163,4 @@ yum install -y ncurses-devel make libpcap-devel pcre-devel openssl-devel git gcc
 cd $SRC && git clone https://github.com/irontec/sngrep
 cd sngrep && ./bootstrap.sh && ./configure && make && make install
 ln -s /usr/local/bin/sngrep /usr/bin/sngrep
+
