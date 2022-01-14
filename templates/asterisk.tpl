@@ -68,7 +68,7 @@ sed -i "s/postgres_user=omnileads/postgres_user=${oml_pgsql_user}/g" ./inventory
 sed -i "s/postgres_password=my_very_strong_pass/postgres_password=${oml_pgsql_password}/g" ./inventory
 sed -i "s/ami_user=omnileads/ami_user=${oml_ami_user}/g" ./inventory
 sed -i "s/ami_password=C12H17N2O4P_o98o98/ami_password=${oml_ami_password}/g" ./inventory
-
+sed -i "s%\#callrec_device=%callrec_device=${oml_callrec_device}%g" ./inventory
 
 if [[ "${oml_backup_filename}" != "NULL" ]];then
 sed -i "s%\#backup_file_name=%backup_file_name=${oml_backup_filename}%g" ./inventory
@@ -143,7 +143,7 @@ mkdir /opt/omnileads/log && touch /opt/omnileads/log/conversor.log
 chown omnileads.omnileads -R /opt/omnileads/log
 
 echo "50 23 * * * source /etc/profile.d/omnileads_envars.sh && /opt/omnileads/utils/backup-restore.sh --backup --asterisk" >> /var/spool/cron/omnileads
-echo "0 1 * * * source /etc/profile.d/omnileads_envars.sh && /opt/omnileads/utils/conversor.sh 2 0 >> /opt/omnileads/log/conversor.log" >> /var/spool/cron/omnileads
+echo "0 1 * * * source /etc/profile.d/omnileads_envars.sh && /opt/omnileads/utils/conversor.sh 1 0 >> /opt/omnileads/log/conversor.log" >> /var/spool/cron/omnileads
 echo "*/1 * * * * source /etc/profile.d/omnileads_envars.sh && /opt/omnileads/utils/mover_audios.sh" >> /var/spool/cron/omnileads
 
 touch /etc/cron.d/cleanTmp
