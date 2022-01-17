@@ -48,10 +48,7 @@ data "template_file" "asterisk" {
       oml_ami_user              = var.ami_user
       oml_ami_password          = var.ami_password
       oml_callrec_device        = var.callrec_storage
-      s3_access_key             = var.s3_access_key
-      s3_secret_key             = var.s3_secret_key
-      s3url                     = "NULL"
-      ast_bucket_name           = split(".", aws_s3_bucket.customer_data.bucket_domain_name)[0]
+      s3_bucket_name            = split(".", aws_s3_bucket.customer_data.bucket_domain_name)[0]
       nfs_host                  = "NULL"
       oml_backup_filename       = var.oml_acd_backup_filename
       oml_auto_restore          = var.oml_auto_restore
