@@ -8,7 +8,6 @@ COMPONENT_REPO=https://gitlab.com/omnileads/omlacd.git
 COMPONENT_REPO_DIR=omlacd
 
 CALLREC_DIR_TMP=/opt/omnileads/asterisk/var/spool/asterisk/monitor
-CALLREC_DIR_DST=/opt/callrec
 
 echo "************************ disable SElinux *************************"
 echo "************************ disable SElinux *************************"
@@ -21,30 +20,19 @@ systemctl stop firewalld > /dev/null 2>&1
 echo "************************ yum install *************************"
 echo "************************ yum install *************************"
 
-case ${oml_infras_stage} in
-   aws)
-     yum remove -y python3 python3-pip
-     yum install -y $SSM_AGENT_URL 
-     yum install -y patch libedit-devel libuuid-devel git
-     amazon-linux-extras install -y epel
-     amazon-linux-extras install python3 -y
-     systemctl start amazon-ssm-agent
-     ;;
-   *)
-     #yum update -y
-     yum -y install epel-release git python3 python3-pip libselinux-python3
-     ;;
- esac
+yum remove -y python3 python3-pip
+yum install -y $SSM_AGENT_URL 
+yum install -y patch libedit-devel libuuid-devel git
+amazon-linux-extras install -y epel
+amazon-linux-extras install python3 -y
+yum install -y lame gsm
+systemctl start amazon-ssm-agent
 
 # echo "************************ install ansible *************************"
 # echo "************************ install ansible *************************"
 pip3 install pip --upgrade
 pip3 install boto boto3 botocore 'ansible==2.9.9' selinux
 export PATH="$HOME/.local/bin/:$PATH"
-
-# if [[ "${oml_infras_stage}" == "aws" ]];then
-# ln -s /root/.local/lib/python3.6/site-packages/selinux /usr/lib64/python3.6/site-packages/
-# fi
 
 # echo "************************ clone REPO *************************"
 # echo "************************ clone REPO *************************"
@@ -68,22 +56,13 @@ sed -i "s/postgres_user=omnileads/postgres_user=${oml_pgsql_user}/g" ./inventory
 sed -i "s/postgres_password=my_very_strong_pass/postgres_password=${oml_pgsql_password}/g" ./inventory
 sed -i "s/ami_user=omnileads/ami_user=${oml_ami_user}/g" ./inventory
 sed -i "s/ami_password=C12H17N2O4P_o98o98/ami_password=${oml_ami_password}/g" ./inventory
-
+sed -i "s%\#callrec_device=%callrec_device=${oml_callrec_device}%g" ./inventory
 
 if [[ "${oml_backup_filename}" != "NULL" ]];then
 sed -i "s%\#backup_file_name=%backup_file_name=${oml_backup_filename}%g" ./inventory
 fi
-if [[ "${s3_access_key}" != "NULL" ]];then
-sed -i "s%\#s3_access_key=%s3_access_key=${s3_access_key}%g" ./inventory
-fi
-if [[ "${s3_secret_key}" != "NULL" ]];then
-sed -i "s%\#s3_secret_key=%s3_secret_key=${s3_secret_key}%g" ./inventory
-fi
-if [[ "${ast_bucket_name}" != "NULL" ]];then
-sed -i "s%\#backup_bucket_name=%backup_bucket_name=${ast_bucket_name}%g" ./inventory
-fi
-if [[ "${s3url}" != "NULL" ]];then
-sed -i "s%\#s3url=%s3url=${s3url}%g" ./inventory
+if [[ "${s3_bucket_name}" != "NULL" ]];then
+sed -i "s%\#s3_bucket_name=%s3_bucket_name=${s3_bucket_name}%g" ./inventory
 fi
 if [[ "${oml_auto_restore}" != "NULL" ]];then
 sed -i "s/auto_restore=false/auto_restore=${oml_auto_restore}/g" ./inventory
@@ -99,106 +78,27 @@ if [[ "${oml_pgsql_cloud}"  == "true" ]]; then
   echo "SSLMode       = require" >> /etc/odbc.ini
 fi
 
-echo "************************ block_device mount *************************"
-echo "************************ block_device mount *************************"
 
-case ${oml_callrec_device} in
-  s3-do)
-    echo "s3 callrec device \n"
-    yum install -y s3fs-fuse lsof
-    echo "${s3_access_key}:${s3_secret_key} " > ~/.passwd-s3fs
-    chmod 600 ~/.passwd-s3fs
-       if [ ! -d $CALLREC_DIR_DST ]; then
-      mkdir -p $CALLREC_DIR_DST
-      chown -R omnileads. $CALLREC_DIR_DST
-    fi
-    echo "${ast_bucket_name} $CALLREC_DIR_DST fuse.s3fs _netdev,allow_other,use_path_request_style,url=${s3url} 0 0" >> /etc/fstab
-    mount -a
-    ;;
-  s3-aws)
-    echo "s3 callrec device \n"
-    yum install -y s3fs-fuse lsof
-    echo "${s3_access_key}:${s3_secret_key} " > ~/.passwd-s3fs
-    chmod 600 ~/.passwd-s3fs
-    if [ ! -d $CALLREC_DIR_DST ]; then
-      mkdir -p $CALLREC_DIR_DST
-      chown -R omnileads. $CALLREC_DIR_DST
-    fi
-    echo "${ast_bucket_name} $CALLREC_DIR_DST fuse.s3fs _netdev,allow_other 0 0" >> /etc/fstab
-    mount -a
-    ;;    
-  nfs)
-    echo "NFS callrec device \n"
-    yum install -y nfs-utils nfs-utils-lib lsof
-        if [ ! -d $CALLREC_DIR_DST ]; then
-      mkdir -p $CALLREC_DIR_DST
-      chown -R omnileads. $CALLREC_DIR_DST
-    fi
-    echo "${nfs_host}:$CALLREC_DIR_TMP $CALLREC_DIR_DST nfs auto,nofail,noatime,nolock,intr,tcp,actimeo=1800 0 0" >> /etc/fstab
-    mount -a
-    ;;
-  *)
-    echo "[ERROR] you must to define some net FS in order to put there callrec files"
-    echo "[ERROR] you must to define some net FS in order to put there callrec files"
-    echo "[ERROR] you must to define some net FS in order to put there callrec files"
-    echo "[ERROR] you must to define some net FS in order to put there callrec files"
-    echo "[ERROR] you must to define some net FS in order to put there callrec files"
-    exit 0
-    ;;
-esac
-
-echo "**************************** write callrec files move script ******************************"
-echo "**************************** write callrec files move script ******************************"
-cat > /opt/omnileads/mover_audios.sh <<EOF
-#!/bin/bash
-
-# RAMDISK Watcher
-# Revisa el contenido del ram0 y lo pasa a disco duro
-# Inicialización de variables
-
-Ano=\$(date +%Y -d today)
-Mes=\$(date +%m -d today)
-Dia=\$(date +%d -d today)
-Lsof="/sbin/lsof"
-DirectorioFinal=$CALLREC_DIR_DST/\$Ano-\$Mes-\$Dia
-
-if [ ! -d \$DirectorioFinal ];then
-  mkdir -p \$DirectorioFinal
-fi
-
-for Grabacion in \$(ls $CALLREC_DIR_TMP/\$Ano-\$Mes-\$Dia/*.wav);do
-  \$Lsof \$Grabacion &> /dev/null
-  Resultado=\$?
-  if [ \$Resultado -ne 0 ];then
-    mv \$Grabacion \$DirectorioFinal
-  fi
-done
-EOF
-
-chown -R omnileads.omnileads /opt/omnileads/mover_audios.sh
-chmod +x /opt/omnileads/mover_audios.sh
-
-echo "****************************** add cron-line to trigger the call-recording move script **************************"
-cat > /etc/cron.d/MoverGrabaciones <<EOF
-*/1 * * * * omnileads /opt/omnileads/mover_audios.sh
-EOF
-
-if [[ "${oml_auto_restore}" != "NULL" ]];then
-echo "50 23 * * * /opt/omnileads/utils/backup-restore.sh --backup --asterisk --target=/opt/callrec" >> /var/spool/cron/omnileads
-fi
-
-echo "********************* Activate cron callrec convert to mp3 *****************"
-echo "********************* Activate cron callrec convert to mp3 *****************"
+echo "********************* Activate cron callrec mv & convert to mp3 and backup *****************"
+echo "********************* Activate cron callrec mv & convert to mp3 and backup *****************"
 mkdir /opt/omnileads/log && touch /opt/omnileads/log/conversor.log
-chown omnileads.omnileads /opt/omnileads/log/conversor.log
-echo "0 1 * * * source /etc/profile.d/omnileads_envars.sh; /opt/omnileads/utils/conversor.sh 1 0 >> /opt/omnileads/log/conversor.log" >> /var/spool/cron/omnileads
+chown omnileads.omnileads -R /opt/omnileads/log
+
+echo "50 23 * * * source /etc/profile.d/omnileads_envars.sh && /opt/omnileads/utils/backup-restore.sh --backup --asterisk" >> /var/spool/cron/omnileads
+echo "0 1 * * * source /etc/profile.d/omnileads_envars.sh && /opt/omnileads/utils/conversor.sh 1 0 >> /opt/omnileads/log/conversor.log" >> /var/spool/cron/omnileads
+echo "*/1 * * * * source /etc/profile.d/omnileads_envars.sh && /opt/omnileads/utils/mover_audios.sh" >> /var/spool/cron/omnileads
+echo "55 23 * * * source /etc/profile.d/omnileads_envars.sh && aws s3 sync /opt/omnileads/backup s3://${s3_bucket_name}/omlacd-backup" >> /var/spool/cron/omnileads
+
+touch /etc/cron.d/cleanTmp
+echo "10 0 * * 6 root rm -rf /tmp/*" > /etc/cron.d/cleanTmp
+
 
 echo "******************** Restart asterisk ***************************"
 echo "******************** Restart asterisk ***************************"
-chown -R omnileads. /opt/omnileads/asterisk
-chown -R omnileads. $CALLREC_DIR_DST
+source /etc/profile.d/omnileads_envars.sh
+chown -R omnileads. /opt/omnileads/
 systemctl enable asterisk
-systemctl start asterisk
+systemctl restart asterisk
 
 echo "********************************** sngrep SIP sniffer install *********************************"
 echo "********************************** sngrep SIP sniffer install *********************************"
