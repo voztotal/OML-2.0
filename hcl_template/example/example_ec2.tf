@@ -1,7 +1,7 @@
 
 module "ec2" {
   additional_user_data = templatefile("${path.module}/templates/omlapp.tpl", {
-    ast_bucket_name           = split(".", aws_s3_bucket.customer_data.bucket_domain_name)[0]
+    s3_bucket_name            = split(".", aws_s3_bucket.customer_data.bucket_domain_name)[0]
     iam_role_name             = module.ec2.iam_role_name
     aws_region                = var.aws_region
     oml_app_repo_url          = var.oml_app_repo_url
@@ -25,10 +25,6 @@ module "ec2" {
     oml_infras_stage          = var.cloud_provider
     oml_tenant_name           = var.customer
     oml_callrec_device        = var.callrec_storage
-    s3_access_key             = var.s3_access_key
-    s3_secret_key             = var.s3_secret_key
-    s3url                     = "NULL"
-    s3_bucket_name            = "NULL"
     nfs_host                  = "NULL"
     optoml_device             = "NULL"
     pgsql_device              = "NULL"
