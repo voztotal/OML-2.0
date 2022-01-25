@@ -70,15 +70,6 @@ fi
 
 ansible-playbook asterisk.yml -i inventory --extra-vars "asterisk_version=$(cat ../.package_version)"
 
-echo "************************ check if set SSLmode for PGSQL *************************"
-echo "************************ check if set SSLmode for PGSQL *************************"
-
-if [[ "${oml_pgsql_cloud}"  == "true" ]]; then
-  echo "digitalocean requiere SSL to connect PGSQL"
-  echo "SSLMode       = require" >> /etc/odbc.ini
-fi
-
-
 echo "********************* Activate cron callrec mv & convert to mp3 and backup *****************"
 echo "********************* Activate cron callrec mv & convert to mp3 and backup *****************"
 mkdir /opt/omnileads/log && touch /opt/omnileads/log/conversor.log

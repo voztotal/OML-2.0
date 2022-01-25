@@ -152,13 +152,6 @@ if [[ "${oml_high_load}" == "true" ]];then
 sed -i "s/high_load=false/high_load=${oml_high_load}/g" $PATH_DEPLOY/inventory
 fi
 
-# User certs verification *******
-
-if [ -f $PATH_CERTS/key.pem ] && [ -f $PATH_CERTS/cert.pem ];then
-        cp $PATH_CERTS/key.pem $SRC/ominicontacto/install/onpremise/deploy/ansible/certs
-        cp $PATH_CERTS/cert.pem $SRC/ominicontacto/install/onpremise/deploy/ansible/certs
-fi
-
 sleep 4
 echo "******************** deploy.sh execution ********************"
 
@@ -177,7 +170,6 @@ echo "50 23 * * * source /etc/profile.d/omnileads_envars.sh ; /opt/omnileads/bin
 echo "55 23 * * * source /etc/profile.d/omnileads_envars.sh && aws s3 sync /opt/omnileads/backup s3://${s3_bucket_name}/omlapp-backup" >> /var/spool/cron/omnileads
 fi
 
-echo "********************* Deactivate cron callrec convert to mp3 *****************"
-sed -i "s/0 1 \* \* \* source/#0 1 \* \* \* source/g" /var/spool/cron/omnileads
+sed -i "s/conversor.sh 1 0/conversor.sh 2 0/g" /var/spool/cron/omnileads
 
 reboot
