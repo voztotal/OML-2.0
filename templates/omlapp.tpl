@@ -151,6 +151,7 @@ fi
 if [[ "${oml_high_load}" == "true" ]];then
 sed -i "s/high_load=false/high_load=${oml_high_load}/g" $PATH_DEPLOY/inventory
 fi
+sed -i "s/callrec_device=local/callrec_device=${oml_callrec_device}/g" ./inventory
 
 sleep 4
 echo "******************** deploy.sh execution ********************"
