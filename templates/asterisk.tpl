@@ -76,13 +76,7 @@ mkdir /opt/omnileads/log && touch /opt/omnileads/log/conversor.log
 chown omnileads.omnileads -R /opt/omnileads/log
 
 echo "50 23 * * * source /etc/profile.d/omnileads_envars.sh && /opt/omnileads/utils/backup-restore.sh --backup --asterisk" >> /var/spool/cron/omnileads
-echo "0 1 * * * source /etc/profile.d/omnileads_envars.sh && /opt/omnileads/utils/conversor.sh 1 0 >> /opt/omnileads/log/conversor.log" >> /var/spool/cron/omnileads
-echo "*/1 * * * * source /etc/profile.d/omnileads_envars.sh && /opt/omnileads/utils/mover_audios.sh" >> /var/spool/cron/omnileads
 echo "55 23 * * * source /etc/profile.d/omnileads_envars.sh && aws s3 sync /opt/omnileads/backup s3://${s3_bucket_name}/omlacd-backup" >> /var/spool/cron/omnileads
-
-touch /etc/cron.d/cleanTmp
-echo "10 0 * * 6 root rm -rf /tmp/*" > /etc/cron.d/cleanTmp
-
 
 echo "******************** Restart asterisk ***************************"
 echo "******************** Restart asterisk ***************************"
