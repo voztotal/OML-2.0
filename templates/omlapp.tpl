@@ -16,7 +16,7 @@ fi
 
 echo "******************** OML RELEASE = ${oml_app_release} ********************"
 
-sleep 5
+sleep 60
 
 echo -n "AWS"
 PRIVATE_IPV4=$(ip addr show ${oml_nic} | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
@@ -42,7 +42,7 @@ systemctl start amazon-ssm-agent
 echo "******************** Ansible installation ********************"
 
 pip3 install --upgrade pip
-pip3 install boto boto3 botocore 'ansible==2.9.2'
+pip3 install boto boto3 botocore 'ansible==2.9.2' awscli
 export PATH="$HOME/.local/bin/:$PATH"
 
 echo "******************** git clone omnileads repo ********************"
@@ -151,7 +151,7 @@ fi
 if [[ "${oml_high_load}" == "true" ]];then
 sed -i "s/high_load=false/high_load=${oml_high_load}/g" $PATH_DEPLOY/inventory
 fi
-sed -i "s/callrec_device=local/callrec_device=${oml_callrec_device}/g" ./inventory
+sed -i "s/callrec_device=local/callrec_device=${oml_callrec_device}/g" $PATH_DEPLOY/inventory
 
 sleep 4
 echo "******************** deploy.sh execution ********************"
