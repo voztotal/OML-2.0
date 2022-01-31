@@ -29,10 +29,10 @@ mysql_rds_size          = "db.t3.micro"
 
 
 # Braches release to deploy
-oml_app_branch          ="release-1.20.0"
+oml_app_branch          ="develop"
 oml_redis_branch        ="211220.01"
 oml_kamailio_branch     ="211220.01"
-oml_acd_branch          ="211220.01"
+oml_acd_branch          ="develop"
 
 # Customer variables
 customer                = "example"
