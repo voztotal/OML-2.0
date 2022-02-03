@@ -139,18 +139,18 @@ if [[ "${oml_app_reset_admin_pass}" == "true" ]];then
   sed -i "s/reset_admin_password=false/reset_admin_password=true/g" $PATH_DEPLOY/inventory
 fi
 
-if [[ "${oml_backup_filename}" != "NULL" ]];then
-sed -i "s%\#backup_file_name=%backup_file_name=${oml_backup_filename}%g" $PATH_DEPLOY/inventory
-fi
 if [[ "${s3_bucket_name}" != "NULL" ]];then
 sed -i "s%\#s3_bucket_name=%s3_bucket_name=${s3_bucket_name}%g" $PATH_DEPLOY/inventory
-fi
-if [[ "${oml_auto_restore}" != "NULL" ]];then
-sed -i "s/auto_restore=false/auto_restore=${oml_auto_restore}/g" $PATH_DEPLOY/inventory
 fi
 if [[ "${oml_high_load}" == "true" ]];then
 sed -i "s/high_load=false/high_load=${oml_high_load}/g" $PATH_DEPLOY/inventory
 fi
+
+if [ "${oml_backup_filename}" != "NULL" ] && [ "${oml_auto_restore}" != "NULL" ]; then
+sed -i "s%\#backup_file_name=%backup_file_name=${oml_backup_filename}%g" $PATH_DEPLOY/inventory
+sed -i "s/auto_restore=false/auto_restore=true/g" $PATH_DEPLOY/inventory
+fi
+
 sed -i "s/callrec_device=local/callrec_device=${oml_callrec_device}/g" $PATH_DEPLOY/inventory
 
 sleep 4

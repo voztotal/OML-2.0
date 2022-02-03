@@ -58,14 +58,12 @@ sed -i "s/ami_user=omnileads/ami_user=${oml_ami_user}/g" ./inventory
 sed -i "s/ami_password=C12H17N2O4P_o98o98/ami_password=${oml_ami_password}/g" ./inventory
 sed -i "s/callrec_device=local/callrec_device=${oml_callrec_device}/g" ./inventory
 
-if [[ "${oml_backup_filename}" != "NULL" ]];then
-sed -i "s%\#backup_file_name=%backup_file_name=${oml_backup_filename}%g" ./inventory
-fi
 if [[ "${s3_bucket_name}" != "NULL" ]];then
 sed -i "s%\#s3_bucket_name=%s3_bucket_name=${s3_bucket_name}%g" ./inventory
 fi
-if [[ "${oml_auto_restore}" != "NULL" ]];then
-sed -i "s/auto_restore=false/auto_restore=${oml_auto_restore}/g" ./inventory
+if [ "${oml_backup_filename}" != "NULL" ] && [ "${oml_auto_restore}" != "NULL" ]; then
+sed -i "s%\#backup_file_name=%backup_file_name=${oml_backup_filename}%g" ./inventory
+sed -i "s/auto_restore=false/auto_restore=true/g" ./inventory
 fi
 
 ansible-playbook asterisk.yml -i inventory --extra-vars "asterisk_version=$(cat ../.package_version)"
