@@ -147,14 +147,13 @@ variable "pstn_trunks" {
   type        = "list"
 }
 
-variable "oml_app_backup_filename" {}
-variable "oml_acd_backup_filename" {}
+variable "oml_backup_filename_app" {}
+variable "oml_backup_filename_acd" {}
 
-variable "oml_backup_path" { default = "" }
-variable "oml_auto_restore" {}
+variable "oml_auto_restore_app" {}
+variable "oml_auto_restore_acd" {}
 
 variable "oml_high_load" {}
 
 variable "asterisk_root_disk_size" {}
 variable "kamailio_root_disk_size" {}
-

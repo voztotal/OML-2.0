@@ -24,7 +24,7 @@ ec2_kamailio_size       = "t2.micro"
 kamailio_root_disk_size = 25
 # RDS PGSQL cluster size
 pg_rds_size             = "db.t3.micro"
-# RDS MySQL dialer backend SQL 
+# RDS MySQL dialer backend SQL
 mysql_rds_size          = "db.t3.micro"
 
 
@@ -57,16 +57,16 @@ mysql_password          = "admin123"
 wombat_version          = "20.02.1-271"
 
 # Backup/Restore params
-oml_auto_restore        = "false"
-oml_app_backup_path     = "/opt/omnileads/backup"
-oml_app_backup_filename = "NULL"
-oml_acd_backup_filename = "NULL"
+oml_auto_restore_app    = "NULL"
+oml_auto_restore_acd    = "NULL"
+oml_backup_filename_app = "NULL"
+oml_backup_filename_acd = "NULL"
 
 init_environment        = "false"
 reset_admin_pass        = "false"
 
-# Kamailio tweeks 
+# Kamailio tweeks
 kamailio_shm_size       = "256"
 kamailio_pkg_size       = "32"
-# Hight Load components tweeks 
+# Hight Load components tweeks
 oml_high_load           = "NULL"

@@ -25,11 +25,11 @@ resource "aws_instance" "asterisk" {
 
   tags = {
     Name = "${module.tags.tags.environment}-${var.customer}-asterisk-EC2"
-  } 
+  }
 }
 
 data "template_file" "asterisk" {
-  template = file("${path.module}/templates/asterisk.tpl") 
+  template = file("${path.module}/templates/asterisk.tpl")
   vars = {
       oml_infras_stage          = var.cloud_provider
       aws_region                = var.aws_region
@@ -50,8 +50,8 @@ data "template_file" "asterisk" {
       oml_callrec_device        = var.callrec_storage
       s3_bucket_name            = split(".", aws_s3_bucket.customer_data.bucket_domain_name)[0]
       nfs_host                  = "NULL"
-      oml_backup_filename       = var.oml_acd_backup_filename
-      oml_auto_restore          = var.oml_auto_restore
+      oml_backup_filename       = var.oml_backup_filename_acd
+      oml_auto_restore          = var.oml_auto_restore_acd
       oml_tz                    = var.TZ
     }
  }

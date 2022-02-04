@@ -39,8 +39,8 @@ module "ec2" {
     oml_app_init_env          = var.init_environment
     oml_app_reset_admin_pass  = var.reset_admin_pass
     oml_app_install_sngrep    = "false"
-    oml_backup_filename       = var.oml_app_backup_filename
-    oml_auto_restore          = var.oml_auto_restore
+    oml_backup_filename       = var.oml_backup_filename_app
+    oml_auto_restore          = var.oml_auto_restore_app
     oml_high_load             = var.oml_high_load
   })
   source                                      = "./modules/ec2-no-elb"
