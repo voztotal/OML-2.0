@@ -139,6 +139,15 @@ if [[ "${oml_app_reset_admin_pass}" == "true" ]];then
   sed -i "s/reset_admin_password=false/reset_admin_password=true/g" $PATH_DEPLOY/inventory
 fi
 
+if [[ "${oml_s3_access_key}" != "NULL" ]];then
+sed -i "s%\#s3_access_key=%s3_access_key=${oml_s3_access_key}%g" $PATH_DEPLOY/inventory
+fi
+if [[ "${oml_s3_secret_key}" != "NULL" ]];then
+sed -i "s%\#s3_secret_key=%s3_secret_key=${oml_s3_secret_key}%g" $PATH_DEPLOY/inventory
+fi
+if [[ "${aws_region}" != "NULL" ]];then
+sed -i "s%\#s3_region=%s3_region=${aws_region}%g" $PATH_DEPLOY/inventory
+fi
 if [[ "${s3_bucket_name}" != "NULL" ]];then
 sed -i "s%\#s3_bucket_name=%s3_bucket_name=${s3_bucket_name}%g" $PATH_DEPLOY/inventory
 fi

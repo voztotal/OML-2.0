@@ -157,3 +157,6 @@ variable "oml_high_load" {}
 
 variable "asterisk_root_disk_size" {}
 variable "kamailio_root_disk_size" {}
+
+variable "s3_access_key" {}
+variable "s3_secret_key" {}

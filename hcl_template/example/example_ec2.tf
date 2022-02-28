@@ -42,6 +42,8 @@ module "ec2" {
     oml_backup_filename       = var.oml_backup_filename_app
     oml_auto_restore          = var.oml_auto_restore_app
     oml_high_load             = var.oml_high_load
+    oml_s3_access_key         = var.s3_access_key
+    oml_s3_secret_key         = var.s3_secret_key
   })
   source                                      = "./modules/ec2-no-elb"
   vpc_id                                      = data.terraform_remote_state.shared_state.outputs.vpc_id
