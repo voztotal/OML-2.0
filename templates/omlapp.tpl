@@ -160,6 +160,12 @@ sed -i "s%\#backup_file_name=%backup_file_name=${oml_backup_filename}%g" $PATH_D
 sed -i "s/auto_restore=false/auto_restore=true/g" $PATH_DEPLOY/inventory
 fi
 
+if [ "${oml_google_maps_api_key}" != "NULL" ] && [ "${oml_google_maps_center}" != "NULL" ]; then
+sed -i "s%\#google_maps_api_key=%google_maps_api_key=${oml_google_maps_api_key}%g" $PATH_DEPLOY/inventory
+sed -i "s%\#google_maps_center=%google_maps_center=${oml_google_maps_center}%g" $PATH_DEPLOY/inventory
+fi
+
+
 sed -i "s/callrec_device=local/callrec_device=${oml_callrec_device}/g" $PATH_DEPLOY/inventory
 
 sleep 4
@@ -167,18 +173,6 @@ echo "******************** deploy.sh execution ********************"
 
 cd $PATH_DEPLOY
 ./deploy.sh -i --iface=${oml_nic}
-
-echo "******************** setting demo environment ********************"
-
-if [[ "${oml_app_init_env}" == "true" ]];then
-  su -c "/opt/omnileads/bin/manage.sh inicializar_entorno" --login omnileads
-fi
-
-echo "********************* Activate cron auto backup over bucket *****************"
-if [[ "${oml_auto_restore}" != "NULL" ]];then
-echo "50 23 * * * source /etc/profile.d/omnileads_envars.sh ; /opt/omnileads/bin/backup-restore.sh --backup --omniapp" >> /var/spool/cron/omnileads
-echo "55 23 * * * source /etc/profile.d/omnileads_envars.sh && aws s3 sync /opt/omnileads/backup s3://${s3_bucket_name}/omlapp-backup" >> /var/spool/cron/omnileads
-fi
 
 sed -i "s/conversor.sh 1 0/conversor.sh 2 0/g" /var/spool/cron/omnileads
 

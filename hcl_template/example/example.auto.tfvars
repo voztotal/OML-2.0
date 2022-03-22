@@ -70,3 +70,6 @@ kamailio_shm_size       = "256"
 kamailio_pkg_size       = "32"
 # Hight Load components tweeks
 oml_high_load           = "NULL"
+
+google_maps_api_key     ="NULL"
+google_maps_center      ="NULL"
