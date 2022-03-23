@@ -36,11 +36,9 @@ module "ec2" {
     oml_websocket_port        = "NULL"
     oml_extern_ip             = "auto"
     oml_app_login_fail_limit  = 10
-    oml_app_init_env          = var.init_environment
+    oml_app_init_env          = "NULL"
     oml_app_reset_admin_pass  = var.reset_admin_pass
     oml_app_install_sngrep    = "false"
-    oml_backup_filename       = var.oml_backup_filename_app
-    oml_auto_restore          = var.oml_auto_restore_app
     oml_high_load             = var.oml_high_load
     oml_s3_access_key         = var.s3_access_key
     oml_s3_secret_key         = var.s3_secret_key

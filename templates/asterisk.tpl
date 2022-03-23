@@ -61,10 +61,6 @@ sed -i "s/callrec_device=local/callrec_device=${oml_callrec_device}/g" ./invento
 if [[ "${s3_bucket_name}" != "NULL" ]];then
 sed -i "s%\#s3_bucket_name=%s3_bucket_name=${s3_bucket_name}%g" ./inventory
 fi
-if [ "${oml_backup_filename}" != "NULL" ] && [ "${oml_auto_restore}" != "NULL" ]; then
-sed -i "s%\#backup_file_name=%backup_file_name=${oml_backup_filename}%g" ./inventory
-sed -i "s/auto_restore=false/auto_restore=true/g" ./inventory
-fi
 
 ansible-playbook asterisk.yml -i inventory --extra-vars "asterisk_version=$(cat ../.package_version)"
 

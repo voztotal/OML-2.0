@@ -147,12 +147,6 @@ variable "pstn_trunks" {
   type        = "list"
 }
 
-variable "oml_backup_filename_app" {}
-variable "oml_backup_filename_acd" {}
-
-variable "oml_auto_restore_app" {}
-variable "oml_auto_restore_acd" {}
-
 variable "oml_high_load" {}
 
 variable "asterisk_root_disk_size" {}

@@ -56,13 +56,6 @@ mysql_username          = "root" # no cambiar este username
 mysql_password          = "admin123"
 wombat_version          = "20.02.1-271"
 
-# Backup/Restore params
-oml_auto_restore_app    = "NULL"
-oml_auto_restore_acd    = "NULL"
-oml_backup_filename_app = "NULL"
-oml_backup_filename_acd = "NULL"
-
-init_environment        = "false"
 reset_admin_pass        = "false"
 
 # Kamailio tweeks

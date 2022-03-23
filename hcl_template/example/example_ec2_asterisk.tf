@@ -50,8 +50,6 @@ data "template_file" "asterisk" {
       oml_callrec_device        = var.callrec_storage
       s3_bucket_name            = split(".", aws_s3_bucket.customer_data.bucket_domain_name)[0]
       nfs_host                  = "NULL"
-      oml_backup_filename       = var.oml_backup_filename_acd
-      oml_auto_restore          = var.oml_auto_restore_acd
       oml_tz                    = var.TZ
     }
  }
