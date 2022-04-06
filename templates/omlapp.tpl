@@ -33,7 +33,7 @@ systemctl stop firewalld > /dev/null 2>&1
 echo "******************** yum update and install packages ********************"
 
 yum remove -y python3 python3-pip
-yum install -y $SSM_AGENT_URL 
+yum install -y $SSM_AGENT_URL
 yum install -y patch libedit-devel libuuid-devel git
 amazon-linux-extras install -y epel
 amazon-linux-extras install python3 -y
@@ -169,5 +169,6 @@ cd $PATH_DEPLOY
 ./deploy.sh -i --iface=${oml_nic}
 
 sed -i "s/conversor.sh 1 0/conversor.sh 2 0/g" /var/spool/cron/omnileads
+sed -i "s/\/opt\/omnileads\/bin\/conversor.sh/\/opt\/omnileads\/utils\/conversor.sh/g" /var/spool/cron/omnileads
 
 reboot
