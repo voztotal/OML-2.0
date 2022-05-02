@@ -24,15 +24,15 @@ ec2_kamailio_size       = "t2.micro"
 kamailio_root_disk_size = 25
 # RDS PGSQL cluster size
 pg_rds_size             = "db.t3.micro"
-# RDS MySQL dialer backend SQL 
+# RDS MySQL dialer backend SQL
 mysql_rds_size          = "db.t3.micro"
 
 
 # Braches release to deploy
-oml_app_branch          ="release-1.20.0"
+oml_app_branch          ="release-1.21.0"
 oml_redis_branch        ="211220.01"
 oml_kamailio_branch     ="211220.01"
-oml_acd_branch          ="211220.01"
+oml_acd_branch          ="220214.01"
 
 # Customer variables
 customer                = "example"
@@ -56,17 +56,13 @@ mysql_username          = "root" # no cambiar este username
 mysql_password          = "admin123"
 wombat_version          = "20.02.1-271"
 
-# Backup/Restore params
-oml_auto_restore        = "false"
-oml_app_backup_path     = "/opt/omnileads/backup"
-oml_app_backup_filename = "NULL"
-oml_acd_backup_filename = "NULL"
-
-init_environment        = "false"
 reset_admin_pass        = "false"
 
-# Kamailio tweeks 
+# Kamailio tweeks
 kamailio_shm_size       = "256"
 kamailio_pkg_size       = "32"
-# Hight Load components tweeks 
+# Hight Load components tweeks
 oml_high_load           = "NULL"
+
+google_maps_api_key     ="NULL"
+google_maps_center      ="NULL"
