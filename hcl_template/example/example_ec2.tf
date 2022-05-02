@@ -1,7 +1,7 @@
 
 module "ec2" {
   additional_user_data = templatefile("${path.module}/templates/omlapp.tpl", {
-    ast_bucket_name           = split(".", aws_s3_bucket.customer_data.bucket_domain_name)[0]
+    s3_bucket_name            = split(".", aws_s3_bucket.customer_data.bucket_domain_name)[0]
     iam_role_name             = module.ec2.iam_role_name
     aws_region                = var.aws_region
     oml_app_repo_url          = var.oml_app_repo_url
@@ -25,10 +25,6 @@ module "ec2" {
     oml_infras_stage          = var.cloud_provider
     oml_tenant_name           = var.customer
     oml_callrec_device        = var.callrec_storage
-    s3_access_key             = var.s3_access_key
-    s3_secret_key             = var.s3_secret_key
-    s3url                     = "NULL"
-    s3_bucket_name            = "NULL"
     nfs_host                  = "NULL"
     optoml_device             = "NULL"
     pgsql_device              = "NULL"
@@ -40,12 +36,14 @@ module "ec2" {
     oml_websocket_port        = "NULL"
     oml_extern_ip             = "auto"
     oml_app_login_fail_limit  = 10
-    oml_app_init_env          = var.init_environment
+    oml_app_init_env          = "NULL"
     oml_app_reset_admin_pass  = var.reset_admin_pass
     oml_app_install_sngrep    = "false"
-    oml_backup_filename       = var.oml_app_backup_filename
-    oml_auto_restore          = var.oml_auto_restore
     oml_high_load             = var.oml_high_load
+    oml_s3_access_key         = var.s3_access_key
+    oml_s3_secret_key         = var.s3_secret_key
+    oml_google_maps_api_key   = var.google_maps_api_key
+    oml_google_maps_center    = var.google_maps_center
   })
   source                                      = "./modules/ec2-no-elb"
   vpc_id                                      = data.terraform_remote_state.shared_state.outputs.vpc_id
