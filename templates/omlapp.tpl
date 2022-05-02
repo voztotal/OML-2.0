@@ -154,6 +154,9 @@ fi
 if [[ "${oml_high_load}" == "true" ]];then
 sed -i "s/high_load=false/high_load=${oml_high_load}/g" $PATH_DEPLOY/inventory
 fi
+if [[ "${oml_high_load}" == "true" ]];then
+sed -i "s/high_load=false/high_load=${oml_high_load}/g" $PATH_DEPLOY/inventory
+fi
 
 if [ "${oml_google_maps_api_key}" != "NULL" ] && [ "${oml_google_maps_center}" != "NULL" ]; then
 sed -i "s%\#google_maps_api_key=%google_maps_api_key=${oml_google_maps_api_key}%g" $PATH_DEPLOY/inventory

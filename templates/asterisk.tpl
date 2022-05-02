@@ -72,6 +72,12 @@ chown omnileads.omnileads -R /opt/omnileads/log
 echo "50 23 * * * source /etc/profile.d/omnileads_envars.sh && /opt/omnileads/utils/backup-restore.sh --backup --asterisk" >> /var/spool/cron/omnileads
 echo "55 23 * * * source /etc/profile.d/omnileads_envars.sh && aws s3 sync /opt/omnileads/backup s3://${s3_bucket_name}/omlacd-backup" >> /var/spool/cron/omnileads
 
+echo "********************* Activate cron callrec convert to mp3 *****************"
+echo "********************* Activate cron callrec convert to mp3 *****************"
+mkdir /opt/omnileads/log && touch /opt/omnileads/log/conversor.log
+chown omnileads.omnileads /opt/omnileads/log/conversor.log
+echo "0 1 * * * source /etc/profile.d/omnileads_envars.sh; /opt/omnileads/utils/conversor.sh 1 0 >> /opt/omnileads/log/conversor.log" >> /var/spool/cron/omnileads
+
 echo "******************** Restart asterisk ***************************"
 echo "******************** Restart asterisk ***************************"
 source /etc/profile.d/omnileads_envars.sh
