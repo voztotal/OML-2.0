@@ -21,7 +21,7 @@ echo "************************ yum install *************************"
 echo "************************ yum install *************************"
 
 yum remove -y python3 python3-pip
-yum install -y $SSM_AGENT_URL 
+yum install -y $SSM_AGENT_URL
 yum install -y patch libedit-devel libuuid-devel git
 amazon-linux-extras install -y epel
 amazon-linux-extras install python3 -y
@@ -76,7 +76,6 @@ echo "********************* Activate cron callrec convert to mp3 ***************
 echo "********************* Activate cron callrec convert to mp3 *****************"
 mkdir /opt/omnileads/log && touch /opt/omnileads/log/conversor.log
 chown omnileads.omnileads /opt/omnileads/log/conversor.log
-echo "0 1 * * * source /etc/profile.d/omnileads_envars.sh; /opt/omnileads/utils/conversor.sh 1 0 >> /opt/omnileads/log/conversor.log" >> /var/spool/cron/omnileads
 
 echo "******************** Restart asterisk ***************************"
 echo "******************** Restart asterisk ***************************"
@@ -91,4 +90,3 @@ yum install -y ncurses-devel make libpcap-devel pcre-devel openssl-devel git gcc
 cd $SRC && git clone https://github.com/irontec/sngrep
 cd sngrep && ./bootstrap.sh && ./configure && make && make install
 ln -s /usr/local/bin/sngrep /usr/bin/sngrep
-
