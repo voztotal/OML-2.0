@@ -22,6 +22,9 @@ dialer_root_disk_size   = 20
 # Kamailio component ec2 size
 ec2_kamailio_size       = "t2.micro"
 kamailio_root_disk_size = 25
+# Websockets component ec2 size
+ec2_websockets_size       = "t2.micro"
+websockets_root_disk_size = 25
 # RDS PGSQL cluster size
 pg_rds_size             = "db.t3.micro"
 # RDS MySQL dialer backend SQL
@@ -29,10 +32,11 @@ mysql_rds_size          = "db.t3.micro"
 
 
 # Braches release to deploy
-oml_app_branch          ="release-1.21.0"
-oml_redis_branch        ="211220.01"
-oml_kamailio_branch     ="211220.01"
-oml_acd_branch          ="220214.01"
+oml_app_branch          ="release-1.24.0"
+oml_redis_branch        ="220606.01"
+oml_kamailio_branch     ="220614.01"
+oml_acd_branch          ="220614.01"
+oml_websockets_branch   ="oml-133-fix-websockets-aws-ubuntu-2204"
 
 # Customer variables
 customer                = "example"
@@ -56,7 +60,7 @@ mysql_username          = "root" # no cambiar este username
 mysql_password          = "admin123"
 wombat_version          = "20.02.1-271"
 
-reset_admin_pass        = "false"
+reset_admin_pass        = "true"
 
 # Kamailio tweeks
 kamailio_shm_size       = "256"
