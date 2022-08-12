@@ -32,8 +32,8 @@ module "ec2" {
     oml_acd_host              = "${var.customer}-asterisk.${var.domain_name}"
     oml_kamailio_host         = "${var.customer}-kamailio.${var.domain_name}"
     oml_redis_host            = "${var.customer}-redis.${var.domain_name}"
-    oml_websocket_host        = "NULL"
-    oml_websocket_port        = "NULL"
+    oml_websocket_host        = "${var.customer}-websockets.${var.domain_name}"
+    oml_websocket_port        = "8000"
     oml_extern_ip             = "auto"
     oml_app_login_fail_limit  = 10
     oml_app_init_env          = "NULL"

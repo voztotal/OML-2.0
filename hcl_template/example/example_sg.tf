@@ -47,6 +47,30 @@ resource "aws_security_group" "redis_ec2_sg" {
   )
 }
 
+resource "aws_security_group" "websockets_ec2_sg" {
+  name        = "${module.tags.tags.prefix}-${module.tags.tags.environment}-${var.customer}-websockets-SG"
+  vpc_id      = data.terraform_remote_state.shared_state.*.outputs.vpc_id[0]
+  description = "${module.tags.tags.role} EC2 Instances Service Websockets SG"
+
+  ingress {
+    from_port   = 8000
+    to_port     = 8000
+    protocol    = "tcp"
+    cidr_blocks = [data.terraform_remote_state.shared_state.outputs.vpc_cidr_block]
+    description = "Websockets"
+  }
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  tags = merge(module.tags.tags,
+    map("Name", "${module.tags.tags.environment}-${var.customer}-websockets-SG"),
+    map("role", "${module.tags.tags.environment}-${var.customer}-websockets-SG")
+  )
+}
+
 resource "aws_security_group" "asterisk_ec2_sg" {
   name        = "${module.tags.tags.prefix}-${module.tags.tags.environment}-${var.customer}-asterisk-SG"
   vpc_id      = data.terraform_remote_state.shared_state.*.outputs.vpc_id[0]
@@ -79,7 +103,7 @@ resource "aws_security_group" "asterisk_ec2_sg" {
     protocol    = "udp"
     cidr_blocks = var.pstn_trunks
     description = "udp rtp PSTN"
-  }          
+  }
   ingress {
     from_port   = 5038
     to_port     = 5038
@@ -117,7 +141,7 @@ resource "aws_security_group" "kamailio_ec2_sg" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
     description = "kamailio SIP WSS"
-  }  
+  }
   egress {
     from_port   = 0
     to_port     = 0
@@ -142,7 +166,7 @@ resource "aws_security_group" "wombat_ec2_sg" {
     protocol    = "tcp"
     cidr_blocks = [data.terraform_remote_state.shared_state.outputs.vpc_cidr_block]
     description = "Tomcat http"
-  }  
+  }
   egress {
     from_port   = 0
     to_port     = 0

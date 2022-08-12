@@ -91,16 +91,17 @@ EOF
 create_s3_backend() {
   local environment=$1
   if [ $AWS_DEFAULT_REGION == "us-east-1" ]; then
+    echo "us-east-1 region"
     OPTIONS=""
   else
     OPTIONS="--create-bucket-configuration LocationConstraint=$AWS_DEFAULT_REGION"
   fi
   cd ${ENVS_DIR}/${environment}/
   BUCKET_NAME=$(grep -R "bucket" ${environment}_backend.tf |awk -F "=" '{print $2}'| tr -d '"' |tr -d ' ')
-  echo "Checking if bucket exists in s3"
+  echo "Checking if bucket $BUCKET_NAME exists in s3"
   BUCKET_S3=$($AWS s3 ls |grep "terraform-$environment" |awk -F " " '{print $3}'|| true)
   if [ -z "${BUCKET_S3}" ]; then
-    echo "Creating s3 bucket $BUCKET_S3"
+    echo "Creating s3 bucket $BUCKET_NAME"
     $AWS s3api create-bucket --bucket $BUCKET_NAME \
       --region $AWS_DEFAULT_REGION $OPTIONS
   else

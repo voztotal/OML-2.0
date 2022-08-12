@@ -90,3 +90,5 @@ yum install -y ncurses-devel make libpcap-devel pcre-devel openssl-devel git gcc
 cd $SRC && git clone https://github.com/irontec/sngrep
 cd sngrep && ./bootstrap.sh && ./configure && make && make install
 ln -s /usr/local/bin/sngrep /usr/bin/sngrep
+
+reboot
