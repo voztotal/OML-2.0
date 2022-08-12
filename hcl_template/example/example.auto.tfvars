@@ -32,11 +32,11 @@ mysql_rds_size          = "db.t3.micro"
 
 
 # Braches release to deploy
-oml_app_branch          ="oml-143-fix-websockets-aws-ubuntu-2204"
+oml_app_branch          ="release-1.24.1"
 oml_redis_branch        ="220606.01"
 oml_kamailio_branch     ="220614.01"
 oml_acd_branch          ="220614.01"
-oml_websockets_branch   ="oml-143-fix-websockets-aws-ubuntu-2204"
+oml_websockets_branch   ="220808.01"
 
 # Customer variables
 customer                = "example"
