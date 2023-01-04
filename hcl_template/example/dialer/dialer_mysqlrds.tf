@@ -8,6 +8,7 @@ module "rds_mysql" {
   username                = var.mysql_username
   password                = var.mysql_password
   engine                  = "mysql"
+  mysql_engine_version    = "5.7.40"
   multi_az                = false
   master_instance_class   = var.mysql_rds_size
   backup_retention_period = 5

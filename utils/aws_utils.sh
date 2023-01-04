@@ -99,7 +99,7 @@ create_s3_backend() {
   cd ${ENVS_DIR}/${environment}/
   BUCKET_NAME=$(grep -R "bucket" ${environment}_backend.tf |awk -F "=" '{print $2}'| tr -d '"' |tr -d ' ')
   echo "Checking if bucket $BUCKET_NAME exists in s3"
-  BUCKET_S3=$($AWS s3 ls |grep "terraform-$environment" |awk -F " " '{print $3}'|| true)
+  BUCKET_S3=$($AWS s3 ls |grep "terraform-$environment-" |awk -F " " '{print $3}'|| true)
   if [ -z "${BUCKET_S3}" ]; then
     echo "Creating s3 bucket $BUCKET_NAME"
     $AWS s3api create-bucket --bucket $BUCKET_NAME \
@@ -112,7 +112,7 @@ create_s3_backend() {
 delete_s3_bucket() {
   local environment=$1
   echo "Getting bucket to delete its objects"
-  BUCKET=$($AWS s3 ls |grep "$environment" |awk -F ' ' '{print $3}')
+  BUCKET=$($AWS s3 ls |grep "\-$environment-" |awk -F ' ' '{print $3}')
   $AWS s3 rb s3://$BUCKET --force
 }
 
