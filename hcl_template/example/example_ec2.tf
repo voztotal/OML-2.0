@@ -1,4 +1,3 @@
-
 module "ec2" {
   additional_user_data = templatefile("${path.module}/templates/omlapp.tpl", {
     s3_bucket_name            = split(".", aws_s3_bucket.customer_data.bucket_domain_name)[0]
@@ -30,6 +29,7 @@ module "ec2" {
     pgsql_device              = "NULL"
     oml_nic                   = var.instance_nic
     oml_acd_host              = "${var.customer}-asterisk.${var.domain_name}"
+    oml_app_host              = "${var.customer}.${var.domain_name}"
     oml_kamailio_host         = "${var.customer}-kamailio.${var.domain_name}"
     oml_redis_host            = "${var.customer}-redis.${var.domain_name}"
     oml_websocket_host        = "${var.customer}-websockets.${var.domain_name}"
@@ -49,10 +49,10 @@ module "ec2" {
   vpc_id                                      = data.terraform_remote_state.shared_state.outputs.vpc_id
   launch_config_key_name                      = data.terraform_remote_state.shared_state.outputs.ec2_key
   launch_config_instance_type                 = var.ec2_oml_size
-  launch_config_image_id                      = data.aws_ami.amazon-linux-2.id
+  launch_config_image_id                      = data.aws_ami.ubuntu.id
   launch_config_root_block_device_volume_size = var.customer_root_disk_size
   launch_config_root_block_device_volume_type = var.customer_root_disk_type
-  launch_config_associate_public_ip_address   = false
+  launch_config_associate_public_ip_address   = true
   launch_config_enable_monitoring             = true
   asg_min_size                                = 1
   asg_max_size                                = 1

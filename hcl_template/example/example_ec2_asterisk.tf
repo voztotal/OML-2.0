@@ -9,10 +9,10 @@ resource "aws_s3_bucket" "customer_data" {
 }
 
 resource "aws_instance" "asterisk" {
-  ami                                   = data.aws_ami.amazon-linux-2.id
+  ami                                   = data.aws_ami.ubuntu.id
   instance_type                         = var.ec2_asterisk_size
   subnet_id                             = data.terraform_remote_state.shared_state.outputs.private_subnet_ids[0]
-  associate_public_ip_address           = false
+  associate_public_ip_address           = true
   iam_instance_profile                  = aws_iam_instance_profile.test_profile.name
   vpc_security_group_ids                = [aws_security_group.asterisk_ec2_sg.id]
   user_data                             = base64encode(data.template_file.asterisk.rendered)
@@ -37,19 +37,18 @@ data "template_file" "asterisk" {
       iam_role_name             = module.ec2.iam_role_name
       oml_acd_release           = var.oml_acd_branch
       oml_tenant_name           = var.customer
-      oml_redis_host            = "${var.customer}-redis.${var.domain_name}"
       oml_app_host              = format("%s.%s", var.customer, var.domain_name)
       oml_pgsql_host            = module.rds_postgres.address
       oml_pgsql_port            = 5432
       oml_pgsql_db              = var.pg_database
       oml_pgsql_user            = var.pg_username
+      oml_kamailio_host         = "${var.customer}-kamailio.${var.domain_name}"
       oml_pgsql_password        = var.pg_password
       oml_pgsql_cloud           = "false"
       oml_ami_user              = var.ami_user
       oml_ami_password          = var.ami_password
       oml_callrec_device        = var.callrec_storage
       s3_bucket_name            = split(".", aws_s3_bucket.customer_data.bucket_domain_name)[0]
-      nfs_host                  = "NULL"
       oml_tz                    = var.TZ
     }
  }

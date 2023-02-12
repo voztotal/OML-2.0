@@ -1,94 +1,64 @@
 #!/bin/bash
 
-SSM_AGENT_URL="https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm"
-S3FS="/bin/s3fs"
+#oml_nic=ens18
+#oml_app_host=172.16.101.42
+#oml_obs_host=172.16.101.43
+#oml_pgsql_host=172.16.101.42
+#oml_pgsql_port=5432
+#oml_pgsql_user=omnileads
+#oml_pgsql_password=omnileads
+#oml_ami_user=omnileads
+#oml_ami_password=omnileads
+#oml_callrec_device=s3
+#s3_bucket_name=omnileads
 
-SRC=/usr/src
-COMPONENT_REPO=https://gitlab.com/omnileads/omlacd.git
-COMPONENT_REPO_DIR=omlacd
+PRIVATE_IPV4=$(ip addr show ${oml_nic} | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
+PUBLIC_IPV4=$(curl ifconfig.co)
 
-CALLREC_DIR_TMP=/opt/omnileads/asterisk/var/spool/asterisk/monitor
+echo "******************** update and install packages ********************"
 
-echo "************************ disable SElinux *************************"
-echo "************************ disable SElinux *************************"
-sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/sysconfig/selinux
-sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/selinux/config
-setenforce 0
-systemctl disable firewalld > /dev/null 2>&1
-systemctl stop firewalld > /dev/null 2>&1
+apt update
+apt install -y ansible git curl
 
-echo "************************ yum install *************************"
-echo "************************ yum install *************************"
+echo "******************** git clone omnileads repo ********************"
 
-yum remove -y python3 python3-pip
-yum install -y $SSM_AGENT_URL
-yum install -y patch libedit-devel libuuid-devel git
-amazon-linux-extras install -y epel
-amazon-linux-extras install python3 -y
-yum install -y lame gsm
-systemctl start amazon-ssm-agent
-
-# echo "************************ install ansible *************************"
-# echo "************************ install ansible *************************"
-pip3 install pip --upgrade
-pip3 install boto boto3 botocore 'ansible==2.9.9' selinux
-export PATH="$HOME/.local/bin/:$PATH"
-
-# echo "************************ clone REPO *************************"
-# echo "************************ clone REPO *************************"
-# echo "************************ clone REPO *************************"
 cd $SRC
-git clone $COMPONENT_REPO
-cd omlacd
-git checkout ${oml_acd_release}
-cd deploy
+git clone --branch oml-261-terraform-aws-deploy https://gitlab.com/omnileads/omldeploytool
+cd omldeploytool/ansible
 
 # echo "******************************************* config and install *****************************************"
 # echo "******************************************* config and install *****************************************"
 # echo "******************************************* config and install *****************************************"
-sed -i "s%\TZ=set_your_timezone_here%TZ=${oml_tz}%g" ./inventory
-sed -i "s/omnileads_hostname=omnileads/omnileads_hostname=${oml_app_host}/g" ./inventory
-sed -i "s/redis_hostname=redis/redis_hostname=${oml_redis_host}/g" ./inventory
-sed -i "s/postgres_hostname=postgres/postgres_hostname=${oml_pgsql_host}/g" ./inventory
-sed -i "s/postgres_port=5432/postgres_port=${oml_pgsql_port}/g" ./inventory
-sed -i "s/postgres_database=omnileads/postgres_database=${oml_pgsql_db}/g" ./inventory
-sed -i "s/postgres_user=omnileads/postgres_user=${oml_pgsql_user}/g" ./inventory
-sed -i "s/postgres_password=my_very_strong_pass/postgres_password=${oml_pgsql_password}/g" ./inventory
-sed -i "s/ami_user=omnileads/ami_user=${oml_ami_user}/g" ./inventory
-sed -i "s/ami_password=C12H17N2O4P_o98o98/ami_password=${oml_ami_password}/g" ./inventory
-sed -i "s/callrec_device=local/callrec_device=${oml_callrec_device}/g" ./inventory
+sed -i "s%\TZ:%TZ: ${oml_tz}%g" ./inventory_voice.yml
+sed -i "s/omni_ip_lan:/omni_ip_lan: $PRIVATE_IPV4/g" ./inventory_voice.yml
+sed -i "s/voice_host:/voice_host: $PRIVATE_IPV4/g" ./inventory_voice.yml
+sed -i "s/application_host:/application_host: ${oml_app_host}/g" ./inventory_voice.yml
+sed -i "s/observability_host:/observability_host: ${oml_kamailio_host}/g" ./inventory_voice.yml
+sed -i "s/postgres_host:/postgres_host: ${oml_pgsql_host}/g" ./inventory_voice.yml
+sed -i "s/postgres_port:/postgres_port: ${oml_pgsql_port}/g" ./inventory_voice.yml
+sed -i "s/postgres_database:/postgres_database: ${oml_pgsql_db}/g" ./inventory_voice.yml
+sed -i "s/postgres_user:/postgres_user: ${oml_pgsql_user}/g" ./inventory_voice.yml
+sed -i "s/postgres_password:/postgres_password: ${oml_pgsql_password}/g" ./inventory_voice.yml
+sed -i "s/ami_user:/ami_user: ${oml_ami_user}/g" ./inventory_voice.yml
+sed -i "s/ami_password:/ami_password: ${oml_ami_password}/g" ./inventory_voice.yml
+sed -i "s/callrec_device:/callrec_device: ${oml_callrec_device}/g" ./inventory_voice.yml
+sed -i "s%\s3_bucket_name:%s3_bucket_name: ${s3_bucket_name}%g" ./inventory_voice.yml
 
-if [[ "${s3_bucket_name}" != "NULL" ]];then
-sed -i "s%\#s3_bucket_name=%s3_bucket_name=${s3_bucket_name}%g" ./inventory
-fi
 
-ansible-playbook asterisk.yml -i inventory --extra-vars "asterisk_version=$(cat ../.package_version)"
-
-echo "********************* Activate cron callrec mv & convert to mp3 and backup *****************"
-echo "********************* Activate cron callrec mv & convert to mp3 and backup *****************"
-mkdir /opt/omnileads/log && touch /opt/omnileads/log/conversor.log
-chown omnileads.omnileads -R /opt/omnileads/log
-
-echo "50 23 * * * source /etc/profile.d/omnileads_envars.sh && /opt/omnileads/utils/backup-restore.sh --backup --asterisk" >> /var/spool/cron/omnileads
-echo "55 23 * * * source /etc/profile.d/omnileads_envars.sh && aws s3 sync /opt/omnileads/backup s3://${s3_bucket_name}/omlacd-backup" >> /var/spool/cron/omnileads
-
-echo "********************* Activate cron callrec convert to mp3 *****************"
-echo "********************* Activate cron callrec convert to mp3 *****************"
-mkdir /opt/omnileads/log && touch /opt/omnileads/log/conversor.log
-chown omnileads.omnileads /opt/omnileads/log/conversor.log
-
-echo "******************** Restart asterisk ***************************"
-echo "******************** Restart asterisk ***************************"
-source /etc/profile.d/omnileads_envars.sh
-chown -R omnileads. /opt/omnileads/
-systemctl enable asterisk
-systemctl restart asterisk
-
-echo "********************************** sngrep SIP sniffer install *********************************"
-echo "********************************** sngrep SIP sniffer install *********************************"
-yum install -y ncurses-devel make libpcap-devel pcre-devel openssl-devel git gcc autoconf automake
-cd $SRC && git clone https://github.com/irontec/sngrep
-cd sngrep && ./bootstrap.sh && ./configure && make && make install
-ln -s /usr/local/bin/sngrep /usr/bin/sngrep
-
-reboot
+ansible-playbook matrix.yml --extra-vars \
+  "django_repo_path=$(pwd)/components/django/ \
+  redis_repo_path=$(pwd)/components/redis/ \
+  pgsql_repo_path=$(pwd)/components/postgresql/ \
+  kamailio_repo_path=$(pwd)/components/kamailio/ \
+  asterisk_repo_path=$(pwd)/components/asterisk/ \
+  rtpengine_repo_path=$(pwd)/components/rtpengine/ \
+  websockets_repo_path=$(pwd)/components/websockets/ \
+  nginx_repo_path=$(pwd)/components/nginx/ \
+  minio_repo_path=$(pwd)/components/minio/ \
+  observability_repo_path=$(pwd)/components/observability/ \
+  rebrand=false \
+  tenant_folder=cacanene \
+  commit=ascd \
+  build_date=\"$(env LC_hosts=C LC_TIME=C date)\"" \
+  --tags voice \
+  -i inventory_voice.yml

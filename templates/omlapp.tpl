@@ -1,177 +1,107 @@
 #!/bin/bash
 
-#oml_app_repo_url=https://gitlab.com/omnileads/ominicontacto.git
-SRC=/usr/src
-PATH_DEPLOY=install/onpremise/deploy/ansible
-CALLREC_DIR_DST=/opt/omnileads/asterisk/var/spool/asterisk/monitor
-SSM_AGENT_URL="https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm"
-S3FS="/bin/s3fs"
-PATH_CERTS="$(cd "$(dirname "$BASH_SOURCE")" &> /dev/null && pwd)/certs"
+#oml_nic=ens18
+#oml_app_host=172.16.101.42
+#oml_obs_host=172.16.101.43
+#oml_pgsql_host=172.16.101.42
+#oml_pgsql_port=5432
+#oml_pgsql_user=omnileads
+#oml_pgsql_password=omnileads
+#oml_ami_user=omnileads
+#oml_ami_password=omnileads
+#oml_callrec_device=s3
+#s3_bucket_name=omnileads
 
-
-# if callrec device like DISK BLOCK DEVICE
-if [[ ${oml_callrec_device} == "disk" ]];then
-  CALLREC_BLOCK_DEVICE=/dev/disk/by-label/callrec-${oml_tenant_name}
-fi
-
-echo "******************** OML RELEASE = ${oml_app_release} ********************"
-
-sleep 60
-
-echo -n "AWS"
 PRIVATE_IPV4=$(ip addr show ${oml_nic} | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
 PUBLIC_IPV4=$(curl ifconfig.co)
 
-echo "******************** SELinux and firewalld disable ********************"
+echo "******************** update and install packages ********************"
 
-setenforce 0
-sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/sysconfig/selinux
-sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/selinux/config
-systemctl disable firewalld > /dev/null 2>&1
-systemctl stop firewalld > /dev/null 2>&1
-
-echo "******************** yum update and install packages ********************"
-
-yum remove -y python3 python3-pip
-yum install -y $SSM_AGENT_URL
-yum install -y patch libedit-devel libuuid-devel git
-amazon-linux-extras install -y epel
-amazon-linux-extras install python3 -y
-systemctl start amazon-ssm-agent
-
-echo "******************** Ansible installation ********************"
-
-pip3 install --upgrade pip
-pip3 install boto boto3 botocore 'ansible==2.9.2' awscli
-export PATH="$HOME/.local/bin/:$PATH"
+apt update
+apt install -y ansible git curl
 
 echo "******************** git clone omnileads repo ********************"
 
-cd $SRC
-git clone --recurse-submodules --branch ${oml_app_release} ${oml_app_repo_url}
-cd ominicontacto
-git submodule update --remote
+git clone --branch oml-261-terraform-aws-deploy https://gitlab.com/omnileads/omldeploytool
+cd omldeploytool/ansible
 
-echo "******************** inventory setting ********************"
+# echo "******************************************* config and install *****************************************"
+# echo "******************************************* config and install *****************************************"
+# echo "******************************************* config and install *****************************************"
+sed -i "s%\TZ:%TZ: ${oml_tz}%g" ./inventory_app.yml
+sed -i "s/omni_ip_lan:/omni_ip_lan: $PRIVATE_IPV4/g" ./inventory_app.yml
+sed -i "s/voice_host:/voice_host: ${oml_acd_host}/g" ./inventory_app.yml
+sed -i "s/application_host:/application_host: $PRIVATE_IPV4/g" ./inventory_app.yml
+sed -i "s/observability_host:/observability_host: ${oml_kamailio_host}/g" ./inventory_app.yml
+sed -i "s/postgres_host:/postgres_host: ${oml_pgsql_host}/g" ./inventory_app.yml
+sed -i "s/postgres_port:/postgres_port: ${oml_pgsql_port}/g" ./inventory_app.yml
+sed -i "s/postgres_database:/postgres_database: ${oml_pgsql_db}/g" ./inventory_app.yml
+sed -i "s/postgres_user:/postgres_user: ${oml_pgsql_user}/g" ./inventory_app.yml
+sed -i "s/postgres_password:/postgres_password: ${oml_pgsql_password}/g" ./inventory_app.yml
+sed -i "s/ami_user:/ami_user: ${oml_ami_user}/g" ./inventory_app.yml
+sed -i "s/ami_password:/ami_password: ${oml_ami_password}/g" ./inventory_app.yml
+sed -i "s/callrec_device:/callrec_device: ${oml_callrec_device}/g" ./inventory_app.yml
+sed -i "s/s3_bucket_name:/s3_bucket_name: ${s3_bucket_name}/g" ./inventory_app.yml
 
-sed -i "s/#localhost ansible/localhost ansible/g" $PATH_DEPLOY/inventory
 
-# PGSQL edit inventory params **************************************************
-if [[ "${oml_pgsql_cloud}"  == "true" ]];then
-  sed -i "s/postgres_cloud=false/postgres_cloud=true/g" $PATH_DEPLOY/inventory
-fi
-if [[ "${oml_pgsql_db}"  != "NULL" ]];then
-  sed -i "s/postgres_database=omnileads/postgres_database=${oml_pgsql_db}/g" $PATH_DEPLOY/inventory
-fi
-if [[ "${oml_pgsql_user}"  != "NULL" ]];then
-  sed -i "s/#postgres_user=omnileads/postgres_user=${oml_pgsql_user}/g" $PATH_DEPLOY/inventory
-fi
-if [[ "${oml_pgsql_password}"  != "NULL" ]];then
-  sed -i "s/#postgres_password=my_very_strong_pass/postgres_password=${oml_pgsql_password}/g" $PATH_DEPLOY/inventory
-fi
-if [[ "${oml_pgsql_host}"  != "NULL" ]];then
-  sed -i "s/#postgres_host=/postgres_host=${oml_pgsql_host}/g" $PATH_DEPLOY/inventory
-fi
-if [[ "${oml_pgsql_port}"  != "NULL" ]];then
-  sed -i "s/#postgres_port=/postgres_port=${oml_pgsql_port}/g" $PATH_DEPLOY/inventory
-fi
-
-# Asterisk ACD parameters *******
-if [[ "${oml_ami_user}"  != "NULL" ]];then
-  sed -i "s/#ami_user=omnileadsami/ami_user=${oml_ami_user}/g" $PATH_DEPLOY/inventory
-fi
-if [[ "${oml_ami_password}"  != "NULL" ]];then
-  sed -i "s/#ami_password=5_MeO_DMT/ami_password=${oml_ami_password}/g" $PATH_DEPLOY/inventory
-fi
-if [[ "${oml_acd_host}"  != "NULL" ]];then
-  sed -i "s/#asterisk_host=/asterisk_host=${oml_acd_host}/g" $PATH_DEPLOY/inventory
-fi
-
-# Wombat Dialer parameters *******
+# # Wombat Dialer parameters *******
 if [[ "${api_dialer_user}"  != "NULL" ]];then
-  sed -i "s/#dialer_user=demoadmin/dialer_user=${api_dialer_user}/g" $PATH_DEPLOY/inventory
+  sed -i "s/dialer_user:/dialer_user: ${api_dialer_user}/g" ./inventory_app.yml
 fi
 if [[ "${api_dialer_password}"  != "NULL" ]];then
-  sed -i "s/#dialer_password=demo/dialer_password=${api_dialer_password}/g" $PATH_DEPLOY/inventory
+  sed -i "s/dialer_password:/dialer_password: ${api_dialer_password}/g" ./inventory_app.yml
 fi
 if [[ "${oml_dialer_host}" != "NULL" ]];then
-  sed -i "s/#dialer_host=/dialer_host=${oml_dialer_host}/g" $PATH_DEPLOY/inventory
-fi
-
-# WebRTC kamailio & rtpengine params *******
-if [[ "${oml_kamailio_host}"  != "NULL" ]];then
-  sed -i "s/#kamailio_host=/kamailio_host=${oml_kamailio_host}/g" $PATH_DEPLOY/inventory
+  sed -i "s/dialer_host:/dialer_host: ${oml_dialer_host}/g" ./inventory_app.yml
 fi
 if [[ "${oml_rtpengine_host}" != "NULL" ]];then
-  sed -i "s/#rtpengine_host=/rtpengine_host=${oml_rtpengine_host}/g" $PATH_DEPLOY/inventory
-fi
-if [[ "${oml_extern_ip}" != "NULL" ]];then
-  sed -i "s/#extern_ip=auto/extern_ip=${oml_extern_ip}/g" $PATH_DEPLOY/inventory
+  sed -i "s/rtpengine_host:/rtpengine_host: ${oml_rtpengine_host}/g" ./inventory_app.yml
 fi
 
-# Redis, Nginx and Websockets params *******
-if [[ "${oml_redis_host}" != "NULL" ]];then
-  sed -i "s/#redis_host=/redis_host=${oml_redis_host}/g" $PATH_DEPLOY/inventory
-fi
-if [[ "$NGINX_HOST" != "NULL" ]];then
-  sed -i "s/#nginx_host=/nginx_host=$NGINX_HOST/g" $PATH_DEPLOY/inventory
-fi
-if [[ "${oml_websocket_host}" != "NULL" ]];then
-  sed -i "s/#websocket_host=/websocket_host=${oml_websocket_host}/g" $PATH_DEPLOY/inventory
-fi
-if [[ "${oml_websocket_port}" != "NULL" ]];then
-  sed -i "s/websocket_port=8000/websocket_port=${oml_websocket_port}/g" $PATH_DEPLOY/inventory
-fi
-
-# Others App params *******
-sed -i "s%\#TZ=%TZ=${oml_tz}%g" $PATH_DEPLOY/inventory
-
-if [[ "$${oml_app_sca}" != "NULL" ]];then
-  sed -i "s/sca=3600/sca=${oml_app_sca}/g" $PATH_DEPLOY/inventory
-fi
-if [[ "${oml_app_ecctl}" != "NULL" ]];then
-  sed -i "s/sca=28800/sca=${oml_app_ecctl}/g" $PATH_DEPLOY/inventory
-fi
-if [[ "${oml_app_login_fail_limit}" != "NULL" ]];then
-  sed -i "s/LOGIN_FAILURE_LIMIT=10/LOGIN_FAILURE_LIMIT=${oml_app_login_fail_limit}/g" $PATH_DEPLOY/inventory
-fi
-if [[ "${oml_app_reset_admin_pass}" == "true" ]];then
-  sed -i "s/reset_admin_password=false/reset_admin_password=true/g" $PATH_DEPLOY/inventory
-fi
+# if [[ "$${oml_app_sca}" != "NULL" ]];then
+#   sed -i "s/sca=3600/sca=${oml_app_sca}/g" ./inventory_app.yml
+# fi
+# if [[ "${oml_app_ecctl}" != "NULL" ]];then
+#   sed -i "s/sca=28800/sca=${oml_app_ecctl}/g" ./inventory_app.yml
+# fi
+# if [[ "${oml_app_login_fail_limit}" != "NULL" ]];then
+#   sed -i "s/LOGIN_FAILURE_LIMIT=10/LOGIN_FAILURE_LIMIT=${oml_app_login_fail_limit}/g" ./inventory_app.yml
+# fi
 
 if [[ "${oml_s3_access_key}" != "NULL" ]];then
-sed -i "s%\#s3_access_key=%s3_access_key=${oml_s3_access_key}%g" $PATH_DEPLOY/inventory
+    sed -i "s%\s3_access_key:%s3_access_key: ${oml_s3_access_key}%g" ./inventory_app.yml
 fi
 if [[ "${oml_s3_secret_key}" != "NULL" ]];then
-sed -i "s%\#s3_secret_key=%s3_secret_key=${oml_s3_secret_key}%g" $PATH_DEPLOY/inventory
+    sed -i "s%\s3_secret_key:%s3_secret_key: ${oml_s3_secret_key}%g" ./inventory_app.yml
 fi
 if [[ "${aws_region}" != "NULL" ]];then
-sed -i "s%\#s3_region=%s3_region=${aws_region}%g" $PATH_DEPLOY/inventory
+    sed -i "s%\s3_region:%s3_region: ${aws_region}%g" ./inventory_app.yml
 fi
-if [[ "${s3_bucket_name}" != "NULL" ]];then
-sed -i "s%\#s3_bucket_name=%s3_bucket_name=${s3_bucket_name}%g" $PATH_DEPLOY/inventory
-fi
-if [[ "${oml_high_load}" == "true" ]];then
-sed -i "s/high_load=false/high_load=${oml_high_load}/g" $PATH_DEPLOY/inventory
-fi
-if [[ "${oml_high_load}" == "true" ]];then
-sed -i "s/high_load=false/high_load=${oml_high_load}/g" $PATH_DEPLOY/inventory
-fi
+
+sed -i "s/s3_bucket_name:/s3_bucket_name: ${s3_bucket_name}/g" ./inventory_app.yml
 
 if [ "${oml_google_maps_api_key}" != "NULL" ] && [ "${oml_google_maps_center}" != "NULL" ]; then
-sed -i "s%\#google_maps_api_key=%google_maps_api_key=${oml_google_maps_api_key}%g" $PATH_DEPLOY/inventory
-sed -i "s%\#google_maps_center=%google_maps_center=${oml_google_maps_center}%g" $PATH_DEPLOY/inventory
+    sed -i "s%\google_maps_api_key:%google_maps_api_key: ${oml_google_maps_api_key}%g" ./inventory_app.yml
+    sed -i "s%\google_maps_center:%google_maps_center: ${oml_google_maps_center}%g" ./inventory_app.yml
 fi
 
-sed -i "s/callrec_device=local/callrec_device=${oml_callrec_device}/g" $PATH_DEPLOY/inventory
+# sleep 3
+# echo "******************** deploy.sh execution ********************"
 
-sleep 4
-echo "******************** deploy.sh execution ********************"
-
-cd $PATH_DEPLOY
-./deploy.sh -i --iface=${oml_nic}
-
-sed -i "s/conversor.sh 1 0/conversor.sh 2 0/g" /var/spool/cron/omnileads
-sed -i "s/\/opt\/omnileads\/bin\/conversor.sh/\/opt\/omnileads\/utils\/conversor.sh/g" /var/spool/cron/omnileads
-
-reboot
+ ansible-playbook matrix.yml --extra-vars \
+  "django_repo_path=$(pwd)/components/django/ \
+  redis_repo_path=$(pwd)/components/redis/ \
+  pgsql_repo_path=$(pwd)/components/postgresql/ \
+  kamailio_repo_path=$(pwd)/components/kamailio/ \
+  asterisk_repo_path=$(pwd)/components/asterisk/ \
+  rtpengine_repo_path=$(pwd)/components/rtpengine/ \
+  websockets_repo_path=$(pwd)/components/websockets/ \
+  nginx_repo_path=$(pwd)/components/nginx/ \
+  minio_repo_path=$(pwd)/components/minio/ \
+  observability_repo_path=$(pwd)/components/observability/ \
+  rebrand=false \
+  tenant_folder=cacanene \
+  commit=ascd \
+  build_date=\"$(env LC_hosts=C LC_TIME=C date)\"" \
+  --tags app \
+  -i inventory_app.yml
