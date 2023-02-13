@@ -16,6 +16,9 @@ module "ec2" {
     api_dialer_user           = var.dialer_user
     api_dialer_password       = var.dialer_password
     oml_app_release           = var.oml_app_branch
+    oml_websockets_release    = var.oml_websockets_branch
+    oml_kamailio_release      = var.oml_kamailio_branch
+    oml_nginx_release         = var.oml_nginx_branch
     oml_app_ecctl             = var.ECCTL
     oml_rtpengine_host        = data.terraform_remote_state.shared_state.outputs.rtpengine_fqdn
     oml_app_sca               = var.SCA
@@ -28,12 +31,10 @@ module "ec2" {
     optoml_device             = "NULL"
     pgsql_device              = "NULL"
     oml_nic                   = var.instance_nic
+    oml_observability_host    = "${var.customer}-observability.${var.domain_name}"
     oml_acd_host              = "${var.customer}-asterisk.${var.domain_name}"
     oml_app_host              = "${var.customer}.${var.domain_name}"
-    oml_kamailio_host         = "${var.customer}-kamailio.${var.domain_name}"
     oml_redis_host            = "${var.customer}-redis.${var.domain_name}"
-    oml_websocket_host        = "${var.customer}-websockets.${var.domain_name}"
-    oml_websocket_port        = "8000"
     oml_extern_ip             = "auto"
     oml_app_login_fail_limit  = 10
     oml_app_init_env          = "NULL"
@@ -52,7 +53,7 @@ module "ec2" {
   launch_config_image_id                      = data.aws_ami.ubuntu.id
   launch_config_root_block_device_volume_size = var.customer_root_disk_size
   launch_config_root_block_device_volume_type = var.customer_root_disk_type
-  launch_config_associate_public_ip_address   = true
+  launch_config_associate_public_ip_address   = false
   launch_config_enable_monitoring             = true
   asg_min_size                                = 1
   asg_max_size                                = 1

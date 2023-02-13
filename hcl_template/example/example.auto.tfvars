@@ -16,12 +16,13 @@ ec2_asterisk_size       = "t2.micro"
 asterisk_root_disk_size = 50
 # REDIS component ec2 size
 ec2_redis_size          = "t2.micro"
+redis_root_disk_size    = 20
 # Wombat dialer component ec2 size
 ec2_dialer_size         = "t2.micro"
 dialer_root_disk_size   = 20
 # Kamailio component ec2 size
-ec2_kamailio_size       = "t2.micro"
-kamailio_root_disk_size = 25
+ec2_observability_size          = "t2.micro"
+observability_root_disk_size    = 25
 # Websockets component ec2 size
 ec2_websockets_size       = "t2.micro"
 websockets_root_disk_size = 25
@@ -32,11 +33,12 @@ mysql_rds_size          = "db.t3.micro"
 
 
 # Braches release to deploy
-oml_app_branch          ="release-1.24.2"
-oml_redis_branch        ="220606.01"
-oml_kamailio_branch     ="220614.01"
-oml_acd_branch          ="220614.01"
-oml_websockets_branch   ="220818.01"
+oml_app_branch          ="RC-230204.01"
+oml_redis_branch        ="230204.01"
+oml_kamailio_branch     ="230204.01"
+oml_acd_branch          ="230204.01"
+oml_websockets_branch   ="230204.01"
+oml_nginx_branch        ="230204.01"
 
 # Customer variables
 customer                = "example"

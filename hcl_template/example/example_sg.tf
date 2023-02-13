@@ -113,30 +113,23 @@ resource "aws_security_group" "asterisk_ec2_sg" {
   )
 }
 
-resource "aws_security_group" "kamailio_ec2_sg" {
-  name        = "${module.tags.tags.prefix}-${module.tags.tags.environment}-${var.customer}-kamailio-SG"
+resource "aws_security_group" "observability_ec2_sg" {
+  name        = "${module.tags.tags.prefix}-${module.tags.tags.environment}-${var.customer}-observability-SG"
   vpc_id      = data.terraform_remote_state.shared_state.*.outputs.vpc_id[0]
   description = "${module.tags.tags.role} EC2 Instances Service Kamailio SG"
 
   ingress {
-    from_port   = 5060
-    to_port     = 5060
+    from_port   = 9090
+    to_port     = 9090
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Prometheus"
+  }
+  ingress {
+    from_port   = 9060
+    to_port     = 9060
     protocol    = "udp"
     cidr_blocks = [data.terraform_remote_state.shared_state.outputs.vpc_cidr_block]
-    description = "kamailio SIP UDP"
-  }
-  ingress {
-    from_port   = 14443
-    to_port     = 14443
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-    description = "kamailio SIP WSS"
-  }
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
     description = "AMI"
   }
   egress {
@@ -146,8 +139,8 @@ resource "aws_security_group" "kamailio_ec2_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
   tags = merge(module.tags.tags,
-    map("Name", "${module.tags.tags.environment}-${var.customer}-kamailio-SG"),
-    map("role", "${module.tags.tags.environment}-${var.customer}-kamailio-SG")
+    map("Name", "${module.tags.tags.environment}-${var.customer}-observability-SG"),
+    map("role", "${module.tags.tags.environment}-${var.customer}-observability-SG")
   )
 }
 
@@ -171,7 +164,7 @@ resource "aws_security_group" "wombat_ec2_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
   tags = merge(module.tags.tags,
-    map("Name", "${module.tags.tags.environment}-${var.customer}-kamailio-SG"),
-    map("role", "${module.tags.tags.environment}-${var.customer}-kamailio-SG")
+    map("Name", "${module.tags.tags.environment}-${var.customer}-wombat-SG"),
+    map("role", "${module.tags.tags.environment}-${var.customer}-wombat-SG")
   )
 }

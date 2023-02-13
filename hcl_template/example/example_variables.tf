@@ -125,6 +125,7 @@ variable "reset_admin_pass" {}
 
 variable "oml_app_branch" {}
 variable "oml_acd_branch" {}
+variable "oml_nginx_branch" {}
 variable "oml_redis_branch" {}
 variable "oml_kamailio_branch" {}
 variable "oml_websockets_branch" {}
@@ -132,7 +133,7 @@ variable "oml_websockets_branch" {}
 variable "ec2_oml_size" {}
 variable "ec2_asterisk_size" {}
 variable "ec2_dialer_size" {}
-variable "ec2_kamailio_size" {}
+variable "ec2_observability_size" {}
 variable "ec2_redis_size" {}
 variable "ec2_websockets_size" {}
 # App # App # App
@@ -151,8 +152,8 @@ variable "pstn_trunks" {
 variable "oml_high_load" {}
 
 variable "asterisk_root_disk_size" {}
-variable "kamailio_root_disk_size" {}
-variable "websockets_root_disk_size" {}
+variable "observability_root_disk_size" {}
+variable "redis_root_disk_size" {}
 
 variable "s3_access_key" {}
 variable "s3_secret_key" {}

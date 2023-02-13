@@ -30,30 +30,11 @@ cd omldeploytool/ansible
 # echo "******************************************* config and install *****************************************"
 # echo "******************************************* config and install *****************************************"
 
-sed -i "s/asterisk_version:/asterisk_version: ${oml_acd_release}/g" ./inventory_voice.yml
-
 sed -i "s%\TZ:%TZ: ${oml_tz}%g" ./inventory_voice.yml
-sed -i "s/omni_ip_lan:/omni_ip_lan: $PRIVATE_IPV4/g" ./inventory_voice.yml
-sed -i "s/voice_host:/voice_host: $PRIVATE_IPV4/g" ./inventory_voice.yml
+sed -i "s/voice_host:/voice_host: ${oml_voice_host}/g" ./inventory_voice.yml
 sed -i "s/application_host:/application_host: ${oml_app_host}/g" ./inventory_voice.yml
-sed -i "s/observability_host:/observability_host: ${oml_observability_host}/g" ./inventory_voice.yml
+sed -i "s/observability_host:/observability_host: $PRIVATE_IPV4/g" ./inventory_voice.yml
 sed -i "s/#redis_host:/redis_host: ${oml_redis_host}/g" ./inventory_voice.yml
-sed -i "s/postgres_host:/postgres_host: ${oml_pgsql_host}/g" ./inventory_voice.yml
-sed -i "s/postgres_port:/postgres_port: ${oml_pgsql_port}/g" ./inventory_voice.yml
-sed -i "s/postgres_database:/postgres_database: ${oml_pgsql_db}/g" ./inventory_voice.yml
-sed -i "s/postgres_user:/postgres_user: ${oml_pgsql_user}/g" ./inventory_voice.yml
-sed -i "s/postgres_password:/postgres_password: ${oml_pgsql_password}/g" ./inventory_voice.yml
-sed -i "s/ami_user:/ami_user: ${oml_ami_user}/g" ./inventory_voice.yml
-sed -i "s/ami_password:/ami_password: ${oml_ami_password}/g" ./inventory_voice.yml
-sed -i "s/callrec_device:/callrec_device: ${oml_callrec_device}/g" ./inventory_voice.yml
-
-sed -i "s/bucket_name:/bucket_name: ${s3_bucket_name}/g" ./inventory_voice.yml
-sed -i "s/bucket_url:/bucket_url: aws/g" ./inventory_voice.yml
-
-if [[ "${aws_region}" != "NULL" ]];then
-    sed -i "s/bucket_region: us-east-1/bucket_region: ${aws_region}/g" ./inventory_voice.yml
-fi
-
 
 ansible-playbook matrix.yml --extra-vars \
   "django_repo_path=$(pwd)/components/django/ \
@@ -70,5 +51,5 @@ ansible-playbook matrix.yml --extra-vars \
   tenant_folder=cacanene \
   commit=ascd \
   build_date=\"$(env LC_hosts=C LC_TIME=C date)\"" \
-  --tags asterisk \
-  -i inventory_voice.yml
+  --tags observability \
+  -i inventory_obs.yml
