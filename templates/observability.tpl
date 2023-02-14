@@ -30,11 +30,12 @@ cd omldeploytool/ansible
 # echo "******************************************* config and install *****************************************"
 # echo "******************************************* config and install *****************************************"
 
-sed -i "s%\TZ:%TZ: ${oml_tz}%g" ./inventory_voice.yml
-sed -i "s/voice_host:/voice_host: ${oml_voice_host}/g" ./inventory_voice.yml
-sed -i "s/application_host:/application_host: ${oml_app_host}/g" ./inventory_voice.yml
-sed -i "s/observability_host:/observability_host: $PRIVATE_IPV4/g" ./inventory_voice.yml
-sed -i "s/#redis_host:/redis_host: ${oml_redis_host}/g" ./inventory_voice.yml
+sed -i "s%\TZ:%TZ: ${oml_tz}%g" ./inventory_obs.yml
+sed -i "s/omni_ip_lan:/omni_ip_lan: $PRIVATE_IPV4/g" ./inventory_obs.yml
+sed -i "s/voice_host:/voice_host: ${oml_voice_host}/g" ./inventory_obs.yml
+sed -i "s/application_host:/application_host: ${oml_app_host}/g" ./inventory_obs.yml
+sed -i "s/observability_host:/observability_host: $PRIVATE_IPV4/g" ./inventory_obs.yml
+sed -i "s/#redis_host:/redis_host: ${oml_redis_host}/g" ./inventory_obs.yml
 
 ansible-playbook matrix.yml --extra-vars \
   "django_repo_path=$(pwd)/components/django/ \

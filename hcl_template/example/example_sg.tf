@@ -11,11 +11,11 @@ resource "aws_security_group" "tenants_ec2_sg" {
     description     = "HTTPS between ${var.customer} ALB and ${var.customer} tenant"
   }
   ingress {
-    from_port   = 22
-    to_port     = 22
+    from_port   = 9100
+    to_port     = 9100
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-    description = "AMI"
+    cidr_blocks = [data.terraform_remote_state.shared_state.outputs.vpc_cidr_block]
+    description = "Prometheus Node EXP"
   }
   egress {
     from_port   = 0
@@ -41,6 +41,20 @@ resource "aws_security_group" "redis_ec2_sg" {
     protocol    = "tcp"
     cidr_blocks = [data.terraform_remote_state.shared_state.outputs.vpc_cidr_block]
     description = "Redis"
+  }
+  ingress {
+    from_port   = 9100
+    to_port     = 9100
+    protocol    = "tcp"
+    cidr_blocks = [data.terraform_remote_state.shared_state.outputs.vpc_cidr_block]
+    description = "Prometheus Node EXP"
+  }
+  ingress {
+    from_port   = 9121
+    to_port     = 9121
+    protocol    = "tcp"
+    cidr_blocks = [data.terraform_remote_state.shared_state.outputs.vpc_cidr_block]
+    description = "Redis prometheus exporter"
   }
   egress {
     from_port   = 0
@@ -94,13 +108,14 @@ resource "aws_security_group" "asterisk_ec2_sg" {
     cidr_blocks = [data.terraform_remote_state.shared_state.outputs.vpc_cidr_block]
     description = "AMI"
   }
-  ingress {
-    from_port   = 22
-    to_port     = 22
+    ingress {
+    from_port   = 9100
+    to_port     = 9100
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-    description = "AMI"
+    cidr_blocks = [data.terraform_remote_state.shared_state.outputs.vpc_cidr_block]
+    description = "Prometheus Node EXP"
   }
+
   egress {
     from_port   = 0
     to_port     = 0
