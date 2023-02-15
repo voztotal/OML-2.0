@@ -167,3 +167,5 @@ variable "google_maps_center" {}
 variable "upgrade_to_major" {
   default = "NULL"
 }
+
+variable "omldeploytool_branch" {}

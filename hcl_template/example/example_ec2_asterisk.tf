@@ -32,6 +32,7 @@ data "template_file" "asterisk" {
   template = file("${path.module}/templates/asterisk.tpl")
   vars = {
       oml_infras_stage          = var.cloud_provider
+      oml_deploytool_branch     = var.omldeploytool_branch
       aws_region                = var.aws_region
       oml_nic                   = var.instance_nic
       iam_role_name             = module.ec2.iam_role_name

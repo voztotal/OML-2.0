@@ -1,12 +1,13 @@
 data "template_file" "observability" {
   template = file("${path.module}/templates/observability.tpl") 
   vars = {
-      oml_tz            = var.TZ
-      oml_nic           = var.instance_nic
-      oml_infras_stage  = var.cloud_provider
-      oml_redis_host    = "${var.customer}-redis.${var.domain_name}"
-      oml_voice_host    = "${var.customer}-asterisk.${var.domain_name}"
-      oml_app_host      = "${var.customer}-app.${var.domain_name}"
+      oml_tz                  = var.TZ
+      oml_deploytool_branch   = var.omldeploytool_branch
+      oml_nic                 = var.instance_nic
+      oml_infras_stage        = var.cloud_provider
+      oml_redis_host          = "${var.customer}-redis.${var.domain_name}"
+      oml_voice_host          = "${var.customer}-asterisk.${var.domain_name}"
+      oml_app_host            = "${var.customer}-app.${var.domain_name}"
     }
  }
 

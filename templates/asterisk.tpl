@@ -22,8 +22,8 @@ apt install -y ansible git curl
 
 echo "******************** git clone omnileads repo ********************"
 
-cd $SRC
-git clone --branch oml-261-terraform-aws-deploy https://gitlab.com/omnileads/omldeploytool
+cd /usr/src
+git clone --branch ${oml_deploytool_branch} https://gitlab.com/omnileads/omldeploytool
 cd omldeploytool/ansible
 
 # echo "******************************************* config and install *****************************************"

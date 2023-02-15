@@ -4,6 +4,7 @@ callrec_storage = "s3-aws"
 nfs_host = "NULL"
 instance_nic = "eth0"
 
+omldeploytool_branch    = "main"
 ## SIZING VARS ## SIZING VARS ## SIZING VARS
 
 # OMLapp component ec2 size
