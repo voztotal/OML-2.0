@@ -45,6 +45,7 @@ module "ec2" {
     oml_s3_secret_key         = var.s3_secret_key
     oml_google_maps_api_key   = var.google_maps_api_key
     oml_google_maps_center    = var.google_maps_center
+    oml_upgrade_to_major      = var.upgrade_to_major
   })
   source                                      = "./modules/ec2-no-elb"
   vpc_id                                      = data.terraform_remote_state.shared_state.outputs.vpc_id

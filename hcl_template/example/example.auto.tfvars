@@ -72,3 +72,5 @@ oml_high_load           = "NULL"
 
 google_maps_api_key     ="NULL"
 google_maps_center      ="NULL"
+
+upgrade_to_major        ="NULL"

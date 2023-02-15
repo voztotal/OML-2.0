@@ -82,6 +82,7 @@ fi
 
 sed -i "s/#rtpengine_host:/rtpengine_host: ${oml_rtpengine_host}/g" ./inventory_app.yml
 
+
 # if [[ "$${oml_app_sca}" != "NULL" ]];then
 #   sed -i "s/sca=3600/sca=${oml_app_sca}/g" ./inventory_app.yml
 # fi
@@ -95,6 +96,10 @@ sed -i "s/#rtpengine_host:/rtpengine_host: ${oml_rtpengine_host}/g" ./inventory_
 if [ "${oml_google_maps_api_key}" != "NULL" ] && [ "${oml_google_maps_center}" != "NULL" ]; then
     sed -i "s%\google_maps_api_key:%google_maps_api_key: ${oml_google_maps_api_key}%g" ./inventory_app.yml
     sed -i "s%\google_maps_center:%google_maps_center: ${oml_google_maps_center}%g" ./inventory_app.yml
+fi
+
+if [[ "${oml_upgrade_to_major}" != "NULL" ]];then
+sed -i "s/#upgrade_from_oml_1/upgrade_from_oml_1/g" ./inventory_app.yml
 fi
 
 # sleep 3
