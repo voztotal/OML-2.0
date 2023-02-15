@@ -130,6 +130,9 @@ variable "oml_redis_branch" {}
 variable "oml_kamailio_branch" {}
 variable "oml_websockets_branch" {}
 
+variable "rds_postgres_version" {}
+variable "rds_replica_count" {}
+
 variable "ec2_oml_size" {}
 variable "ec2_asterisk_size" {}
 variable "ec2_dialer_size" {}

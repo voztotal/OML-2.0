@@ -8,12 +8,12 @@ module "rds_postgres" {
   username                    = var.pg_username
   password                    = var.pg_password
   engine                      = "postgres"
-  postgres_engine_version     = "11.18"
+  postgres_engine_version     = var.rds_postgres_version
   backup_retention_period     = 5
   security_group_ids          = [data.terraform_remote_state.shared_state.outputs.sg_rds_id]
   multi_az                    = false
   master_instance_class       = var.pg_rds_size
-  replica_count               = 0
+  replica_count               = var.rds_replica_count
   allow_major_version_upgrade = true
   replica_security_group_ids = [data.terraform_remote_state.shared_state.outputs.sg_rds_id]
   tags = merge(module.tags.tags,

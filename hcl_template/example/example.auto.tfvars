@@ -7,29 +7,29 @@ instance_nic = "eth0"
 ## SIZING VARS ## SIZING VARS ## SIZING VARS
 
 # OMLapp component ec2 size
-ec2_oml_size            = "t2.medium"
-customer_root_disk_type = "standard"
-customer_root_disk_size = 20
-ebs_volume_size         = 10
+ec2_oml_size                    = "t2.medium"
+customer_root_disk_type         = "standard"
+customer_root_disk_size         = 20
+ebs_volume_size                 = 10
 # Asterisk component ec2 size
-ec2_asterisk_size       = "t2.micro"
-asterisk_root_disk_size = 50
+ec2_asterisk_size               = "t2.micro"
+asterisk_root_disk_size         = 50
 # REDIS component ec2 size
-ec2_redis_size          = "t2.micro"
-redis_root_disk_size    = 20
+ec2_redis_size                  = "t2.micro"
+redis_root_disk_size            = 20
 # Wombat dialer component ec2 size
-ec2_dialer_size         = "t2.micro"
-dialer_root_disk_size   = 20
+ec2_dialer_size                 = "t2.micro"
+dialer_root_disk_size           = 20
 # Kamailio component ec2 size
 ec2_observability_size          = "t2.micro"
 observability_root_disk_size    = 25
 # Websockets component ec2 size
-ec2_websockets_size       = "t2.micro"
-websockets_root_disk_size = 25
+ec2_websockets_size             = "t2.micro"
+websockets_root_disk_size       = 25
 # RDS PGSQL cluster size
-pg_rds_size             = "db.t3.micro"
+pg_rds_size                     = "db.t3.micro"
 # RDS MySQL dialer backend SQL
-mysql_rds_size          = "db.t3.micro"
+mysql_rds_size                  = "db.t3.micro"
 
 
 # Braches release to deploy
@@ -39,6 +39,9 @@ oml_kamailio_branch     ="230204.01"
 oml_acd_branch          ="230204.01"
 oml_websockets_branch   ="230204.01"
 oml_nginx_branch        ="230204.01"
+
+rds_postgres_version    ="13.7"
+rds_replica_count       ="0"
 
 # Customer variables
 customer                = "example"
