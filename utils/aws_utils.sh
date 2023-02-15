@@ -36,7 +36,7 @@ prepare_deploy_links() {
     ln -s ../../hcl_template/example/Terrafile .
     if [ -f ${environment}.auto.tfvars ]; then
       cp ${environment}.auto.tfvars ${environment}.auto.tfvars.backup
-      cp ${environment}.auto.tfvars.backup ${environment}.auto.tfvars
+      cp ../../hcl_template/example/example.auto.tfvars ${environment}.auto.tfvars
     else
       ln -s ../../hcl_template/example/example.auto.tfvars .
     fi

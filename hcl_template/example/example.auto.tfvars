@@ -33,12 +33,12 @@ mysql_rds_size                  = "db.t3.micro"
 
 
 # Braches release to deploy
-oml_app_branch          ="RC-230204.01"
+oml_app_branch          ="RC-2.0.0"
 oml_redis_branch        ="230204.01"
 oml_kamailio_branch     ="230204.01"
 oml_acd_branch          ="230204.01"
 oml_websockets_branch   ="230204.01"
-oml_nginx_branch        ="230204.01"
+oml_nginx_branch        ="230215.01"
 
 rds_postgres_version    ="13.7"
 rds_replica_count       ="0"
