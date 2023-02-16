@@ -49,7 +49,7 @@ ansible-playbook matrix.yml --extra-vars \
   minio_repo_path=$(pwd)/components/minio/ \
   observability_repo_path=$(pwd)/components/observability/ \
   rebrand=false \
-  tenant_folder=cacanene \
+  tenant_folder=${oml_tenant} \
   commit=ascd \
   build_date=\"$(env LC_hosts=C LC_TIME=C date)\"" \
   --tags observability \

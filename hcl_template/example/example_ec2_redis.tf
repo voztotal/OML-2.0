@@ -2,6 +2,7 @@ data "template_file" "redis" {
   template = file("${path.module}/templates/redis.tpl") 
   vars = {
       oml_nic                   = var.instance_nic
+      oml_tenant                = var.customer
     }
  }
 

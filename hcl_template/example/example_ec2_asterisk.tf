@@ -52,5 +52,6 @@ data "template_file" "asterisk" {
       oml_callrec_device        = var.callrec_storage
       s3_bucket_name            = split(".", aws_s3_bucket.customer_data.bucket_domain_name)[0]
       oml_tz                    = var.TZ
+      oml_tenant                = var.customer
     }
  }

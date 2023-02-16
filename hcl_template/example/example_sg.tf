@@ -115,6 +115,13 @@ resource "aws_security_group" "asterisk_ec2_sg" {
     cidr_blocks = [data.terraform_remote_state.shared_state.outputs.vpc_cidr_block]
     description = "Prometheus Node EXP"
   }
+    ingress {
+    from_port   = 7088
+    to_port     = 7088
+    protocol    = "tcp"
+    cidr_blocks = [data.terraform_remote_state.shared_state.outputs.vpc_cidr_block]
+    description = "Prometheus Node EXP"
+  }
 
   egress {
     from_port   = 0
@@ -131,7 +138,7 @@ resource "aws_security_group" "asterisk_ec2_sg" {
 resource "aws_security_group" "observability_ec2_sg" {
   name        = "${module.tags.tags.prefix}-${module.tags.tags.environment}-${var.customer}-observability-SG"
   vpc_id      = data.terraform_remote_state.shared_state.*.outputs.vpc_id[0]
-  description = "${module.tags.tags.role} EC2 Instances Service Kamailio SG"
+  description = "${module.tags.tags.role} EC2 Instances Service Observability SG"
 
   ingress {
     from_port   = 9090
