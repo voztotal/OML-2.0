@@ -118,6 +118,8 @@ variable "cloud_provider" {}
 variable "instance_nic" {}
 variable "callrec_storage" {}
 
+variable "pg_storage" {}
+
 variable "nfs_host" {}
 
 variable "reset_admin_pass" {}

@@ -148,6 +148,13 @@ resource "aws_security_group" "observability_ec2_sg" {
     description = "Prometheus"
   }
   ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Prometheus"
+  }
+  ingress {
     from_port   = 9060
     to_port     = 9060
     protocol    = "udp"

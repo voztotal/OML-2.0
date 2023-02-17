@@ -29,6 +29,7 @@ ec2_websockets_size             = "t2.micro"
 websockets_root_disk_size       = 25
 # RDS PGSQL cluster size
 pg_rds_size                     = "db.t3.micro"
+pg_storage                      = 10
 # RDS MySQL dialer backend SQL
 mysql_rds_size                  = "db.t3.micro"
 
