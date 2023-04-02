@@ -39,7 +39,7 @@ data "template_file" "asterisk" {
       oml_acd_release           = var.oml_acd_branch
       oml_tenant_name           = var.customer
       oml_app_host              = "${var.customer}.${var.domain_name}"
-      oml_redis_host            = "${var.customer}-redis.${var.domain_name}"
+      oml_data_host            = "${var.customer}-redis.${var.domain_name}"
       oml_pgsql_host            = module.rds_postgres.address
       oml_pgsql_port            = 5432
       oml_pgsql_db              = var.pg_database

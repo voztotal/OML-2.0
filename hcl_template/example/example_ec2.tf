@@ -32,10 +32,9 @@ module "ec2" {
     optoml_device             = "NULL"
     pgsql_device              = "NULL"
     oml_nic                   = var.instance_nic
-    oml_observability_host    = "${var.customer}-observability.${var.domain_name}"
-    oml_acd_host              = "${var.customer}-asterisk.${var.domain_name}"
+    oml_voice_host              = "${var.customer}-asterisk.${var.domain_name}"
     oml_app_host              = "${var.customer}.${var.domain_name}"
-    oml_redis_host            = "${var.customer}-redis.${var.domain_name}"
+    oml_data_host            = "${var.customer}-redis.${var.domain_name}"
     oml_extern_ip             = "auto"
     oml_app_login_fail_limit  = 10
     oml_app_init_env          = "NULL"

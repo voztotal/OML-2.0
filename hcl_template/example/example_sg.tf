@@ -17,6 +17,13 @@ resource "aws_security_group" "tenants_ec2_sg" {
     cidr_blocks = [data.terraform_remote_state.shared_state.outputs.vpc_cidr_block]
     description = "Prometheus Node EXP"
   }
+  ingress {
+    from_port   = 9090
+    to_port     = 9090
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Prometheus"
+  }
   egress {
     from_port   = 0
     to_port     = 0
@@ -108,21 +115,20 @@ resource "aws_security_group" "asterisk_ec2_sg" {
     cidr_blocks = [data.terraform_remote_state.shared_state.outputs.vpc_cidr_block]
     description = "AMI"
   }
-    ingress {
+  ingress {
     from_port   = 9100
     to_port     = 9100
     protocol    = "tcp"
     cidr_blocks = [data.terraform_remote_state.shared_state.outputs.vpc_cidr_block]
     description = "Prometheus Node EXP"
   }
-    ingress {
-    from_port   = 7088
-    to_port     = 7088
-    protocol    = "tcp"
+  ingress {
+    from_port   = 9060
+    to_port     = 9060
+    protocol    = "udp"
     cidr_blocks = [data.terraform_remote_state.shared_state.outputs.vpc_cidr_block]
-    description = "Prometheus Node EXP"
+    description = "Homer Heplify"
   }
-
   egress {
     from_port   = 0
     to_port     = 0
@@ -135,43 +141,43 @@ resource "aws_security_group" "asterisk_ec2_sg" {
   )
 }
 
-resource "aws_security_group" "observability_ec2_sg" {
-  name        = "${module.tags.tags.prefix}-${module.tags.tags.environment}-${var.customer}-observability-SG"
-  vpc_id      = data.terraform_remote_state.shared_state.*.outputs.vpc_id[0]
-  description = "${module.tags.tags.role} EC2 Instances Service Observability SG"
+# resource "aws_security_group" "observability_ec2_sg" {
+#   name        = "${module.tags.tags.prefix}-${module.tags.tags.environment}-${var.customer}-observability-SG"
+#   vpc_id      = data.terraform_remote_state.shared_state.*.outputs.vpc_id[0]
+#   description = "${module.tags.tags.role} EC2 Instances Service Observability SG"
 
-  ingress {
-    from_port   = 9090
-    to_port     = 9090
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-    description = "Prometheus"
-  }
-  ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-    description = "Prometheus"
-  }
-  ingress {
-    from_port   = 9060
-    to_port     = 9060
-    protocol    = "udp"
-    cidr_blocks = [data.terraform_remote_state.shared_state.outputs.vpc_cidr_block]
-    description = "AMI"
-  }
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  tags = merge(module.tags.tags,
-    map("Name", "${module.tags.tags.environment}-${var.customer}-observability-SG"),
-    map("role", "${module.tags.tags.environment}-${var.customer}-observability-SG")
-  )
-}
+#   ingress {
+#     from_port   = 9090
+#     to_port     = 9090
+#     protocol    = "tcp"
+#     cidr_blocks = ["0.0.0.0/0"]
+#     description = "Prometheus"
+#   }
+#   ingress {
+#     from_port   = 80
+#     to_port     = 80
+#     protocol    = "tcp"
+#     cidr_blocks = ["0.0.0.0/0"]
+#     description = "Prometheus"
+#   }
+#   ingress {
+#     from_port   = 9060
+#     to_port     = 9060
+#     protocol    = "udp"
+#     cidr_blocks = [data.terraform_remote_state.shared_state.outputs.vpc_cidr_block]
+#     description = "AMI"
+#   }
+#   egress {
+#     from_port   = 0
+#     to_port     = 0
+#     protocol    = "-1"
+#     cidr_blocks = ["0.0.0.0/0"]
+#   }
+#   tags = merge(module.tags.tags,
+#     map("Name", "${module.tags.tags.environment}-${var.customer}-observability-SG"),
+#     map("role", "${module.tags.tags.environment}-${var.customer}-observability-SG")
+#   )
+# }
 
 
 resource "aws_security_group" "wombat_ec2_sg" {

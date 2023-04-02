@@ -4,7 +4,7 @@ callrec_storage = "s3-aws"
 nfs_host = "NULL"
 instance_nic = "eth0"
 
-omldeploytool_branch    = "main"
+omldeploytool_branch    = "develop"
 ## SIZING VARS ## SIZING VARS ## SIZING VARS
 
 # OMLapp component ec2 size
@@ -35,10 +35,10 @@ mysql_rds_size                  = "db.t3.micro"
 
 
 # Braches release to deploy
-oml_app_branch          ="RC-2.0.0"
+oml_app_branch          ="1.26.0"
 oml_redis_branch        ="230204.01"
 oml_kamailio_branch     ="230204.01"
-oml_acd_branch          ="230204.01"
+oml_acd_branch          ="230328.01"
 oml_websockets_branch   ="230204.01"
 oml_nginx_branch        ="230215.01"
 
