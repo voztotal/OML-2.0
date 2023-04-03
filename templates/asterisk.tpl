@@ -28,7 +28,7 @@ sed -i "s/omni_ip_lan: /omni_ip_lan: $PRIVATE_IPV4/g" ./inventory.yml
 sed -i "s/asterisk_version:/asterisk_version: ${oml_acd_release}/g" ./inventory.yml
 sed -i "s%\TZ:%TZ: ${oml_tz}%g" ./inventory.yml
 
-sed -i "s/#postgres_host: oml-fabi-do-user-6023066-0.b.db.ondigitalocean.com/postgres_host: ${oml_pgsql_host}/g" ./inventory.yml
+sed -i "s/#postgres_host: /postgres_host: ${oml_pgsql_host}/g" ./inventory.yml
 sed -i "s/postgres_port: 5432/postgres_port: ${oml_pgsql_port}/g" ./inventory.yml
 sed -i "s/postgres_database: omnileads/postgres_database: ${oml_pgsql_db}/g" ./inventory.yml
 sed -i "s/postgres_user: omnileads/postgres_user: ${oml_pgsql_user}/g" ./inventory.yml
