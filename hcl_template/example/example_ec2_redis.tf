@@ -3,6 +3,10 @@ data "template_file" "redis" {
   vars = {
       oml_nic                   = var.instance_nic
       oml_tenant                = var.customer
+      oml_deploytool_branch     = var.omldeploytool_branch
+      oml_tz                    = var.TZ
+      oml_app_host              = "${var.customer}.${var.domain_name}"
+      oml_voice_host            = "${var.customer}-asterisk.${var.domain_name}"
     }
  }
 

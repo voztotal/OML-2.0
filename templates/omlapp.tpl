@@ -125,7 +125,7 @@ pstn_repo_path=$(pwd)/components/pstn_emulator/ \
 addons_repo_path=$(pwd)/components/addons/ \
 observability_repo_path=$(pwd)/components/observability/ \
 rebrand=false \
-tenant_folder=$oml_tenant \
+tenant_folder=${oml_tenant} \
 commit=ascd \
 build_date=\"$(env LC_hosts=C LC_TIME=C date)\"" \
 --tags app,observability \
