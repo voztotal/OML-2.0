@@ -1,6 +1,8 @@
 module "ec2" {
   additional_user_data = templatefile("${path.module}/templates/omlapp.tpl", {
-    s3_bucket_name            = split(".", aws_s3_bucket.customer_data.bucket_domain_name)[0]
+    bucket_name               = split(".", aws_s3_bucket.customer_data.bucket_domain_name)[0]
+    bucket_access_key         = var.s3_access_key
+    bucket_secret_key         = var.s3_secret_key
     oml_deploytool_branch     = var.omldeploytool_branch
     iam_role_name             = module.ec2.iam_role_name
     aws_region                = var.aws_region
@@ -31,14 +33,12 @@ module "ec2" {
     nfs_host                  = "NULL"
     optoml_device             = "NULL"
     pgsql_device              = "NULL"
-    oml_nic                   = var.instance_nic
     oml_voice_host              = "${var.customer}-asterisk.${var.domain_name}"
     oml_app_host              = "${var.customer}.${var.domain_name}"
     oml_data_host            = "${var.customer}-redis.${var.domain_name}"
     oml_extern_ip             = "auto"
     oml_app_login_fail_limit  = 10
     oml_app_init_env          = "NULL"
-    oml_app_reset_admin_pass  = var.reset_admin_pass
     oml_app_install_sngrep    = "false"
     oml_high_load             = var.oml_high_load
     oml_s3_access_key         = var.s3_access_key

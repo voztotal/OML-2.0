@@ -1,8 +1,6 @@
 ## GENERAL VARS ## GENERAL VARS ## GENERAL VARS
 cloud_provider = "aws"
 callrec_storage = "s3-aws"
-nfs_host = "NULL"
-instance_nic = "eth0"
 
 omldeploytool_branch    = "develop"
 ## SIZING VARS ## SIZING VARS ## SIZING VARS
@@ -12,27 +10,20 @@ ec2_oml_size                    = "t2.medium"
 customer_root_disk_type         = "standard"
 customer_root_disk_size         = 20
 ebs_volume_size                 = 10
-# Asterisk component ec2 size
+# VOICE component ec2 size
 ec2_asterisk_size               = "t2.micro"
 asterisk_root_disk_size         = 50
-# REDIS component ec2 size
+# DATA component ec2 size
 ec2_redis_size                  = "t2.micro"
 redis_root_disk_size            = 20
 # Wombat dialer component ec2 size
 ec2_dialer_size                 = "t2.micro"
 dialer_root_disk_size           = 20
-# Kamailio component ec2 size
-ec2_observability_size          = "t2.micro"
-observability_root_disk_size    = 25
-# Websockets component ec2 size
-ec2_websockets_size             = "t2.micro"
-websockets_root_disk_size       = 25
 # RDS PGSQL cluster size
 pg_rds_size                     = "db.t3.micro"
-pg_storage                      = 0
+pg_storage                      = 5
 # RDS MySQL dialer backend SQL
 mysql_rds_size                  = "db.t3.micro"
-
 
 # Braches release to deploy
 oml_app_branch          ="1.26.0"
@@ -66,8 +57,6 @@ mysql_database          = "wombat"
 mysql_username          = "root" # no cambiar este username
 mysql_password          = "admin123"
 wombat_version          = "20.02.1-271"
-
-reset_admin_pass        = "true"
 
 # Kamailio tweeks
 kamailio_shm_size       = "256"

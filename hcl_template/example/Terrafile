@@ -22,7 +22,7 @@ tf-aws-rds:
 # ALB
 terraform-aws-alb:
   source: "https://gitlab.com/freetech_solutions_terraform/terraform-aws-alb.git"
-  version: "master"
+  version: "develop"
 
 # NLB
 terraform-aws-nlb:

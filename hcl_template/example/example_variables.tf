@@ -115,14 +115,9 @@ variable "aws_default_region" {
 }
 
 variable "cloud_provider" {}
-variable "instance_nic" {}
 variable "callrec_storage" {}
 
 variable "pg_storage" {}
-
-variable "nfs_host" {}
-
-variable "reset_admin_pass" {}
 
 
 variable "oml_app_branch" {}
@@ -138,9 +133,7 @@ variable "rds_replica_count" {}
 variable "ec2_oml_size" {}
 variable "ec2_asterisk_size" {}
 variable "ec2_dialer_size" {}
-variable "ec2_observability_size" {}
 variable "ec2_redis_size" {}
-variable "ec2_websockets_size" {}
 # App # App # App
 
 variable "kamailio_pkg_size" {
@@ -157,7 +150,6 @@ variable "pstn_trunks" {
 variable "oml_high_load" {}
 
 variable "asterisk_root_disk_size" {}
-variable "observability_root_disk_size" {}
 variable "redis_root_disk_size" {}
 
 variable "s3_access_key" {}

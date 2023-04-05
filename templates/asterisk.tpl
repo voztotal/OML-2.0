@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PRIVATE_IPV4=$(ip addr show ${oml_nic} | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
+PRIVATE_IPV4=$(curl http://169.254.169.254/latest/meta-data/local-ipv4)
 PUBLIC_IPV4=$(curl ifconfig.co)
 
 echo "******************** update and install packages ********************"
@@ -35,15 +35,12 @@ sed -i "s/postgres_user: omnileads/postgres_user: ${oml_pgsql_user}/g" ./invento
 sed -i "s/postgres_password: AVNS_XZ1h82JjcV1w_Gyq6XY/postgres_password: ${oml_pgsql_password}/g" ./inventory.yml
 sed -i "s/ami_user: omnileads/ami_user: ${oml_ami_user}/g" ./inventory.yml
 sed -i "s/ami_password: C12H17N2O4P_o98o98/ami_password: ${oml_ami_password}/g" ./inventory.yml
-sed -i "s/callrec_device: s3-no-check-cert/callrec_device: ${oml_callrec_device}/g" ./inventory.yml
+sed -i "s/callrec_device: s3/callrec_device: ${oml_callrec_device}/g" ./inventory.yml
 
-#sed -i "s%\data_host: \"{{ hostvars['omnileads_data'].omni_ip_lan }}\"%data_host: ${oml_data_host}%g" ./inventory.yml
-#sed -i "s%\voice_host: \"{{ hostvars['omnileads_voice'].omni_ip_lan }}\"%voice_host: $PRIVATE_IPV4%g" ./inventory.yml
-#sed -i "s%\application_host: \"{{ hostvars['omnileads_app'].omni_ip_lan }}\"%application_host: ${oml_app_host}%g" ./inventory.yml
-
-sed -i "s/bucket_name: omnileads/bucket_name: ${s3_bucket_name}/g" ./inventory.yml
-sed -i "s/#bucket_url: https://sfo3.digitaloceanspaces.com/bucket_url: aws/g" ./inventory.yml
-
+sed -i "s/bucket_name: omnileads/bucket_name: ${bucket_name}/g" ./inventory.yml
+sed -i "s/bucket_access_key: uoHidalFyBdV7BQa/bucket_access_key: ${bucket_access_key}/g" ./inventory.yml
+sed -i "s/bucket_secret_key: de5lEoTbU8SbV0cNIdVzOMeCxYw5XbKZ/bucket_secret_key: ${bucket_secret_key}/g" ./inventory.yml
+sed -i "s/#bucket_url:/bucket_url: aws/g" ./inventory.yml
 if [[ "${aws_region}" != "NULL" ]];then
     sed -i "s/bucket_region: us-east-1/bucket_region: ${aws_region}/g" ./inventory.yml
 fi

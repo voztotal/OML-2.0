@@ -34,7 +34,6 @@ data "template_file" "asterisk" {
       oml_infras_stage          = var.cloud_provider
       oml_deploytool_branch     = var.omldeploytool_branch
       aws_region                = var.aws_region
-      oml_nic                   = var.instance_nic
       iam_role_name             = module.ec2.iam_role_name
       oml_acd_release           = var.oml_acd_branch
       oml_tenant_name           = var.customer
@@ -50,7 +49,9 @@ data "template_file" "asterisk" {
       oml_ami_user              = var.ami_user
       oml_ami_password          = var.ami_password
       oml_callrec_device        = var.callrec_storage
-      s3_bucket_name            = split(".", aws_s3_bucket.customer_data.bucket_domain_name)[0]
+      bucket_name               = split(".", aws_s3_bucket.customer_data.bucket_domain_name)[0]
+      bucket_access_key         = var.s3_access_key
+      bucket_secret_key         = var.s3_secret_key
       oml_tz                    = var.TZ
       oml_tenant                = var.customer
     }

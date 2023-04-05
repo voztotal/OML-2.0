@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PRIVATE_IPV4=$(ip addr show ${oml_nic} | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
+PRIVATE_IPV4=$(curl http://169.254.169.254/latest/meta-data/local-ipv4)
 PUBLIC_IPV4=$(curl ifconfig.co)
 
 echo "******************** update and install packages ********************"

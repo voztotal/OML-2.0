@@ -27,37 +27,7 @@ module "alb" {
   )
 }
 
-resource "aws_lb_listener_rule" "alb_ingress" {
-  listener_arn = module.alb.https_listener_arn
-  priority     = 100
-
-  action {
-    type             = "forward"
-    target_group_arn = module.alb.default_target_group_arn
-  }
-
-  condition {
-    field  = "host-header"
-    values = ["${var.customer}.${var.domain_name}"]
-  }
-}
-
-# resource "aws_lb_listener_rule" "alb_ingress_prometheus" {
-#   listener_arn = module.alb.prometheus_listener_arn
-#   priority     = 100
-
-#   action {
-#     type             = "forward"
-#     target_group_arn = module.alb.default_target_group_arn
-#   }
-
-#   condition {
-#     field  = "host-header"
-#     values = ["${var.customer}.${var.domain_name}"]
-#   }
-# }
-
-# resource "aws_lb_listener_rule" "alb_ingress_homer" {
+# resource "aws_lb_listener_rule" "alb_ingress" {
 #   listener_arn = module.alb.https_listener_arn
 #   priority     = 100
 
@@ -71,6 +41,15 @@ resource "aws_lb_listener_rule" "alb_ingress" {
 #     values = ["${var.customer}.${var.domain_name}"]
 #   }
 # }
+
+
+# esto no lo hago para nginx y prometheus, ya que se lo indica a nivel
+# module de ec2 autoscalling.
+resource "aws_lb_target_group_attachment" "homer" {
+  target_group_arn = module.alb.homer_target_group_arn
+  target_id        = aws_instance.asterisk.id
+  port             = 80
+}
 
 resource "aws_route53_record" "alb_dns" {
   zone_id = data.aws_route53_zone.selected.zone_id
