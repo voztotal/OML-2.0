@@ -45,7 +45,10 @@ if [[ "${aws_region}" != "NULL" ]];then
     sed -i "s/bucket_region: us-east-1/bucket_region: ${aws_region}/g" ./inventory.yml
 fi
 
-echo "data_host: ${oml_data_host}" >> ./inventory.yml
+echo " " >> ./inventory.yml
+echo " # edit by Terraform" >> ./inventory.yml
+echo " # edit by Terraform" >> ./inventory.yml
+echo "    data_host: ${oml_data_host}" >> ./inventory.yml
 echo "    voice_host: $PRIVATE_IPV4" >> ./inventory.yml
 echo "    application_host: ${oml_app_host}" >> ./inventory.yml
 

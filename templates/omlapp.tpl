@@ -100,7 +100,10 @@ if [[ "${oml_upgrade_to_major}" != "NULL" ]];then
 sed -i "s/#upgrade_from_oml_1/upgrade_from_oml_1/g" ./inventory.yml
 fi
 
-echo "data_host: ${oml_data_host}" >> ./inventory.yml
+echo " " >> ./inventory.yml
+echo " # edit by Terraform" >> ./inventory.yml
+echo " # edit by Terraform" >> ./inventory.yml
+echo "    data_host: ${oml_data_host}" >> ./inventory.yml
 echo "    voice_host: ${oml_voice_host}" >> ./inventory.yml
 echo "    application_host: $PRIVATE_IPV4" >> ./inventory.yml
 
@@ -132,3 +135,6 @@ commit=ascd \
 build_date=\"$(env LC_hosts=C LC_TIME=C date)\"" \
 --tags app,observability \
 -i inventory.yml
+
+
+until curl -sk --head  --request GET https://localhost |grep "302" > /dev/null; do echo "Environment still initializing , sleeping 10 seconds"; sleep 10; done; echo "Environment is up"

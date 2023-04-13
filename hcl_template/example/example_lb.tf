@@ -15,7 +15,7 @@ module "alb" {
   https_enabled                           = true
   idle_timeout                            = 600
   certificate_arn                         = data.terraform_remote_state.shared_state.outputs.acm_arn
-  target_group_name                       = "${module.tags.tags.environment}-${var.customer}-httpsTG"
+  target_group_name                       = "${var.customer}-httpsTG"
   target_group_protocol                   = "HTTPS"
   target_group_target_type                = "instance"
   target_group_port                       = 443
@@ -26,22 +26,6 @@ module "alb" {
     map("role", "${module.tags.tags.environment}-${var.customer}-ALB")
   )
 }
-
-# resource "aws_lb_listener_rule" "alb_ingress" {
-#   listener_arn = module.alb.https_listener_arn
-#   priority     = 100
-
-#   action {
-#     type             = "forward"
-#     target_group_arn = module.alb.default_target_group_arn
-#   }
-
-#   condition {
-#     field  = "host-header"
-#     values = ["${var.customer}.${var.domain_name}"]
-#   }
-# }
-
 
 # esto no lo hago para nginx y prometheus, ya que se lo indica a nivel
 # module de ec2 autoscalling.

@@ -26,7 +26,10 @@ sed -i "s/omni_ip_lan: /omni_ip_lan: $PRIVATE_IPV4/g" ./inventory.yml
 
 sed -i "s%\TZ:%TZ: ${oml_tz}%g" ./inventory.yml
 
-echo "data_host: $PRIVATE_IPV4" >> ./inventory.yml
+echo " " >> ./inventory.yml
+echo " # edit by Terraform" >> ./inventory.yml
+echo " # edit by Terraform" >> ./inventory.yml
+echo "    data_host: $PRIVATE_IPV4" >> ./inventory.yml
 echo "    voice_host: ${oml_voice_host}" >> ./inventory.yml
 echo "    application_host: ${oml_app_host}" >> ./inventory.yml
 
