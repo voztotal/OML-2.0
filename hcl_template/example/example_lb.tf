@@ -29,11 +29,11 @@ module "alb" {
 
 # esto no lo hago para nginx y prometheus, ya que se lo indica a nivel
 # module de ec2 autoscalling.
-resource "aws_lb_target_group_attachment" "homer" {
-  target_group_arn = module.alb.homer_target_group_arn
-  target_id        = aws_instance.asterisk.id
-  port             = 80
-}
+# resource "aws_lb_target_group_attachment" "homer" {
+#   target_group_arn = module.alb.homer_target_group_arn
+#   target_id        = aws_instance.asterisk.id
+#   port             = 80
+# }
 
 resource "aws_route53_record" "alb_dns" {
   zone_id = data.aws_route53_zone.selected.zone_id
