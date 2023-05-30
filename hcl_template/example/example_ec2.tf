@@ -1,9 +1,19 @@
+resource "aws_s3_bucket" "customer_data" {
+  bucket = "${module.tags.tags.environment}-${module.tags.tags.owner}-${var.customer}-data"
+  acl    = "private"
+  tags = merge(module.tags.tags,
+    map("Name", "${module.tags.tags.environment}-${module.tags.tags.owner}-${var.customer}-data"),
+    map("role", "${module.tags.tags.environment}-${module.tags.tags.owner}-${var.customer}-data")
+  )
+}
+
 module "ec2" {
-  additional_user_data = templatefile("${path.module}/templates/omlapp.tpl", {
+  additional_user_data = templatefile("${path.module}/templates/aio.tpl", {
     bucket_name               = split(".", aws_s3_bucket.customer_data.bucket_domain_name)[0]
     bucket_access_key         = var.s3_access_key
     bucket_secret_key         = var.s3_secret_key
     oml_deploytool_branch     = var.omldeploytool_branch
+    obs_host                  = var.obs_host
     iam_role_name             = module.ec2.iam_role_name
     aws_region                = var.aws_region
     oml_app_repo_url          = var.oml_app_repo_url
@@ -30,12 +40,6 @@ module "ec2" {
     oml_infras_stage          = var.cloud_provider
     oml_tenant_name           = var.customer
     oml_callrec_device        = var.callrec_storage
-    nfs_host                  = "NULL"
-    optoml_device             = "NULL"
-    pgsql_device              = "NULL"
-    oml_voice_host              = "${var.customer}-asterisk.${var.domain_name}"
-    oml_app_host              = "${var.customer}.${var.domain_name}"
-    oml_data_host            = "${var.customer}-redis.${var.domain_name}"
     oml_extern_ip             = "auto"
     oml_app_login_fail_limit  = 10
     oml_app_init_env          = "NULL"
@@ -53,8 +57,9 @@ module "ec2" {
   launch_config_key_name                      = data.terraform_remote_state.shared_state.outputs.ec2_key
   launch_config_instance_type                 = var.ec2_oml_size
   launch_config_image_id                      = data.aws_ami.ubuntu.id
+  launch_config_root_block_device_volume_name = "/dev/sda1"
   launch_config_root_block_device_volume_size = var.customer_root_disk_size
-  launch_config_root_block_device_volume_type = var.customer_root_disk_type
+  launch_config_root_block_device_volume_type = "gp3"
   launch_config_associate_public_ip_address   = false
   launch_config_enable_monitoring             = true
   asg_min_size                                = 1

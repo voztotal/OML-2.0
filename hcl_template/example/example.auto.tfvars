@@ -5,10 +5,12 @@ callrec_storage = "s3-aws"
 omldeploytool_branch    = "develop"
 ## SIZING VARS ## SIZING VARS ## SIZING VARS
 
+obs_host    = "190.19.150.8"
+
 # OMLapp component ec2 size
 ec2_oml_size                    = "t2.medium"
 customer_root_disk_type         = "standard"
-customer_root_disk_size         = 20
+customer_root_disk_size         = 30
 ebs_volume_size                 = 10
 # VOICE component ec2 size
 ec2_asterisk_size               = "t2.micro"

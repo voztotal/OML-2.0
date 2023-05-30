@@ -74,10 +74,10 @@ variable "domain_name" {
   description = "The domain configured in AWS"
   type        = "string"
 }
-variable "ebs_volume_size" {
-  description = "The disk size of EBS volume in customer EC2"
-  type        = number
-}
+# variable "ebs_volume_size" {
+#   description = "The disk size of EBS volume in customer EC2"
+#   type        = number
+# }
 variable "ECCTL" {
   description = "The number of seconds that ephimeral SIP credentials will last"
   type        = "string"
@@ -163,3 +163,4 @@ variable "upgrade_to_major" {
 }
 
 variable "omldeploytool_branch" {}
+variable "obs_host" {}
