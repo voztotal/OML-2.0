@@ -45,7 +45,7 @@ prepare_deploy_links() {
     rm -rf example_ec2_asterisk.tf
     rm -rf example_route53.tf
   else
-    echo "lola"
+    echo "ERROR: You must to pass the ARQ parameter"
   fi
   if [ -f ${environment}.auto.tfvars ]; then
       cp ${environment}.auto.tfvars ${environment}.auto.tfvars.backup

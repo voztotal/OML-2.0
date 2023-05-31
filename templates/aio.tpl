@@ -36,6 +36,11 @@ sed -i "50 s/bucket_access_key:/bucket_access_key: ${bucket_access_key}/g" $inve
 sed -i "51 s/bucket_secret_key:/bucket_secret_key: ${bucket_secret_key}/g" $inventory_path/inventory.yml
 sed -i "52 s/bucket_name: tenant_example_3/bucket_name: ${bucket_name}/g" $inventory_path/inventory.yml
 
+sed -i "s/#rtpengine_host:/rtpengine_host: ${oml_rtpengine_host}/g" $inventory_path/inventory.yml
+sed -i "s%\#bucket_url: https://sfo3.digitaloceanspaces.com%bucket_url: aws%g" $inventory_path/inventory.yml
+
+sed -i "s%\TZ: America/Argentina/Cordoba%TZ: ${oml_tz}%g" ./inventory.yml
+
 sed -i "s/ami_password:/ami_password: ${oml_ami_password}/g" $inventory_path/inventory.yml
 sed -i "s/ami_user: omnileads/ami_user: ${oml_ami_user}/g" $inventory_path/inventory.yml
 
@@ -46,10 +51,11 @@ sed -i "s/ami_user: omnileads/ami_user: ${oml_ami_user}/g" $inventory_path/inven
 
 sed -i "s/callrec_device: s3/callrec_device: ${oml_callrec_device}/g" $inventory_path/inventory.yml
 
+sed -i "s/infra_env: cloud/infra_env: lan/g" $inventory_path/inventory.yml
+
 sed -i "s/loki_host: 190.19.150.222/homer_host: ${obs_host}/g" $inventory_path/inventory.yml
 sed -i "s/homer_host: 190.19.150.222/homer_host: ${obs_host}/g" $inventory_path/inventory.yml
 
-sed -i "s/#bucket_url:/bucket_url: aws/g" $inventory_path/inventory.yml
 if [[ "${aws_region}" != "NULL" ]];then
     sed -i "s/bucket_region: us-east-1/bucket_region: ${aws_region}/g" $inventory_path/inventory.yml
 fi
@@ -90,5 +96,5 @@ sed -i "238 s/tenant_example_5_app/#tenant_example_5_app/g" $inventory_path/inve
 cd $deploy_tool_path/ansible
 ./deploy.sh --action=install --tenant=${oml_tenant}
 
-until curl -sk --head --request GET https://$PROXMOX_ADDR:5706|grep "302" > /dev/null; do echo "Environment still being installed, sleeping 60 seconds"; sleep 60; done; echo "Environment is up"
+until curl -sk --head --request GET https://$PRIVATE_IPV4|grep "302" > /dev/null; do echo "Environment still being installed, sleeping 60 seconds"; sleep 60; done; echo "Environment is up"
 
