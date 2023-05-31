@@ -12,8 +12,11 @@ if [ -z "${1}" ]; then
 fi
 
 prepare_deploy_links() {
+  
   local environment=$1
-  local dialer=$2
+  local arq=$2
+  local dialer=$3
+  
   if [ ! -d ${ENVS_DIR}/${environment} ]; then
     mkdir -p ${ENVS_DIR}/${environment}
   fi
@@ -31,33 +34,43 @@ prepare_deploy_links() {
     find . -name 'shared_*' -exec bash -c 'mv $0 ${0/shared/'"${environment}"'}' {} \;
     find . -name 'shared.*' -exec bash -c 'mv $0 ${0/shared/'"${environment}"'}' {} \;
     sed -i "s/changemeplease/${environment}/g" ${environment}.auto.tfvars
-  else
+  elif [[ ${arq} == *"cluster"* ]]; then
     ln -s ../../hcl_template/example/*.tf .
     ln -s ../../hcl_template/example/Terrafile .
-    if [ -f ${environment}.auto.tfvars ]; then
+    rm -rf example_ec2_aio.tf .
+  elif [[ ${arq} == *"aio"* ]]; then
+    ln -s ../../hcl_template/example/*.tf .
+    ln -s ../../hcl_template/example/Terrafile .
+    rm -rf example_ec2_cluster.tf
+    rm -rf example_ec2_asterisk.tf
+    rm -rf example_route53.tf
+  else
+    echo "lola"
+  fi
+  if [ -f ${environment}.auto.tfvars ]; then
       cp ${environment}.auto.tfvars ${environment}.auto.tfvars.backup
       cp ../../hcl_template/example/example.auto.tfvars ${environment}.auto.tfvars
-    else
-      ln -s ../../hcl_template/example/example.auto.tfvars .
-    fi
-    find . -name 'example_*' -exec bash -c 'mv $0 ${0/example/'"${environment}"'}' {} \;
-    find . -name 'example.*' -exec bash -c 'mv $0 ${0/example/'"${environment}"'}' {} \;
-    echo "Editing ${environment}_backend.tf and customer variable in ${environment}.auto.tfvars"
-    sed -i "s/example/${environment}/g" ${environment}.auto.tfvars
-    if [ "${dialer}" == "yes" ] || [ "${dialer}" == "YES" ]; then
-      ln -s ../../hcl_template/example/dialer/*.tf .
-      rm -rf ${environment}_locals.tf
-    elif [ "${dialer}" == "no" ] || [ "${dialer}" == "NO" ]; then
-      rm -rf dialer*
-      if [ ! -f ${environment}_locals.tf ]; then ln -s ../../hcl_template/example/example_locals.tf ./${environment}_locals.tf; fi
-    elif [ "${dialer}" == "" ]; then
-      echo "DIALER envar wasn't passed"; exit 1
-    else
-      echo "Invalid option for DIALER envar, valid options YES/yes or NO/no"; exit 1
-    fi
-    ln -s ../../common/*.tf .
-    sed -i "s/sharedus/${TF_VAR_shared_env}/" ./${environment}.auto.tfvars
+  else
+    ln -s ../../hcl_template/example/example.auto.tfvars .
+  fi  
+  find . -name 'example_*' -exec bash -c 'mv $0 ${0/example/'"${environment}"'}' {} \;
+  find . -name 'example.*' -exec bash -c 'mv $0 ${0/example/'"${environment}"'}' {} \;
+  echo "Editing ${environment}_backend.tf and customer variable in ${environment}.auto.tfvars"
+  sed -i "s/example/${environment}/g" ${environment}.auto.tfvars
+  if [ "${dialer}" == "yes" ] || [ "${dialer}" == "YES" ]; then
+    ln -s ../../hcl_template/example/dialer/*.tf .
+    rm -rf ${environment}_locals.tf
+  elif [ "${dialer}" == "no" ] || [ "${dialer}" == "NO" ]; then
+    rm -rf dialer*
+    if [ ! -f ${environment}_locals.tf ]; then ln -s ../../hcl_template/example/example_locals.tf ./${environment}_locals.tf; fi
+  elif [ "${dialer}" == "" ]; then
+    echo "DIALER envar wasn't passed"; exit 1
+  else
+    echo "Invalid option for DIALER envar, valid options YES/yes or NO/no"; exit 1
   fi
+  ln -s ../../common/*.tf .
+  sed -i "s/sharedus/${TF_VAR_shared_env}/" ./${environment}.auto.tfvars
+
   if [[ ${environment} == *"shared"* ]]; then
     rm -rf common_remote_state.tf
   fi
