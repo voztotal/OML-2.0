@@ -25,16 +25,18 @@ cp $deploy_tool_path/ansible/inventory.yml $inventory_path/
 sed -i "s/ansible_host: 201.22.11.2/ansible_connection: local/g" $inventory_path/inventory.yml
 sed -i "s/omni_ip_lan: 10.10.10.3/omni_ip_lan: $PRIVATE_IPV4/g" $inventory_path/inventory.yml
 
-sed -i "43 s/postgres_host:/postgres_host: ${oml_pgsql_host}/g" $inventory_path/inventory.yml
-sed -i "44 s/postgres_port:/postgres_port: ${oml_pgsql_port}/g" $inventory_path/inventory.yml
-sed -i "45 s/postgres_user:/postgres_user: ${oml_pgsql_user}/g" $inventory_path/inventory.yml
-sed -i "46 s/postgres_password:/postgres_password: ${oml_pgsql_password}/g" $inventory_path/inventory.yml
-sed -i "47 s/postgres_database: omnileads/postgres_database: ${oml_pgsql_db}/g" $inventory_path/inventory.yml
-sed -i "48 s/postgres_maintenance_db: defaultdb/postgres_maintenance_db: postgres/g" $inventory_path/inventory.yml
-sed -i "49 s/postgres_ssl: true/postgres_ssl: false/g" $inventory_path/inventory.yml
-sed -i "50 s/bucket_access_key:/bucket_access_key: ${bucket_access_key}/g" $inventory_path/inventory.yml
-sed -i "51 s/bucket_secret_key:/bucket_secret_key: ${bucket_secret_key}/g" $inventory_path/inventory.yml
-sed -i "52 s/bucket_name: tenant_example_3/bucket_name: ${bucket_name}/g" $inventory_path/inventory.yml
+sed -i "91 s/systemd/docker_compose/g" $inventory_path/inventory.yml
+
+sed -i "41 s/postgres_host:/postgres_host: ${oml_pgsql_host}/g" $inventory_path/inventory.yml
+sed -i "42 s/postgres_port:/postgres_port: ${oml_pgsql_port}/g" $inventory_path/inventory.yml
+sed -i "43 s/postgres_user:/postgres_user: ${oml_pgsql_user}/g" $inventory_path/inventory.yml
+sed -i "44 s/postgres_password:/postgres_password: ${oml_pgsql_password}/g" $inventory_path/inventory.yml
+sed -i "45 s/postgres_database: omnileads/postgres_database: ${oml_pgsql_db}/g" $inventory_path/inventory.yml
+sed -i "46 s/postgres_maintenance_db: defaultdb/postgres_maintenance_db: postgres/g" $inventory_path/inventory.yml
+sed -i "47 s/postgres_ssl: true/postgres_ssl: false/g" $inventory_path/inventory.yml
+sed -i "48 s/bucket_access_key:/bucket_access_key: ${bucket_access_key}/g" $inventory_path/inventory.yml
+sed -i "49 s/bucket_secret_key:/bucket_secret_key: ${bucket_secret_key}/g" $inventory_path/inventory.yml
+sed -i "50 s/bucket_name: tenant_example_3/bucket_name: ${bucket_name}/g" $inventory_path/inventory.yml
 
 sed -i "s/#rtpengine_host:/rtpengine_host: ${oml_rtpengine_host}/g" $inventory_path/inventory.yml
 sed -i "s%\#bucket_url: https://sfo3.digitaloceanspaces.com%bucket_url: aws%g" $inventory_path/inventory.yml
@@ -49,11 +51,9 @@ sed -i "s/ami_user: omnileads/ami_user: ${oml_ami_user}/g" $inventory_path/inven
 # sed -i "s/nginx_version:*/nginx_version: ${oml_nginx_release}/g" $inventory_path/inventory.yml
 # sed -i "s/kamailio_version:*/kamailio_version: ${oml_kamailio_release}/g" $inventory_path/inventory.yml
 
-sed -i "s/callrec_device: s3/callrec_device: ${oml_callrec_device}/g" $inventory_path/inventory.yml
-
 sed -i "s/infra_env: cloud/infra_env: lan/g" $inventory_path/inventory.yml
 
-sed -i "s/loki_host: 190.19.150.222/homer_host: ${obs_host}/g" $inventory_path/inventory.yml
+sed -i "s/loki_host: 190.19.150.222/loki_host: ${obs_host}/g" $inventory_path/inventory.yml
 sed -i "s/homer_host: 190.19.150.222/homer_host: ${obs_host}/g" $inventory_path/inventory.yml
 
 if [[ "${aws_region}" != "NULL" ]];then
@@ -86,11 +86,11 @@ if [[ "${oml_upgrade_to_major}" != "NULL" ]];then
 sed -i "s/#upgrade_from_oml_1/upgrade_from_oml_1/g" $inventory_path/inventory.yml
 fi
 
-sed -i "220 s/tenant_example_1/#tenant_example_1/g" $inventory_path/inventory.yml
-sed -i "222 s/#tenant_example_3/tenant_example_3/g" $inventory_path/inventory.yml
-sed -i "226 s/tenant_example_5_data/#tenant_example_5_data/g" $inventory_path/inventory.yml
-sed -i "232 s/tenant_example_5_voice/#tenant_example_5_voice/g" $inventory_path/inventory.yml
-sed -i "238 s/tenant_example_5_app/#tenant_example_5_app/g" $inventory_path/inventory.yml
+sed -i "218 s/tenant_example_1/#tenant_example_1/g" $inventory_path/inventory.yml
+sed -i "220 s/#tenant_example_3/tenant_example_3/g" $inventory_path/inventory.yml
+sed -i "224 s/tenant_example_5_data/#tenant_example_5_data/g" $inventory_path/inventory.yml
+sed -i "230 s/tenant_example_5_voice/#tenant_example_5_voice/g" $inventory_path/inventory.yml
+sed -i "236 s/tenant_example_5_app/#tenant_example_5_app/g" $inventory_path/inventory.yml
 
 
 cd $deploy_tool_path/ansible
