@@ -28,10 +28,10 @@ module "ec2" {
     oml_dialer_host           = local.dialer_host != null ? local.dialer_host : ""
     api_dialer_user           = var.dialer_user
     api_dialer_password       = var.dialer_password
-    oml_app_release           = var.oml_app_branch
-    oml_websockets_release    = var.oml_websockets_branch
-    oml_kamailio_release      = var.oml_kamailio_branch
-    oml_nginx_release         = var.oml_nginx_branch
+    oml_app_tag               = var.oml_app_branch
+    oml_websockets_tag        = var.oml_websockets_branch
+    oml_kamailio_tag          = var.oml_kamailio_branch
+    oml_nginx_tag             = var.oml_nginx_branch
     oml_app_ecctl             = var.ECCTL
     oml_rtpengine_host        = data.terraform_remote_state.shared_state.outputs.rtpengine_fqdn
     oml_app_sca               = var.SCA

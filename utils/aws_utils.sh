@@ -37,7 +37,7 @@ prepare_deploy_links() {
   elif [[ ${arq} == *"cluster"* ]]; then
     ln -s ../../hcl_template/example/*.tf .
     ln -s ../../hcl_template/example/Terrafile .
-    rm -rf example_ec2_aio.tf .
+    rm -rf example_ec2_aio.tf
   elif [[ ${arq} == *"aio"* ]]; then
     ln -s ../../hcl_template/example/*.tf .
     ln -s ../../hcl_template/example/Terrafile .

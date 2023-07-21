@@ -1,13 +1,3 @@
-############################## bucket for callrec #####################################################
-resource "aws_s3_bucket" "customer_data" {
-  bucket = "${module.tags.tags.environment}-${module.tags.tags.owner}-${var.customer}-data"
-  acl    = "private"
-  tags = merge(module.tags.tags,
-    map("Name", "${module.tags.tags.environment}-${module.tags.tags.owner}-${var.customer}-data"),
-    map("role", "${module.tags.tags.environment}-${module.tags.tags.owner}-${var.customer}-data")
-  )
-}
-
 resource "aws_instance" "asterisk" {
   ami                                   = data.aws_ami.ubuntu.id
   instance_type                         = var.ec2_asterisk_size
@@ -43,7 +33,11 @@ data "template_file" "asterisk" {
       oml_pgsql_port            = 5432
       oml_pgsql_db              = var.pg_database
       oml_pgsql_user            = var.pg_username
-      oml_observability_host    = "${var.customer}-observability.${var.domain_name}"
+      oml_upgrade_to_major      = var.upgrade_to_major
+      oml_app_host              = "${var.customer}.${var.domain_name}"
+      oml_data_host             = "${var.customer}-redis.${var.domain_name}"
+      oml_rtpengine_host        = data.terraform_remote_state.shared_state.outputs.rtpengine_fqdn
+      oml_obs_host              = var.obs_host
       oml_pgsql_password        = var.pg_password
       oml_pgsql_cloud           = "false"
       oml_ami_user              = var.ami_user

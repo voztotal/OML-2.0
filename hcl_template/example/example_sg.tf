@@ -29,7 +29,14 @@ resource "aws_security_group" "tenants_ec2_sg" {
     to_port     = 5060
     protocol    = "tcp"
     cidr_blocks = [data.terraform_remote_state.shared_state.outputs.vpc_cidr_block]
-    description = "Prometheus subscriber"
+    description = "Kamailio"
+  }
+  ingress {
+    from_port   = 4573
+    to_port     = 4573
+    protocol    = "tcp"
+    cidr_blocks = [data.terraform_remote_state.shared_state.outputs.vpc_cidr_block]
+    description = "FastAGI"
   }
   egress {
     from_port   = 0

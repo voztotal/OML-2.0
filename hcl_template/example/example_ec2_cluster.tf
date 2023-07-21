@@ -8,7 +8,7 @@ resource "aws_s3_bucket" "customer_data" {
 }
 
 module "ec2" {
-  additional_user_data = templatefile("${path.module}/templates/aio.tpl", {
+  additional_user_data = templatefile("${path.module}/templates/omlapp.tpl", {
     bucket_name               = split(".", aws_s3_bucket.customer_data.bucket_domain_name)[0]
     bucket_access_key         = var.s3_access_key
     bucket_secret_key         = var.s3_secret_key
@@ -28,12 +28,13 @@ module "ec2" {
     oml_dialer_host           = local.dialer_host != null ? local.dialer_host : ""
     api_dialer_user           = var.dialer_user
     api_dialer_password       = var.dialer_password
-    oml_app_release           = var.oml_app_branch
+    oml_app_tag               = var.oml_app_branch
     oml_websockets_release    = var.oml_websockets_branch
     oml_kamailio_release      = var.oml_kamailio_branch
     oml_nginx_release         = var.oml_nginx_branch
     oml_app_ecctl             = var.ECCTL
     oml_rtpengine_host        = data.terraform_remote_state.shared_state.outputs.rtpengine_fqdn
+    oml_obs_host              = var.obs_host
     oml_app_sca               = var.SCA
     vpc_subnet                = data.terraform_remote_state.shared_state.outputs.vpc_cidr_block
     oml_tz                    = var.TZ
@@ -51,6 +52,8 @@ module "ec2" {
     oml_google_maps_center    = var.google_maps_center
     oml_upgrade_to_major      = var.upgrade_to_major
     oml_tenant                = var.customer
+    oml_voice_host            = "${var.customer}-asterisk.${var.domain_name}"
+    oml_data_host             = "${var.customer}-redis.${var.domain_name}"
   })
   source                                      = "./modules/ec2-no-elb"
   vpc_id                                      = data.terraform_remote_state.shared_state.outputs.vpc_id
