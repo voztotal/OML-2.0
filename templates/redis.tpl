@@ -36,9 +36,9 @@ sed -i "s/infra_env: cloud/infra_env: lan/g" $inventory_path/inventory.yml
 sed -i "s/#loki_host: /loki_host: ${oml_obs_host}/g" $inventory_path/inventory.yml
 sed -i "s/#homer_host: /homer_host: ${oml_obs_host}/g" $inventory_path/inventory.yml
 
-sed -i "268 s/tenant_example_1/#tenant_example_1/g" $inventory_path/inventory.yml
-sed -i "279 s/tenant_example_5_voice/#tenant_example_5_voice/g" $inventory_path/inventory.yml
-sed -i "283 s/tenant_example_5_app/#tenant_example_5_app/g" $inventory_path/inventory.yml
+sed -i "267 s/tenant_example_1/#tenant_example_1/g" $inventory_path/inventory.yml
+sed -i "278 s/tenant_example_5_voice/#tenant_example_5_voice/g" $inventory_path/inventory.yml
+sed -i "282 s/tenant_example_5_app/#tenant_example_5_app/g" $inventory_path/inventory.yml
 
 
 cd $deploy_tool_path/ansible

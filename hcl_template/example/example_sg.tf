@@ -8,6 +8,7 @@ resource "aws_security_group" "tenants_ec2_sg" {
     to_port         = 443
     protocol        = "tcp"
     security_groups = [module.alb.security_group_id]
+    cidr_blocks = [data.terraform_remote_state.shared_state.outputs.vpc_cidr_block]
     description     = "HTTPS between ${var.customer} ALB and ${var.customer} tenant"
   }
   ingress {

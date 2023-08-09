@@ -24,7 +24,6 @@ data "template_file" "redis" {
       oml_infras_stage          = var.cloud_provider
       oml_deploytool_branch     = var.omldeploytool_branch
       aws_region                = var.aws_region
-      iam_role_name             = module.ec2.iam_role_name
       oml_tenant_name           = var.customer
       oml_data_host             = "${var.customer}-redis.${var.domain_name}"
       oml_pgsql_host            = module.rds_postgres.address

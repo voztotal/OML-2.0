@@ -38,10 +38,12 @@ prepare_deploy_links() {
     ln -s ../../hcl_template/example/*.tf .
     ln -s ../../hcl_template/example/Terrafile .
     rm -rf example_ec2_aio.tf
+    rm -rf example_route53_aio.tf
   elif [[ ${arq} == *"aio"* ]]; then
     ln -s ../../hcl_template/example/*.tf .
     ln -s ../../hcl_template/example/Terrafile .
     rm -rf example_ec2_cluster.tf
+    rm -rf example_ec2_redis.tf
     rm -rf example_ec2_asterisk.tf
     rm -rf example_route53.tf
   else

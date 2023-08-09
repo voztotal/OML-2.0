@@ -2,6 +2,7 @@ data "aws_route53_zone" "selected" {
   name         = var.domain_name
 }
 
+
 module "alb" {
   source                                  = "./modules/terraform-aws-alb"
   stage                                   = module.tags.environment
@@ -27,13 +28,13 @@ module "alb" {
   )
 }
 
-# esto no lo hago para nginx y prometheus, ya que se lo indica a nivel
-# module de ec2 autoscalling.
-# resource "aws_lb_target_group_attachment" "homer" {
-#   target_group_arn = module.alb.homer_target_group_arn
-#   target_id        = aws_instance.asterisk.id
-#   port             = 80
-# }
+
+resource "aws_lb_target_group_attachment" "https" {
+  target_group_arn = module.alb.default_target_group_arn
+  target_id        = aws_instance.omlapp.id
+  port             = 443
+}
+
 
 resource "aws_route53_record" "alb_dns" {
   zone_id = data.aws_route53_zone.selected.zone_id

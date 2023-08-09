@@ -27,11 +27,6 @@ sed -i "s/data_host: 172.16.101.41/data_host: ${oml_data_host}/g" $inventory_pat
 sed -i "s/voice_host: 172.16.101.42/voice_host: $PRIVATE_IPV4/g" $inventory_path/inventory.yml
 sed -i "s/application_host: 172.16.101.43/application_host: ${oml_app_host}/g" $inventory_path/inventory.yml
 
-sed -i "131 s/postgres_user: omnileads/postgres_user: ${oml_pgsql_user}/g" $inventory_path/inventory.yml
-sed -i "132 s/postgres_password: HJGKJHGDSAKJHK7856765DASDAS675765JHGJHSAjjhgjhaaa/postgres_password: ${oml_pgsql_password}/g" $inventory_path/inventory.yml
-sed -i "133 s/postgres_database: omnileads/postgres_database: ${oml_pgsql_db}/g" $inventory_path/inventory.yml
-sed -i "192 s/#postgres_host:/postgres_host: ${oml_pgsql_host}/g" $inventory_path/inventory.yml
-
 sed -i "145 s/bucket_access_key: Hghjkdghjkdhasjdasdsada/bucket_access_key: ${bucket_access_key}/g" $inventory_path/inventory.yml
 sed -i "146 s/bucket_secret_key: jknkjhkjh4523kjhcksjdhkjfdhKJHHKJGKJh786876876NBVJHB/bucket_secret_key: ${bucket_secret_key}/g" $inventory_path/inventory.yml
 sed -i "147 s/bucket_name: omnileads/bucket_name: ${bucket_name}/g" $inventory_path/inventory.yml
@@ -57,9 +52,9 @@ if [[ "${oml_upgrade_to_major}" != "NULL" ]];then
 sed -i "s/#upgrade_from_oml_1/upgrade_from_oml_1/g" $inventory_path/inventory.yml
 fi
 
-sed -i "268 s/tenant_example_1/#tenant_example_1/g" $inventory_path/inventory.yml
-sed -i "275 s/tenant_example_5_data/#tenant_example_5_data/g" $inventory_path/inventory.yml
-sed -i "283 s/tenant_example_5_app/#tenant_example_5_app/g" $inventory_path/inventory.yml
+sed -i "267 s/tenant_example_1/#tenant_example_1/g" $inventory_path/inventory.yml
+sed -i "274 s/tenant_example_5_data/#tenant_example_5_data/g" $inventory_path/inventory.yml
+sed -i "282 s/tenant_example_5_app/#tenant_example_5_app/g" $inventory_path/inventory.yml
 
 cd $deploy_tool_path/ansible
 ./deploy.sh --action=install --tenant=${oml_tenant}

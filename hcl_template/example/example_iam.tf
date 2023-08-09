@@ -56,24 +56,20 @@ resource "aws_iam_instance_profile" "test_profile" {
 
 resource "aws_iam_role_policy" "ec2_ssm_management" {
   name   = "${var.customer}-SsmManagement"
-  role   = module.ec2.iam_role_id
+  role   = aws_iam_role.test_role.name
   policy = templatefile("${path.module}/templates/ec2_ssm_policy.tpl", {})
 }
 
-############################### iam for S3 ################################
-
 resource "aws_iam_role_policy" "ec2_s3_access_management" {
-  name = "${var.customer}S3FullAccessManagement"
-  role = module.ec2.iam_role_id
-  policy = templatefile("${path.module}/templates/s3_full_access_policy.tpl", {
+  name    = "${var.customer}S3FullAccessManagement"
+  role    = aws_iam_role.test_role.name
+  policy  = templatefile("${path.module}/templates/s3_full_access_policy.tpl", {
     astsbc_s3_bucket = aws_s3_bucket.customer_data.arn
   })
 }
 
-############################### iam for EBS ################################
-
 resource "aws_iam_role_policy" "ec2_ebs_attach_management" {
-  name   = "${var.customer}EbsAttachManagement"
-  role   = module.ec2.iam_role_id
-  policy = templatefile("${path.module}/templates/ec2_ebs_attach_policy.tpl", {})
+  name    = "${var.customer}EbsAttachManagement"
+  role    = aws_iam_role.test_role.name
+  policy  = templatefile("${path.module}/templates/ec2_ebs_attach_policy.tpl", {})
 }

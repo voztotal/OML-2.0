@@ -1,102 +1,138 @@
-resource "aws_lb_listener_rule" "wd_external_ingress" {
-  listener_arn = module.alb.https_listener_arn
-  priority     = 99
-
-  action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.wdext_target_group.arn
-  }
-
-  condition {
-    field  = "host-header"
-    values = [aws_route53_record.wdext_dns.fqdn]
-  }
-}
-
-resource "aws_lb_target_group" "wdint_target_group" {
-  name        = "${module.tags.tags.environment}-${var.customer}-wdintTG"
-  port        = 8080
-  protocol    = "TCP"
-  target_type = "instance"
-  vpc_id      = data.terraform_remote_state.shared_state.outputs.vpc_id
-  stickiness {
-    enabled = false
-    type = "lb_cookie"
-  }
-  health_check {
-    port                = "8080"
-    healthy_threshold   = 3
-    unhealthy_threshold = 3
-  }
-}
-
-resource "aws_lb_target_group" "wdext_target_group" {
-  name        = "${module.tags.tags.environment}-${var.customer}-wdextTG"
-  port        = 8080
-  protocol    = "HTTP"
-  target_type = "instance"
-  vpc_id      = data.terraform_remote_state.shared_state.outputs.vpc_id
-
-  health_check {
-    path                = "/"
-    port                = "8080"
-    healthy_threshold   = 3
-    unhealthy_threshold = 5
-    matcher             = "200"
-  }
-}
-
-module "wombat_nlb" {
-  source                                  = "./modules/terraform-aws-nlb"
-  namespace                               = module.tags.prefix
-  stage                                   = module.tags.environment
-  name                                    = "${var.customer}-wdNLB"
-  vpc_id                                  = data.terraform_remote_state.shared_state.outputs.vpc_id
-  subnet_ids                              = data.terraform_remote_state.shared_state.outputs.private_subnet_ids
-  internal                                = true
-  access_logs_enabled                     = false
-  nlb_access_logs_s3_bucket_force_destroy = true
-  health_check_port                       = 7088
-  health_check_protocol                   = "HTTP"
-  health_check_interval                   = 30
-  target_group_name                       = "${module.tags.environment}-${var.customer}-amiTG"
-  target_group_port                       = 5038
-  tcp_port                                = 5038
-  target_group_target_type                = "instance"
+module "default_label" {
+  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.16.0"
+  attributes = []
+  delimiter  = "-"
+  name       = "${var.owner}-${var.customer}-dialer"
+  namespace  = ""
+  stage      = ""
   tags = merge(module.tags.tags,
-    map("Name", "${module.tags.tags.environment}-${var.customer}-wdNLB"),
-    map("role", "${module.tags.tags.environment}-${var.customer}-wdNLB")
+    map("Name", "${module.tags.tags.environment}-${var.customer}-ALB"),
+    map("role", "${module.tags.tags.environment}-${var.customer}-ALB")
   )
 }
 
-resource "aws_lb_listener" "wd_internal_listener" {
-  load_balancer_arn = module.wombat_nlb.nlb_arn
-  port              = "8080"
-  protocol          = "TCP"
+
+resource "aws_security_group" "wombat_lb_sg" {
+  description = "Controls access to the ALB (HTTP/HTTPS)"
+  vpc_id      = data.terraform_remote_state.shared_state.outputs.vpc_id
+  name        = module.default_label.id
+  tags        = module.default_label.tags
+}
+
+resource "aws_security_group_rule" "egress" {
+  type              = "egress"
+  from_port         = "0"
+  to_port           = "0"
+  protocol          = "-1"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.wombat_lb_sg.id
+}
+
+resource "aws_security_group_rule" "http_ingress_wombat" {
+  type              = "ingress"
+  from_port         = 443
+  to_port           = 444
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  #prefix_list_ids   = var.http_ingress_prefix_list_ids
+  security_group_id = aws_security_group.wombat_lb_sg.id
+}
+
+
+# Crear el recurso del ALB
+resource "aws_lb" "dialer" {
+  name               = module.default_label.id
+  tags               = module.default_label.tags
+  internal           = false
+  load_balancer_type = "application"
+
+  security_groups     = [aws_security_group.wombat_lb_sg.id]
+
+  subnets                          = data.terraform_remote_state.shared_state.outputs.public_subnet_ids
+  enable_http2                     = true
+  idle_timeout                     = 600
+  #ip_address_type                  = var.ip_address_type
+  enable_deletion_protection       = false
+}
+
+resource "aws_lb_target_group" "wombat" {
+  name                 = "${var.customer}-WDadmin"
+  port                 = 8080
+  protocol             = "HTTP"
+  vpc_id               = data.terraform_remote_state.shared_state.outputs.vpc_id
+  target_type          = "instance"
+  deregistration_delay = 1800
+
+  health_check {
+    path                = "/"
+    port                = 8080
+    protocol            = "HTTP"
+    timeout             = 60
+    healthy_threshold   = 3
+    unhealthy_threshold = 3
+    interval            = 100
+    #matcher             = 
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+
+  # tags = merge(
+  #   module.default_target_group_label.tags,
+  #   var.target_group_additional_tags
+  # )
+}
+
+
+module "default_target_group_label" {
+  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.16.0"
+  attributes = ["default"]
+  delimiter  = "-"
+  name       = "${var.owner}-${var.customer}-dialer"
+  namespace  = ""
+  stage      = ""
+  tags       = merge(module.tags.tags,
+    map("Name", "${module.tags.tags.environment}-${var.customer}-ALB"),
+    map("role", "${module.tags.tags.environment}-${var.customer}-ALB")
+  )
+}
+
+
+
+resource "aws_lb_listener" "https" {
+  #count             = var.https_enabled ? 1 : 0
+  load_balancer_arn = aws_lb.dialer.arn
+
+  port            = 443
+  protocol        = "HTTPS"
+  ssl_policy      = "ELBSecurityPolicy-2016-08"
+  certificate_arn = data.terraform_remote_state.shared_state.outputs.acm_arn
+
   default_action {
+    target_group_arn = aws_lb_target_group.wombat.arn
     type             = "forward"
-    target_group_arn = aws_lb_target_group.wdint_target_group.arn
   }
 }
 
-resource "aws_route53_record" "wdint_dns" {
-  zone_id = data.aws_route53_zone.selected.zone_id
-  name    = "${var.customer}-wdint.${var.domain_name}"
-  type    = "A"
-  alias {
-    name                   = module.wombat_nlb.nlb_dns_name
-    zone_id                = module.wombat_nlb.nlb_zone_id
-    evaluate_target_health = false
-  }
+
+
+# Agregar instancia EC2 al target group
+resource "aws_lb_target_group_attachment" "target_group_attachment" {
+  target_group_arn = aws_lb_target_group.wombat.arn
+  target_id        = aws_instance.dialer_ec2.id
+  port             = 8080
 }
+
+
 
 resource "aws_route53_record" "wdext_dns" {
   zone_id = data.aws_route53_zone.selected.zone_id
   name    = "${var.customer}-wdext.${var.domain_name}"
   type    = "A"
   alias {
-    name                   = module.alb.alb_dns_name
-    zone_id                = module.alb.alb_zone_id
+    name                   = aws_lb.dialer.dns_name
+    zone_id                = aws_lb.dialer.zone_id
     evaluate_target_health = false
   }
 }

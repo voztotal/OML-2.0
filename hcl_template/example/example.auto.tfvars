@@ -2,7 +2,7 @@
 cloud_provider = "aws"
 callrec_storage = "s3-aws"
 
-omldeploytool_branch    = "develop"
+omldeploytool_branch    = "oml-305-dev-migrate-queuelog-to-fastagi"
 ## SIZING VARS ## SIZING VARS ## SIZING VARS
 
 obs_host    = "190.19.150.8"
