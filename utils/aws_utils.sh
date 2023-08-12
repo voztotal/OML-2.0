@@ -45,7 +45,7 @@ prepare_deploy_links() {
     rm -rf example_ec2_cluster.tf
     rm -rf example_ec2_redis.tf
     rm -rf example_ec2_asterisk.tf
-    rm -rf example_route53.tf
+    rm -rf example_route53_cluster.tf
   else
     echo "ERROR: You must to pass the ARQ parameter"
   fi
@@ -62,6 +62,12 @@ prepare_deploy_links() {
   if [ "${dialer}" == "yes" ] || [ "${dialer}" == "YES" ]; then
     ln -s ../../hcl_template/example/dialer/*.tf .
     rm -rf ${environment}_locals.tf
+    rm -rf ${environment}_route53*.tf
+    if [[ ${arq} == *"aio"* ]]; then
+      rm -rf dialer_route53_cluster.tf
+    else
+      rm -rf dialer_route53_aio.tf
+    fi  
   elif [ "${dialer}" == "no" ] || [ "${dialer}" == "NO" ]; then
     rm -rf dialer*
     if [ ! -f ${environment}_locals.tf ]; then ln -s ../../hcl_template/example/example_locals.tf ./${environment}_locals.tf; fi

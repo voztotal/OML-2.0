@@ -28,6 +28,12 @@ data "template_file" "asterisk" {
       oml_tenant_name           = var.customer
       oml_app_host              = "${var.customer}-omlapp.${var.domain_name}"
       oml_data_host             = "${var.customer}-redis.${var.domain_name}"
+      oml_pgsql_host            = module.rds_postgres.address
+      oml_pgsql_host            = module.rds_postgres.address
+      oml_pgsql_port            = 5432
+      oml_pgsql_db              = var.pg_database
+      oml_pgsql_user            = var.pg_username
+      oml_pgsql_password        = var.pg_password
       oml_upgrade_to_major      = var.upgrade_to_major
       oml_app_host              = "${var.customer}-omlapp.${var.domain_name}"
       oml_data_host             = "${var.customer}-redis.${var.domain_name}"

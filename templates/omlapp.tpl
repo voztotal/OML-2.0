@@ -30,13 +30,15 @@ sed -i "s/data_host: 172.16.101.41/data_host: ${oml_data_host}/g" $inventory_pat
 sed -i "s/voice_host: 172.16.101.42/voice_host: ${oml_voice_host}/g" $inventory_path/inventory.yml
 sed -i "s/application_host: 172.16.101.43/application_host: $PRIVATE_IPV4/g" $inventory_path/inventory.yml
 
-sed -i "131 s/postgres_user: omnileads/postgres_user: ${oml_pgsql_user}/g" $inventory_path/inventory.yml
-sed -i "132 s/postgres_password: HJGKJHGDSAKJHK7856765DASDAS675765JHGJHSAjjhgjhaaa/postgres_password: ${oml_pgsql_password}/g" $inventory_path/inventory.yml
-sed -i "133 s/postgres_database: omnileads/postgres_database: ${oml_pgsql_db}/g" $inventory_path/inventory.yml
+sed -i "173 s/postgres_user: omnileads/postgres_user: ${oml_pgsql_user}/g" $inventory_path/inventory.yml
+sed -i "174 s/postgres_password: HJGKJHGDSAKJHK7856765DASDAS675765JHGJHSAjjhgjhaaa/postgres_password: ${oml_pgsql_password}/g" $inventory_path/inventory.yml
+sed -i "175 s/postgres_database: omnileads/postgres_database: ${oml_pgsql_db}/g" $inventory_path/inventory.yml
 
-sed -i "147 s/bucket_name: omnileads/bucket_name: ${bucket_name}/g" $inventory_path/inventory.yml
+sed -i "s/postgres_utc: false/postgres_utc: true/g" $inventory_path/inventory.yml
 
-sed -i "192 s/#postgres_host:/postgres_host: ${oml_pgsql_host}/g" $inventory_path/inventory.yml
+sed -i "190 s/bucket_name: omnileads/bucket_name: ${bucket_name}/g" $inventory_path/inventory.yml
+
+sed -i "236 s/#postgres_host:/postgres_host: ${oml_pgsql_host}/g" $inventory_path/inventory.yml
 
 sed -i "s/#rtpengine_host:/rtpengine_host: ${oml_rtpengine_host}/g" $inventory_path/inventory.yml
 sed -i "s%\#bucket_url: https://sfo3.digitaloceanspaces.com%bucket_url: aws%g" $inventory_path/inventory.yml
@@ -75,9 +77,9 @@ if [[ "${oml_upgrade_to_major}" != "NULL" ]];then
 sed -i "s/#upgrade_from_oml_1/upgrade_from_oml_1/g" $inventory_path/inventory.yml
 fi
 
-sed -i "267 s/tenant_example_1/#tenant_example_1/g" $inventory_path/inventory.yml
-sed -i "274 s/tenant_example_5_data/#tenant_example_5_data/g" $inventory_path/inventory.yml
-sed -i "278 s/tenant_example_5_voice/#tenant_example_5_voice/g" $inventory_path/inventory.yml
+sed -i "310 s/tenant_example_1/#tenant_example_1/g" $inventory_path/inventory.yml
+sed -i "320 s/tenant_example_5_data/#tenant_example_5_data/g" $inventory_path/inventory.yml
+sed -i "324 s/tenant_example_5_voice/#tenant_example_5_voice/g" $inventory_path/inventory.yml
 
 
 if [[ "${oml_app_tag}" != "NULL" ]];then
