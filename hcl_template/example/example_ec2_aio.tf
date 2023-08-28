@@ -58,6 +58,8 @@ data "template_file" "omlapp" {
     oml_google_maps_center    = var.google_maps_center
     oml_upgrade_to_major      = var.upgrade_to_major
     oml_tenant                = var.customer
+    oml_s3_access_key         = var.s3_access_key
+    oml_s3_secret_key         = var.s3_secret_key
   }
 }
 
