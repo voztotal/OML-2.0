@@ -2,7 +2,7 @@
 cloud_provider = "aws"
 callrec_storage = "s3-aws"
 
-omldeploytool_branch    = "oml-300-dev-addon-webphone"
+omldeploytool_branch    = "main"
 ## SIZING VARS ## SIZING VARS ## SIZING VARS
 
 obs_host    = "190.19.150.8"
