@@ -84,9 +84,9 @@ if [[ "${oml_upgrade_to_major}" != "NULL" ]];then
 sed -i "s/#upgrade_from_oml_1/upgrade_from_oml_1/g" $inventory_path/inventory.yml
 fi
 
-sed -i "322 s/tenant_example_1/#tenant_example_1/g" $inventory_path/inventory.yml
-sed -i "333 s/tenant_example_5_data/#tenant_example_5_data/g" $inventory_path/inventory.yml
-sed -i "337 s/tenant_example_5_voice/#tenant_example_5_voice/g" $inventory_path/inventory.yml
+sed -i "334 s/tenant_example_1/#tenant_example_1/g" $inventory_path/inventory.yml
+sed -i "345 s/tenant_example_5_data/#tenant_example_5_data/g" $inventory_path/inventory.yml
+sed -i "349 s/tenant_example_5_voice/#tenant_example_5_voice/g" $inventory_path/inventory.yml
 
 
 if [[ "${oml_app_tag}" != "NULL" ]];then
