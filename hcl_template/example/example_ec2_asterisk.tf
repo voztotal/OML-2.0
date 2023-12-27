@@ -45,8 +45,8 @@ data "template_file" "asterisk" {
       oml_ami_password          = var.ami_password
       oml_callrec_device        = var.callrec_storage
       bucket_name               = split(".", aws_s3_bucket.customer_data.bucket_domain_name)[0]
-      bucket_access_key         = var.s3_access_key
-      bucket_secret_key         = var.s3_secret_key
+      oml_s3_access_key         = var.s3_access_key
+      oml_s3_secret_key         = var.s3_secret_key
       oml_tz                    = var.TZ
       oml_tenant                = var.customer
     }

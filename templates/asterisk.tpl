@@ -55,6 +55,13 @@ if [[ "${aws_region}" != "NULL" ]];then
     sed -i "s/bucket_region: us-east-1/bucket_region: ${aws_region}/g" $inventory_path/inventory.yml
 fi
 
+if [[ "${oml_s3_access_key}" != "NULL" ]];then
+sed -i "s%\bucket_access_key: dkjhdjkhasjkdhasjkdhasda%bucket_access_key: ${oml_s3_access_key}%g" $inventory_path/inventory.yml
+fi
+if [[ "${oml_s3_secret_key}" != "NULL" ]];then
+sed -i "s%\#s3_secret_key=%bucket_secret_key: ${oml_s3_secret_key}%g" $inventory_path/inventory.yml
+fi
+
 if [[ "${oml_upgrade_to_major}" != "NULL" ]];then
 sed -i "s/#upgrade_from_oml_1/upgrade_from_oml_1/g" $inventory_path/inventory.yml
 fi
