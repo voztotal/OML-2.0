@@ -49,5 +49,6 @@ data "template_file" "asterisk" {
       oml_s3_secret_key         = var.s3_secret_key
       oml_tz                    = var.TZ
       oml_tenant                = var.customer
+      scale_asterisk            = var.scale_asterisk
     }
  }

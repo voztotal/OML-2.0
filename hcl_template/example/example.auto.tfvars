@@ -2,7 +2,7 @@
 cloud_provider = "aws"
 callrec_storage = "s3-aws"
 
-omldeploytool_branch    = "develop"
+omldeploytool_branch    = "oml-463-dev-rsync-ansible-ha"
 ## SIZING VARS ## SIZING VARS ## SIZING VARS
 
 obs_host    = "190.19.150.8"
@@ -70,3 +70,6 @@ google_maps_api_key     ="NULL"
 google_maps_center      ="NULL"
 
 upgrade_to_major        ="NULL"
+
+scale_asterisk          ="NULL" 
+scale_uwsgi             ="NULL" 

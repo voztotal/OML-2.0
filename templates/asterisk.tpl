@@ -66,9 +66,16 @@ if [[ "${oml_upgrade_to_major}" != "NULL" ]];then
 sed -i "s/#upgrade_from_oml_1/upgrade_from_oml_1/g" $inventory_path/inventory.yml
 fi
 
-sed -i "334 s/tenant_example_1/#tenant_example_1/g" $inventory_path/inventory.yml
-sed -i "345 s/tenant_example_5_data/#tenant_example_5_data/g" $inventory_path/inventory.yml
-sed -i "353 s/tenant_example_5_app/#tenant_example_5_app/g" $inventory_path/inventory.yml
+if [[ "$scale_asterisk }" != "NULL" ]];then
+sed -i "s/#scale_asterisk/scale_asterisk/g" $inventory_path/inventory.yml
+sed -i "s/#asterisk_mem_limit/asterisk_mem_limit/g" $inventory_path/inventory.yml
+sed -i "s/#pjsip_threadpool_idle_timeout/pjsip_threadpool_idle_timeout/g" $inventory_path/inventory.yml
+sed -i "s/#pjsip_threadpool_max_size/pjsip_threadpool_max_size/g" $inventory_path/inventory.yml    
+fi
+
+sed -i "327 s/tenant_example_1/#tenant_example_1/g" $inventory_path/inventory.yml
+sed -i "338 s/tenant_example_5_data/#tenant_example_5_data/g" $inventory_path/inventory.yml
+sed -i "346 s/tenant_example_5_app/#tenant_example_5_app/g" $inventory_path/inventory.yml
 
 cd $deploy_tool_path/ansible
 ./deploy.sh --action=install --tenant=${oml_tenant}

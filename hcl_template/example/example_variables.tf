@@ -164,3 +164,5 @@ variable "upgrade_to_major" {
 
 variable "omldeploytool_branch" {}
 variable "obs_host" {}
+variable "scale_asterisk" {}
+variable "scale_uwsgi" {}

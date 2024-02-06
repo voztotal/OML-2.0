@@ -64,5 +64,6 @@ data "template_file" "omlapp" {
     oml_data_host             = "${var.customer}-redis.${var.domain_name}"
     oml_s3_access_key         = var.s3_access_key
     oml_s3_secret_key         = var.s3_secret_key
+    scale_uwsgi               = var.scale_uwsgi
   }
 }
