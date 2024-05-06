@@ -27,16 +27,14 @@ sed -i "s/data_host: 172.16.101.41/data_host: ${oml_data_host}/g" $inventory_pat
 sed -i "s/voice_host: 172.16.101.42/voice_host: $PRIVATE_IPV4/g" $inventory_path/inventory.yml
 sed -i "s/application_host: 172.16.101.43/application_host: ${oml_app_host}/g" $inventory_path/inventory.yml
 
-sed -i "180 s/postgres_user: omnileads/postgres_user: ${oml_pgsql_user}/g" $inventory_path/inventory.yml
-sed -i "181 s/postgres_password: HJGKJHGDSAKJHK7856765DASDAS675765JHGJHSAjjhgjhaaa/postgres_password: ${oml_pgsql_password}/g" $inventory_path/inventory.yml
-sed -i "182 s/postgres_database: omnileads/postgres_database: ${oml_pgsql_db}/g" $inventory_path/inventory.yml
+sed -i "184 s/postgres_user: omnileads/postgres_user: ${oml_pgsql_user}/g" $inventory_path/inventory.yml
+sed -i "185 s/postgres_password: HJGKJHGDSAKJHK7856765DASDAS675765JHGJHSAjjhgjhaaa/postgres_password: ${oml_pgsql_password}/g" $inventory_path/inventory.yml
+sed -i "186 s/postgres_database: omnileads/postgres_database: ${oml_pgsql_db}/g" $inventory_path/inventory.yml
 
 sed -i "s/postgres_utc: false/postgres_utc: true/g" $inventory_path/inventory.yml
 
 sed -i "s/postgres_utc: false/postgres_utc: true/g" $inventory_path/inventory.yml
-sed -i "197 s/bucket_name: omnileads/bucket_name: ${bucket_name}/g" $inventory_path/inventory.yml
-
-sed -i "244 s/#postgres_host:/postgres_host: ${oml_pgsql_host}/g" $inventory_path/inventory.yml
+sed -i "201 s/bucket_name: omnileads/bucket_name: ${bucket_name}/g" $inventory_path/inventory.yml
 
 sed -i "s/#rtpengine_host:/rtpengine_host: ${oml_rtpengine_host}/g" $inventory_path/inventory.yml
 sed -i "s%\#bucket_url: https://sfo3.digitaloceanspaces.com%bucket_url: aws%g" $inventory_path/inventory.yml
@@ -73,9 +71,9 @@ sed -i "s/#pjsip_threadpool_idle_timeout/pjsip_threadpool_idle_timeout/g" $inven
 sed -i "s/#pjsip_threadpool_max_size/pjsip_threadpool_max_size/g" $inventory_path/inventory.yml    
 fi
 
-sed -i "327 s/tenant_example_1/#tenant_example_1/g" $inventory_path/inventory.yml
-sed -i "338 s/tenant_example_5_data/#tenant_example_5_data/g" $inventory_path/inventory.yml
-sed -i "346 s/tenant_example_5_app/#tenant_example_5_app/g" $inventory_path/inventory.yml
+sed -i "319 s/tenant_example_1/#tenant_example_1/g" $inventory_path/inventory.yml
+sed -i "330 s/tenant_example_5_data/#tenant_example_5_data/g" $inventory_path/inventory.yml
+sed -i "338 s/tenant_example_5_app/#tenant_example_5_app/g" $inventory_path/inventory.yml
 
 cd $deploy_tool_path/ansible
 ./deploy.sh --action=install --tenant=${oml_tenant}
