@@ -2,7 +2,7 @@
 cloud_provider = "aws"
 callrec_storage = "s3-aws"
 
-omldeploytool_branch    = "pre-release-2.0.0"
+omldeploytool_branch    = "develop"
 ## SIZING VARS ## SIZING VARS ## SIZING VARS
 
 obs_host    = "190.19.150.8"
@@ -23,7 +23,7 @@ ec2_dialer_size                 = "t2.micro"
 dialer_root_disk_size           = 20
 # RDS PGSQL cluster size
 pg_rds_size                     = "db.t3.micro"
-pg_storage                      = 5
+pg_storage                      = 100
 # RDS MySQL dialer backend SQL
 mysql_rds_size                  = "db.t3.micro"
 
