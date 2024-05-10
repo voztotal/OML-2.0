@@ -100,7 +100,7 @@ systemctl stop firewalld > /dev/null 2>&1
 
 echo "************************* ansible install ***********************************"
 echo "************************* ansible install ***********************************"
-pip3 install pip --upgrade
+pip3 install --trusted-host pypi.python.org pip --upgrade
 pip3 install 'ansible==2.9.2'
 export PATH="$HOME/.local/bin/:$PATH"
 

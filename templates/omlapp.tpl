@@ -41,7 +41,7 @@ systemctl start amazon-ssm-agent
 
 echo "******************** Ansible installation ********************"
 
-pip3 install --upgrade pip
+pip3 install --trusted-host pypi.python.org pip --upgrade
 pip3 install boto boto3 botocore 'ansible==2.9.2' awscli
 export PATH="$HOME/.local/bin/:$PATH"
 
