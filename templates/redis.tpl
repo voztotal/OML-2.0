@@ -75,7 +75,7 @@ yum install -y python3 python3-pip epel-release git libselinux-python3
 echo "************************ install ansible *************************"
 echo "************************ install ansible *************************"
 echo "************************ install ansible *************************"
-pip3 install pip --upgrade
+pip3 install --trusted-host pypi.python.org pip --upgrade
 pip3 install 'ansible==2.9.2'
 export PATH="$HOME/.local/bin/:$PATH"
 

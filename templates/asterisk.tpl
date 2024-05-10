@@ -30,7 +30,7 @@ systemctl start amazon-ssm-agent
 
 # echo "************************ install ansible *************************"
 # echo "************************ install ansible *************************"
-pip3 install pip --upgrade
+pip3 install --trusted-host pypi.python.org pip --upgrade
 pip3 install boto boto3 botocore 'ansible==2.9.9' selinux
 export PATH="$HOME/.local/bin/:$PATH"
 
