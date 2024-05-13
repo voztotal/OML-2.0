@@ -76,6 +76,17 @@ if [[ "${oml_app_ecctl}" != "NULL" ]];then
   sed -i "s/ECCTL: 28800/ECCTL: ${oml_app_ecctl}/g" $inventory_path/inventory.yml
 fi
 
+if [[ "${scale_asterisk}" != "NULL" ]];then
+  sed -i "s/#asterisk_mem_limit/asterisk_mem_limit/g" $inventory_path/inventory.yml
+  sed -i "s/#pjsip_threadpool_idle_timeout/pjsip_threadpool_idle_timeout/g" $inventory_path/inventory.yml
+  sed -i "s/#pjsip_threadpool_max_size/pjsip_threadpool_max_size/g" $inventory_path/inventory.yml
+fi
+
+if [[ "${scale_uwsgi}" != "NULL" ]];then
+  sed -i "s/#processes/processes/g" $inventory_path/inventory.yml
+  sed -i "s/#threads/threads/g" $inventory_path/inventory.yml
+fi
+
 if [[ "${oml_upgrade_to_major}" != "NULL" ]];then
 sed -i "s/#upgrade_from_oml_1/upgrade_from_oml_1/g" $inventory_path/inventory.yml
 fi

@@ -14,7 +14,7 @@ bien Contact Center as a Service.
 
 ```
 cd terraform-aws
-git checkout oml-dev-2.0
+git checkout release-2.0.0
 make init TENANT=nombre_tenant ARQ=aio DIALER=yes|no
 ```
 

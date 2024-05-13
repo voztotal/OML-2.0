@@ -2,7 +2,7 @@
 cloud_provider = "aws"
 callrec_storage = "s3-aws"
 
-omldeploytool_branch    = "develop"
+omldeploytool_branch    = "main"
 ## SIZING VARS ## SIZING VARS ## SIZING VARS
 
 obs_host    = "190.19.150.8"
@@ -11,7 +11,7 @@ obs_host    = "190.19.150.8"
 ec2_oml_size                    = "t2.medium"
 customer_root_disk_type         = "standard"
 customer_root_disk_size         = 30
-ebs_volume_size                 = 10
+ebs_volume_size                 = 50
 # VOICE component ec2 size
 ec2_asterisk_size               = "t2.micro"
 asterisk_root_disk_size         = 50
