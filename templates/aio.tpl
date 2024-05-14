@@ -99,6 +99,8 @@ if [[ "${oml_app_tag}" != "NULL" ]];then
 sed -i "s/#omnileads_version: 1.29.0/omnileads_version: ${oml_app_tag}/g" $inventory_path/inventory.yml
 fi
 
+sed -i "s|\(omnileads_img:.*\)|\1-enterprise|" $inventory_path/inventory.yml
+
 cd $deploy_tool_path/ansible
 ./deploy.sh --action=install --tenant=${oml_tenant}
 
