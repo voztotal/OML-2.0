@@ -34,7 +34,7 @@ sed -i "s/postgres_utc: false/postgres_utc: true/g" $inventory_path/inventory.ym
 
 sed -i "201 s/bucket_name: omnileads/bucket_name: ${bucket_name}/g" $inventory_path/inventory.yml
 
-sed -i "254 s/#postgres_host:/postgres_host: ${oml_pgsql_host}/g" $inventory_path/inventory.yml
+sed -i "256 s/#postgres_host:/postgres_host: ${oml_pgsql_host}/g" $inventory_path/inventory.yml
 
 sed -i "s/#rtpengine_host:/rtpengine_host: ${oml_rtpengine_host}/g" $inventory_path/inventory.yml
 sed -i "s%\#bucket_url: https://sfo3.digitaloceanspaces.com%bucket_url: aws%g" $inventory_path/inventory.yml
@@ -77,12 +77,14 @@ if [[ "${oml_app_ecctl}" != "NULL" ]];then
 fi
 
 if [[ "${scale_asterisk}" != "NULL" ]];then
+  sed -i "s/#scale_asterisk/scale_asterisk/g" $inventory_path/inventory.yml
   sed -i "s/#asterisk_mem_limit/asterisk_mem_limit/g" $inventory_path/inventory.yml
   sed -i "s/#pjsip_threadpool_idle_timeout/pjsip_threadpool_idle_timeout/g" $inventory_path/inventory.yml
   sed -i "s/#pjsip_threadpool_max_size/pjsip_threadpool_max_size/g" $inventory_path/inventory.yml
 fi
 
 if [[ "${scale_uwsgi}" != "NULL" ]];then
+  sed -i "s/#scale_uwsgi/scale_uwsgi/g" $inventory_path/inventory.yml
   sed -i "s/#processes/processes/g" $inventory_path/inventory.yml
   sed -i "s/#threads/threads/g" $inventory_path/inventory.yml
 fi
@@ -99,6 +101,7 @@ if [[ "${oml_app_tag}" != "NULL" ]];then
 sed -i "s/#omnileads_version: 1.29.0/omnileads_version: ${oml_app_tag}/g" $inventory_path/inventory.yml
 fi
 
+sed -i "s/#speech_analytics_model/speech_analytics_model/g" $inventory_path/inventory.yml
 sed -i "s|\(omnileads_img:.*\)|\1-enterprise|" $inventory_path/inventory.yml
 
 cd $deploy_tool_path/ansible
