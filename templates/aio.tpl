@@ -26,15 +26,15 @@ sed -i "s/tenant_id: tenant_example_1/tenant_id: ${oml_tenant}/g" $inventory_pat
 sed -i "s/ansible_host: 190.19.150.18/ansible_connection: local/g" $inventory_path/inventory.yml
 sed -i "s/omni_ip_lan: 172.16.101.44/omni_ip_lan: $PRIVATE_IPV4/g" $inventory_path/inventory.yml
 
-sed -i "184 s/postgres_user: omnileads/postgres_user: ${oml_pgsql_user}/g" $inventory_path/inventory.yml
-sed -i "185 s/postgres_password: HJGKJHGDSAKJHK7856765DASDAS675765JHGJHSAjjhgjhaaa/postgres_password: ${oml_pgsql_password}/g" $inventory_path/inventory.yml
-sed -i "186 s/postgres_database: omnileads/postgres_database: ${oml_pgsql_db}/g" $inventory_path/inventory.yml
+sed -i "s/postgres_user: omnileads/postgres_user: ${oml_pgsql_user}/g" $inventory_path/inventory.yml
+sed -i "s/postgres_password: HJGKJHGDSAKJHK7856765DASDAS675765JHGJHSAjjhgjhaaa/postgres_password: ${oml_pgsql_password}/g" $inventory_path/inventory.yml
+sed -i "s/postgres_database: omnileads/postgres_database: ${oml_pgsql_db}/g" $inventory_path/inventory.yml
 
 sed -i "s/postgres_utc: false/postgres_utc: true/g" $inventory_path/inventory.yml
 
-sed -i "201 s/bucket_name: omnileads/bucket_name: ${bucket_name}/g" $inventory_path/inventory.yml
+sed -i "s/bucket_name: omnileads/bucket_name: ${bucket_name}/g" $inventory_path/inventory.yml
 
-sed -i "256 s/#postgres_host:/postgres_host: ${oml_pgsql_host}/g" $inventory_path/inventory.yml
+sed -i "s/#postgres_host:/postgres_host: ${oml_pgsql_host}/g" $inventory_path/inventory.yml
 
 sed -i "s/#rtpengine_host:/rtpengine_host: ${oml_rtpengine_host}/g" $inventory_path/inventory.yml
 sed -i "s%\#bucket_url: https://sfo3.digitaloceanspaces.com%bucket_url: aws%g" $inventory_path/inventory.yml
@@ -93,15 +93,9 @@ if [[ "${oml_upgrade_to_major}" != "NULL" ]];then
 sed -i "s/#upgrade_from_oml_1/upgrade_from_oml_1/g" $inventory_path/inventory.yml
 fi
 
-sed -i "330 s/tenant_example_5_data/#tenant_example_5_data/g" $inventory_path/inventory.yml
-sed -i "334 s/tenant_example_5_voice/#tenant_example_5_voice/g" $inventory_path/inventory.yml
-sed -i "338 s/tenant_example_5_app/#tenant_example_5_app/g" $inventory_path/inventory.yml
+sed -i "s/#tenant_example_1/tenant_example_1/g" $inventory_path/inventory.yml
 
-if [[ "${oml_app_tag}" != "NULL" ]];then
-sed -i "s/#omnileads_version: 1.29.0/omnileads_version: ${oml_app_tag}/g" $inventory_path/inventory.yml
-fi
-
-sed -i "s/#speech_analytics_model/speech_analytics_model/g" $inventory_path/inventory.yml
+#sed -i "s/#speech_analytics_model/speech_analytics_model/g" $inventory_path/inventory.yml
 sed -i "s|\(omnileads_img:.*\)|\1-enterprise|" $inventory_path/inventory.yml
 
 cd $deploy_tool_path/ansible
