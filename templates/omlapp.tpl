@@ -57,13 +57,6 @@ if [[ "${aws_region}" != "NULL" ]];then
     sed -i "s/bucket_region: us-east-1/bucket_region: ${aws_region}/g" $inventory_path/inventory.yml
 fi
 
-if [[ "${oml_s3_access_key}" != "NULL" ]];then
-sed -i "s%\bucket_access_key: dkjhdjkhasjkdhasjkdhasda%bucket_access_key: ${oml_s3_access_key}%g" $inventory_path/inventory.yml
-fi
-if [[ "${oml_s3_secret_key}" != "NULL" ]];then
-sed -i "s%\#s3_secret_key=%bucket_secret_key: ${oml_s3_secret_key}%g" $inventory_path/inventory.yml
-fi
-
 # # Wombat Dialer parameters *******
 if [[ "${api_dialer_user}"  != "NULL" ]];then
   sed -i "s/dialer_user: demoadmin/dialer_user: ${api_dialer_user}/g" $inventory_path/inventory.yml
@@ -84,15 +77,13 @@ if [[ "${oml_upgrade_to_major}" != "NULL" ]];then
 sed -i "s/#upgrade_from_oml_1/upgrade_from_oml_1/g" $inventory_path/inventory.yml
 fi
 
-if [[ "$scale_uwsgi }" != "NULL" ]];then
-sed -i "s/#scale_uwsgi/scale_uwsgi/g" $inventory_path/inventory.yml
-sed -i "s/#processes: 8/processes: 8/g" $inventory_path/inventory.yml
-sed -i "s/#threads: 1/threads: 1/g" $inventory_path/inventory.yml    
+if [[ "${scale_uwsgi}" != "NULL" ]];then
+  sed -i "s/#scale_uwsgi/scale_uwsgi/g" $inventory_path/inventory.yml
+  sed -i "s/#processes/processes/g" $inventory_path/inventory.yml
+  sed -i "s/#threads/threads/g" $inventory_path/inventory.yml
 fi
 
-sed -i "327 s/tenant_example_1/#tenant_example_1/g" $inventory_path/inventory.yml
-sed -i "338 s/tenant_example_5_data/#tenant_example_5_data/g" $inventory_path/inventory.yml
-sed -i "342 s/tenant_example_5_voice/#tenant_example_5_voice/g" $inventory_path/inventory.yml
+sed -i "s/#tenant_example_5_app/tenant_example_5_app/g" $inventory_path/inventory.yml
 
 cd $deploy_tool_path/ansible
 ./deploy.sh --action=install --tenant=${oml_tenant}

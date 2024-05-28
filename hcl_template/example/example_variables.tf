@@ -58,10 +58,10 @@ variable "dialer_root_disk_size" {
   description = "The disk size of root partition in dialer EC2"
   type        = number
 }
-variable "oml_app_repo_url" {
-  description = "URL for omlapp repository"
-  type        = string
-}
+# variable "oml_app_repo_url" {
+#   description = "URL for omlapp repository"
+#   type        = string
+# }
 variable "dialer_user" {
   description = "The username of Wombat Dialer web admin"
   type        = "string"
@@ -120,12 +120,12 @@ variable "callrec_storage" {}
 variable "pg_storage" {}
 
 
-variable "oml_app_branch" {}
-variable "oml_acd_branch" {}
-variable "oml_nginx_branch" {}
-variable "oml_redis_branch" {}
-variable "oml_kamailio_branch" {}
-variable "oml_websockets_branch" {}
+# variable "oml_app_branch" {}
+# variable "oml_acd_branch" {}
+# variable "oml_nginx_branch" {}
+# variable "oml_redis_branch" {}
+# variable "oml_kamailio_branch" {}
+# variable "oml_websockets_branch" {}
 
 variable "rds_postgres_version" {}
 variable "rds_replica_count" {}

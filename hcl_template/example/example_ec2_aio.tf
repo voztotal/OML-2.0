@@ -44,7 +44,6 @@ data "template_file" "omlapp" {
     oml_dialer_host           = local.dialer_host != null ? local.dialer_host : ""
     api_dialer_user           = var.dialer_user
     api_dialer_password       = var.dialer_password
-    oml_app_tag               = var.oml_app_branch
     oml_app_ecctl             = var.ECCTL
     oml_rtpengine_host        = data.terraform_remote_state.shared_state.outputs.rtpengine_fqdn
     obs_host                  = var.obs_host

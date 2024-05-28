@@ -11,7 +11,6 @@ obs_host    = "190.19.150.8"
 ec2_oml_size                    = "t2.medium"
 customer_root_disk_type         = "standard"
 customer_root_disk_size         = 30
-ebs_volume_size                 = 50
 # VOICE component ec2 size
 ec2_asterisk_size               = "t2.micro"
 asterisk_root_disk_size         = 50
@@ -27,13 +26,6 @@ pg_storage                      = 100
 # RDS MySQL dialer backend SQL
 mysql_rds_size                  = "db.t3.micro"
 
-# Braches release to deploy
-oml_app_branch          ="1.26.0"
-oml_redis_branch        ="230204.01"
-oml_kamailio_branch     ="230204.01"
-oml_acd_branch          ="230328.01"
-oml_websockets_branch   ="230204.01"
-oml_nginx_branch        ="230215.01"
 
 rds_postgres_version    ="14.10"
 rds_replica_count       ="0"
