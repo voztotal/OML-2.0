@@ -21,6 +21,7 @@ resource "aws_instance" "asterisk" {
 data "template_file" "asterisk" {
   template = file("${path.module}/templates/asterisk.tpl")
   vars = {
+      bucket_name               = split(".", aws_s3_bucket.customer_data.bucket_domain_name)[0]
       oml_infras_stage          = var.cloud_provider
       oml_deploytool_branch     = var.omldeploytool_branch
       aws_region                = var.aws_region

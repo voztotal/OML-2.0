@@ -65,6 +65,13 @@ resource "aws_security_group" "redis_ec2_sg" {
     description = "Redis"
   }
   ingress {
+    from_port   = 5672
+    to_port     = 5672
+    protocol    = "tcp"
+    cidr_blocks = [data.terraform_remote_state.shared_state.outputs.vpc_cidr_block]
+    description = "RabbitMQ"
+  }
+  ingress {
     from_port   = 9100
     to_port     = 9100
     protocol    = "tcp"

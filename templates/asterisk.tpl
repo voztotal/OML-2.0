@@ -39,6 +39,12 @@ sed -i "s/infra_env: cloud/infra_env: lan/g" $inventory_path/inventory.yml
 sed -i "s/#loki_host: /loki_host: ${oml_obs_host}/g" $inventory_path/inventory.yml
 sed -i "s/#homer_host: /homer_host: ${oml_obs_host}/g" $inventory_path/inventory.yml
 
+sed -i "s%\#bucket_url: https://sfo3.digitaloceanspaces.com%bucket_url: aws%g" $inventory_path/inventory.yml
+sed -i "s/bucket_name: omnileads/bucket_name: ${bucket_name}/g" $inventory_path/inventory.yml
+
+if [[ "${aws_region}" != "NULL" ]];then
+    sed -i "s/bucket_region: us-east-1/bucket_region: ${aws_region}/g" $inventory_path/inventory.yml
+fi
 
 if [[ "${oml_upgrade_to_major}" != "NULL" ]];then
 sed -i "s/#upgrade_from_oml_1/upgrade_from_oml_1/g" $inventory_path/inventory.yml
